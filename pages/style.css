@@ -12,20 +12,7 @@ body {
   align-items: center;
   background: linear-gradient(135deg, #0f172a, #1e3a8a, #0ea5e9);
   background-size: 300% 300%;
-  /* animation: gradientMove 30s ease infinite; */
 }
-
-/* @keyframes gradientMove {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-} */
 
 .signup-container {
   width: 350px;
@@ -82,10 +69,10 @@ body {
   transition: 0.3s;
 }
 
-/* .form-group input:focus {
+.form-group input:focus {
   border: 1px solid #38bdf8;
   box-shadow: 0 0 10px #38bdf8;
-} */
+}
 
 .btn {
   width: 100%;
