@@ -3,26 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vezii</title>
+    <title>Urban Track</title>
     <link rel="stylesheet" href="login.css" />
   </head>
-  <header>Create new account</header>
+  <header></header>
   <body>
     <form action="">
       <div class="container">
-        <div class="input">
-          <input id="text" placeholder="username" required /><br /><br />
-        </div>
-        <div class="input">
-          <input id="email" placeholder="@gmail" required /><br /><br />
-        </div>
-        <div class="input">
-          <input id="password" placeholder="password" required /><br /><br />
+        <div class="form-group">
+          <label for="text">Username</label>
+          <input id="text" placeholder="username" required />
         </div>
 
-        <button id="submit">Register</button>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" placeholder="password" required />
+        </div>
 
-        <p>Don't have an account? <a href="signUpPage.html">Sign up</a></p>
+        <button type="submit" class="btn">Register</button>
+
+        <p class="footer-text">
+          Don't have an account? <a href="signUpPage.html">Sign up</a>
+        </p>
       </div>
     </form>
     <script src="like.js"></script>
