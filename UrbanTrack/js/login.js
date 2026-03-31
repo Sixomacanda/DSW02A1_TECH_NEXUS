@@ -1,64 +1,63 @@
-/*document.getElementById("button").onclick=function(){
-    let username=document.getElementById("username").value
-    let password=document.getElementById("password").value
-    let email=document.getElementById("email").value
+document.querySelector("form").addEventListener("submit", function (e) {
+    e.preventDefault();
 
-   
-    if(email[email.length-1]==="m"){
-        if(email[email.length-2]==="o"){
-            if(email[email.length-3]==="c"){
-                if(email[email.length-4]=== "."){
-                    if(email[email.length-5]==="l"){
-                        if(email [email.length-6]==="i"){
-                            if(email[email.length-7]==="a"){
-                                if(email[email.length-8]==="m"){
-                                    if(email.length[-9]==="g"){
-                                        if(email[email.length-10]==="@"){
-                                             if(username.length>4){
-                                                if(password.length>8){
-                                                    alert("login successful")
-                                                }
-                                                else{
-                                                    alert("invalid password")
-                                                }
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+    let confirmPassword = document.getElementById("confirm-password").value;
 
-        
+    if (password.length < 8) {
+        alert("Password must have at least 8 characters");
+        return;
     }
-    else{
-        alert("invalid username")
+
+    if (!/\d/.test(password)) {
+        alert("Password must include numbers");
+        return;
     }
-        */
+
+    if (!email.endsWith("@gmail.com")) {
+        alert("Please enter a valid email");
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        alert("Passwords do not match");
+        return;
+    }
+
+    localStorage.setItem("email", email);
+    localStorage.setItem("password", password);
+
+    alert("Account created successfully!");
+
     
+    window.location.href = "login.html";
+});
+
+document.querySelector("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    let username = document.getElementById("text").value;
+    let password = document.getElementById("password").value;
+
+    let savedEmail = localStorage.getItem("email");
+    let savedPassword = localStorage.getItem("password");
+
     
-                                      
-
-
-
-document.getElementById("submit").onclick=function(){
-
-    let text=document.getElementById("text").value
-    let password=document.getElementById("password").value
-    let email=document.getElementById("email").value
-
-
-    if(text==""){
-        alert("you must fill this field")
-        return;
+    if (username === savedEmail && password === savedPassword) {
+        alert("✅ Login successful!");
+    } else {
+        alert("❌ Incorrect username or password");
     }
-     if(password.length<8 ){
-        alert("password must have at least 8 characters")
-        return;
+});
+
+
+//homePage Code
+ function scrollToAbout() {
+      document.getElementById("about").scrollIntoView({ behavior: "smooth" });
     }
-    if(! /\d/.test(password)){
-        alert("password should also include numbers")
-        return;
+
+    function search() {
+      let query = document.getElementById("search").value;
+      alert("You searched for: " + query);
     }
-     if(!email.endswidth("@gmail.com")){
-        alert("please enter a correct email address")
-        return;
-    }
-    else{
-        alert("your account has been created successfully")
-    }
-    
-};
