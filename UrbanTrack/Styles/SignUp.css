@@ -25,6 +25,49 @@ body {
     background-position: 0% 50%;
   }
 }
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(15px);
+
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+  color: #38bdf8;
+}
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+}
+
+.nav-links li a {
+  color: #38bdf8;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.nav-links li a:hover,
+.nav-links li a:focus-visible {
+  background-color: rgba(56, 189, 248, 0.25);
+  color: #dbeafe;
+  outline: none;
+}
 
 .signup-container {
   width: 350px;
