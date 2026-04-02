@@ -233,7 +233,9 @@ body {
 }
 
 .footer-section {
-  margin: 10px;
+  margin: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
   text-align: left;
 }
 
