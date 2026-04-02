@@ -151,6 +151,11 @@ i {
 .hide {
   display: none;
 }
+.error {
+  color: #ff0000;
+  font-size: 14px;
+  margin-top: 10px;
+}
 .btn {
   width: 100%;
   padding: 12px;
@@ -184,4 +189,15 @@ i {
 
 .footer-text a:hover {
   text-decoration: underline;
+}
+
+.input-error {
+  border-color: #f87171 !important;
+}
+
+.error {
+  color: #f87171;
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
 }
