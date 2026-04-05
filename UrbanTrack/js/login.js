@@ -61,3 +61,22 @@ document.querySelector("form").addEventListener("submit", function (e) {
       let query = document.getElementById("search").value;
       alert("You searched for: " + query);
     }
+
+
+
+//     //admin code 
+
+// document.getElementById("loginBtn").addEventListener("click", function() {
+//     const username = document.getElementById("email").value;
+//     const password = document.getElementById("password").value;
+
+//     const adminUsername = "admin";
+//     const adminPassword = "admin123";
+
+//     if (username === adminUsername && password === adminPassword) {
+//         localStorage.setItem("adminLoggedIn", "true");
+//         window.location.href = "admin-dashboard.html";
+//     } else {
+//         document.getElementById("errorMsg").textContent = "Invalid username or password";
+//     }
+// });
