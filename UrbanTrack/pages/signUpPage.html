@@ -18,18 +18,19 @@
       <div class="logo">Urban Track</div>
 
       <ul class="nav-links">
-        <li><a href="../homePage.html">Home</a></li>
+        <li><a href="../../homePage.html">Home</a></li>
         <li><a href="login.html">Login</a></li>
       </ul>
     </nav>
 
     <div class="signup-container">
       <h2>Create Account</h2>
-      <form id="signupForm" novalidate>
+      <form id="signupForm" method="post" action="register.php" novalidate>
         <div class="form-group">
           <label for="surname">Surname</label>
           <input
             type="text"
+            name="surname"
             id="surname"
             placeholder="Enter your surname"
             required
@@ -40,6 +41,7 @@
           <label for="email">Email</label>
           <input
             type="email"
+            name="email"
             id="email"
             placeholder="Enter your email"
             required
@@ -50,6 +52,7 @@
           <label for="password">Password</label>
           <input
             type="password"
+            name="password"
             id="Signup-password"
             placeholder="Enter your password"
             required
@@ -61,6 +64,7 @@
           <label for="confirm-password">Confirm Password</label>
           <input
             type="password"
+            name="confirm-password"
             id="Signup-confirm-password"
             placeholder="Confirm your password"
             required
@@ -68,7 +72,9 @@
           <i class="fa-solid fa-eye"></i>
           <i class="fa-solid fa-eye-slash hide"></i>
         </div>
-        <button type="submit" class="btn">Sign Up</button>
+        <button type="submit" id="sign" class="btn" name="signup">
+          Sign Up
+        </button>
       </form>
       <p class="footer-text">
         Already have an account? <a href="login.html">Log in</a>
