@@ -1,4 +1,4 @@
-document.querySelector("form").addEventListener("submit", function (e) {
+/*document.querySelector("form").addEventListener("submit", function (e) {
     e.preventDefault();
 
     let email = document.getElementById("email").value;
@@ -31,7 +31,7 @@ document.querySelector("form").addEventListener("submit", function (e) {
     alert("Account created successfully!");
 
     
-    window.location.href = "login.html";
+    window.location.href = "login.php";
 });
 
 document.querySelector("form").addEventListener("submit", function (e) {
@@ -60,4 +60,4 @@ document.querySelector("form").addEventListener("submit", function (e) {
     function search() {
       let query = document.getElementById("search").value;
       alert("You searched for: " + query);
-    }
+    }*/
