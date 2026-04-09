@@ -9,6 +9,7 @@ body {
   height: 100vh;
   display: flex;
   justify-content: center;
+
   align-items: center;
   background: linear-gradient(135deg, #0f172a, #1e3a8a, #0ea5e9);
   background-size: 300% 300%;
@@ -72,6 +73,7 @@ body {
 }
 
 .container {
+  justify-content: right;
   width: 350px;
   padding: 30px;
   border-radius: 20px;
