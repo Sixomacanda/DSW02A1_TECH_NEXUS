@@ -1,11 +1,16 @@
-
-
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Urban Track</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link rel="stylesheet" href="../Styles/SignUp.css" />
   </head>
   <body>
@@ -13,56 +18,68 @@
       <div class="logo">Urban Track</div>
 
       <ul class="nav-links">
-        <li><a href="homePage.html">Home</a></li>
+        <li><a href="../../homePage.html">Home</a></li>
         <li><a href="login.html">Login</a></li>
       </ul>
     </nav>
 
     <div class="signup-container">
       <h2>Create Account</h2>
-      <form method = "post" action = "register.php">
+      <form id="signupForm" method="post" action="register.php" novalidate>
         <div class="form-group">
           <label for="surname">Surname</label>
           <input
-            type="text" name = "surname"
+            type="text"
+            name="surname"
             id="surname"
             placeholder="Enter your surname"
             required
           />
+          <small class="error"></small>
         </div>
         <div class="form-group">
           <label for="email">Email</label>
           <input
-            type="email" name = "email"
+            type="email"
+            name="email"
             id="email"
             placeholder="Enter your email"
             required
           />
+          <small class="error"></small>
         </div>
-        <div class="form-group">
+        <div class="form-group password-group">
           <label for="password">Password</label>
           <input
             type="password"
-            name = "password"
-            id="password"
+            name="password"
+            id="Signup-password"
             placeholder="Enter your password"
             required
           />
+          <i class="fa-solid fa-eye"></i>
+          <i class="fa-solid fa-eye-slash hide"></i>
         </div>
-        <div class="form-group">
+        <div class="form-group password-group">
           <label for="confirm-password">Confirm Password</label>
           <input
-            type="password" name = "confirm-password"
-            id="confirm-password"
+            type="password"
+            name="confirm-password"
+            id="Signup-confirm-password"
             placeholder="Confirm your password"
             required
           />
+          <i class="fa-solid fa-eye"></i>
+          <i class="fa-solid fa-eye-slash hide"></i>
         </div>
-        <button type="submit" id="sign" class="btn" name = "signup">Sign Up</button>
+        <button type="submit" id="sign" class="btn" name="signup">
+          Sign Up
+        </button>
       </form>
       <p class="footer-text">
         Already have an account? <a href="login.html">Log in</a>
       </p>
     </div>
+    <script src="../js/main.js"></script>
   </body>
 </html>
