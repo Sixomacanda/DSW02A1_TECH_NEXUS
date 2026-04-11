@@ -73,7 +73,6 @@ body {
 }
 
 .container {
-  justify-content: right;
   width: 350px;
   padding: 30px;
   border-radius: 20px;

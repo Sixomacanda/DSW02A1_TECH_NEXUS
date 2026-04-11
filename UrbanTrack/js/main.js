@@ -124,7 +124,7 @@ if (signupForm) {
 
     if (valid) {
       console.log("Signup form valid");
-      // signupForm.submit();
+      // signupForm.submit();j
     }
   });
 }
