@@ -1,10 +1,12 @@
 <?php
 include("connection.php");
 
+echo "Register page working";
+
 error_reporting(E_ALL);
 ini_set('display_errors',1);
 
-if(isset($_POST['Signup_'])){
+if(isset($_POST['Signup'])){
 
 $surname = trim($_POST['surname_']);
 $email = trim($_POST['email_']);
