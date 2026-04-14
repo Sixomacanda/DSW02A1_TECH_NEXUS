@@ -2,12 +2,17 @@
 session_start();
 include("connection.php");
 
-if(isset($_POST['login'])){
+if(isset($_POST['login_'])){
 
-$email = trim($_POST['email']);
-$password = trim($_POST['password']);
+$email = trim($_POST['email_']);
+$password = trim($_POST['password_']);
 
 $stmt = $conn->prepare("SELECT Password FROM boy_table WHERE Email = ?");
+
+if(!$stmt){
+die("Query failed: " . $conn->error);
+}
+
 $stmt->bind_param("s",$email);
 $stmt->execute();
 
@@ -22,7 +27,7 @@ if($password === $db_password){
 
 $_SESSION['email'] = $email;
 
-header("location: homePage.html");
+header("Location: Home.html");
 exit();
 
 }else{
@@ -36,6 +41,8 @@ echo "Incorrect password";
 echo "Email not registered";
 
 }
+
+$stmt->close();
 
 }
 ?>

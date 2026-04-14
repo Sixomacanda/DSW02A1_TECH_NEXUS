@@ -1,12 +1,15 @@
 <?php
 include("connection.php");
 
-if(isset($_POST['signup'])){
+error_reporting(E_ALL);
+ini_set('display_errors',1);
 
-$surname = trim($_POST['surname']);
-$email = trim($_POST['email']);
-$password = $_POST['password'];
-$confirm_pass = $_POST['confirm-password'];
+if(isset($_POST['Signup_'])){
+
+$surname = trim($_POST['surname_']);
+$email = trim($_POST['email_']);
+$password = $_POST['password_'];
+$confirm_pass = $_POST['confirm-password_'];
 
 $errors = [];
 
@@ -45,7 +48,11 @@ $stmt = $conn->prepare("INSERT INTO boy_table (Surname, Email, Password) VALUES 
 $stmt->bind_param("sss",$surname,$email,$password);
 
 if($stmt->execute()){
-echo "Account created successfully";
+header("Location: index.html");
+    exit();
+    
+        
+
 }else{
 echo "Error: ".$stmt->error;
 }
