@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urban Track</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="login.css" />
+  </head>
+  <header></header>
+  <body>
+    <nav class="navbar">
+      <div class="logo">Urban Track</div>
+
+      <ul class="nav-links">
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="signUpPage.html">Sign Up</a></li>
+      </ul>
+    </nav>
+
+    <form id="loginForm"  method="POST"  >
+      <div class="container">
+        <div class="form-group">
+          <label for="text">Email</label>
+          <input id="text" name="email_" placeholder="email" required />
+          <small class="error"></small>
+        </div>
+
+        <div class="form-group password-group">
+          <label for="password">Password</label>
+          <input
+            id="password"
+            name="password_"
+            type="password"
+            placeholder="password"
+            required
+          />
+          <small class="error"></small>
+          <i class="fa-solid fa-eye"></i>
+          <i class="fa-solid fa-eye-slash hide"></i>
+        </div>
+
+        <button type="submit" id="" name="login_" class="btn">Login</button>
+
+        <p class="footer-text">
+          Don't have an account? <a href="signUpPage.html">Sign up</a>
+        </p>
+      </div>
+    </form>
+    <script src="main.js"></script>
+  </body>
+</html>
