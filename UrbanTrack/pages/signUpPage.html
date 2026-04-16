@@ -1,4 +1,4 @@
-<!doctype html>
+s<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -11,26 +11,26 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link rel="stylesheet" href="../Styles/SignUp.css" />
+    <link rel="stylesheet" href="SignUp.css" />
   </head>
   <body>
     <nav class="navbar">
       <div class="logo">Urban Track</div>
 
       <ul class="nav-links">
-        <li><a href="../../homePage.html">Home</a></li>
-        <li><a href="login.html">Login</a></li>
+        <li><a href="Home.html">Home</a></li>
+        <li><a href="index.html">Login</a></li>
       </ul>
     </nav>
 
     <div class="signup-container">
       <h2>Create Account</h2>
-      <form id="signupForm" method="post" action="register.php" novalidate>
+      <form id="signupForm" method="POST" action="register.php" >
         <div class="form-group">
           <label for="surname">Surname</label>
           <input
             type="text"
-            name="surname"
+            name="surname_"
             id="surname"
             placeholder="Enter your surname"
             required
@@ -41,7 +41,7 @@
           <label for="email">Email</label>
           <input
             type="email"
-            name="email"
+            name="email_"
             id="email"
             placeholder="Enter your email"
             required
@@ -52,7 +52,7 @@
           <label for="password">Password</label>
           <input
             type="password"
-            name="password"
+            name="password_"
             id="Signup-password"
             placeholder="Enter your password"
             required
@@ -64,7 +64,7 @@
           <label for="confirm-password">Confirm Password</label>
           <input
             type="password"
-            name="confirm-password"
+            name="confirm-password_"
             id="Signup-confirm-password"
             placeholder="Confirm your password"
             required
@@ -72,14 +72,14 @@
           <i class="fa-solid fa-eye"></i>
           <i class="fa-solid fa-eye-slash hide"></i>
         </div>
-        <button type="submit" id="sign" class="btn" name="signup">
+        <button type="submit" id="sign" class="btn" name="Signup">
           Sign Up
         </button>
       </form>
       <p class="footer-text">
-        Already have an account? <a href="login.html">Log in</a>
+        Already have an account? <a href="index.html">Log in</a>
       </p>
     </div>
-    <script src="../js/main.js"></script>
+    <script src="main.js"></script>
   </body>
 </html>
