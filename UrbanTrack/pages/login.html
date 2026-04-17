@@ -25,32 +25,43 @@
     </nav>
 
     <form id="loginForm" novalidate>
+      <div class="right">
+        <div class="right-content">
+          <h1>Welcome Back to Urban Track</h1>
+          <h3>Empowering communities to improve their cities.</h3>
+        </div>
+      </div>
+      <div class="divider"></div>
       <div class="container">
-        <div class="form-group">
-          <label for="text">Email</label>
-          <input id="text" name="email" placeholder="email" required />
-          <small class="error"></small>
+        <div class="left">
+          <div class="form-group">
+            <label for="text">Email</label>
+            <input id="text" name="email" placeholder="example@address.com" required />
+            <small class="error"></small>
+          </div>
+
+          <div class="form-group password-group">
+            <label for="password">Password</label>
+            <input
+              id="password"
+              name="password"
+              placeholder="password"
+              required
+            />
+            <small class="error"></small>
+            <i class="fa-solid fa-eye"></i>
+            <i class="fa-solid fa-eye-slash hide"></i>
+          </div>
+
+          <button type="submit" id="" name="login" class="btn">Login</button>
+          <!-- si -->
+          <p class="forgot-password">
+            <a href="passRecovery.html">Forgot password?</a>
+          </p>
+          <p class="footer-text">
+            Don't have an account? <a href="signUpPage.html">Sign up</a>
+          </p>
         </div>
-
-        <div class="form-group password-group">
-          <label for="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            placeholder="password"
-            required
-          />
-          <small class="error"></small>
-          <i class="fa-solid fa-eye"></i>
-          <i class="fa-solid fa-eye-slash hide"></i>
-        </div>
-
-        <button type="submit" id="" name="login" class="btn">Login</button>
-        <!-- si -->
-
-        <p class="footer-text">
-          Don't have an account? <a href="signUpPage.html">Sign up</a>
-        </p>
       </div>
     </form>
     <script src="../js/main.js"></script>
