@@ -72,9 +72,19 @@ body {
   outline: none;
 }
 
+form#loginForm {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 30px;
+  width: min(100%, 1000px);
+  padding-top: 80px;
+}
+
 .container {
-  justify-content: right;
-  width: 350px;
+  width: auto;
+  flex: 1;
+  min-width: 260px;
   padding: 30px;
   border-radius: 20px;
 
@@ -85,6 +95,18 @@ body {
   color: white;
 
   animation: floatUp 0.8s ease;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.divider {
+  width: 1px;
+  min-height: 450px;
+  background: rgba(255, 255, 255, 0.25);
 }
 
 @keyframes floatUp {
@@ -137,7 +159,7 @@ body {
 i {
   position: absolute;
   right: 50px;
-  top: 50%;
+  top: 43%;
   /* transform: translateY(-50%); */
   /* color: #38bdf8; */
   cursor: pointer;
@@ -203,3 +225,50 @@ i {
   margin-top: 5px;
   display: block;
 }
+.right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+  min-width: 260px;
+  padding: 30px;
+  /* box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); */
+  color: white;
+  animation: floatUp 2s ease;
+  background-color: none;
+  margin-top: 10%;
+}
+
+.right-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (max-width: 860px) {
+  form#loginForm {
+    flex-direction: column;
+    /* align-items: stretch; */
+    gap: 20px;
+    width: auto;
+  }
+
+  .divider {
+    display: none;
+  }
+  .right {
+    display: none;
+  }
+}
+.forgot-password a {
+  
+  font-size: 14px;
+  color: #38bdf8;
+  
+  transition: color 0.2s ease;
+}
+.forgot-password a:hover {
+  color: #6366f1;
+}
+
+
