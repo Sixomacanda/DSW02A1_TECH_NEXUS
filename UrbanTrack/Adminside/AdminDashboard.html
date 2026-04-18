@@ -18,26 +18,26 @@
 
   <div class="sidebar-section">Overview</div>
   <button class="nav-item active" onclick="showView('overview',this)">
-    <span class="icon">📊</span> Dashboard
+    <span class="icon"></span> Dashboard
   </button>
 
   <div class="sidebar-section">Management</div>
   <button class="nav-item" onclick="showView('issues',this)">
-    <span class="icon">📋</span> All Issues
+    <span class="icon"></span> All Issues
     <span class="nav-badge" id="issuesBadge">12</span>
   </button>
   <button class="nav-item" onclick="showView('users',this)">
-    <span class="icon">👥</span> Users
+    <span class="icon"></span> Users
     <span class="nav-badge warn" id="usersBadge">3</span>
   </button>
   <button class="nav-item" onclick="showView('pending',this)">
-    <span class="icon">⏳</span> Pending Approval
+    <span class="icon"></span> Pending Approval
     <span class="nav-badge warn" id="pendingBadge">3</span>
   </button>
 
   <div class="sidebar-section">Settings</div>
   <button class="nav-item" onclick="showView('settings',this)">
-    <span class="icon">⚙️</span> Settings
+    <span class="icon"></span> Settings
   </button>
 
   <div class="sidebar-footer">
@@ -122,7 +122,7 @@
       <!-- Pending users alert -->
       <div id="pendingAlert" style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:var(--radius);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
         <div style="display:flex;align-items:center;gap:.75rem;">
-          <span style="font-size:1.4rem;">⚠️</span>
+          <span style="font-size:1.4rem;"></span>
           <div>
             <div style="font-weight:700;color:var(--warning);font-size:.95rem;">3 users awaiting approval</div>
             <div style="font-size:.8rem;color:var(--text-secondary);opacity:.7;margin-top:.1rem;">New registrations need your review before they can submit reports.</div>
@@ -141,10 +141,10 @@
         </div>
         <div class="filter-tabs" id="issueFilter">
           <button class="ftab active" onclick="filterIssues('all',this)">All</button>
-          <button class="ftab" onclick="filterIssues('urgent',this)">🔴 Urgent</button>
-          <button class="ftab" onclick="filterIssues('pending',this)">🟡 Pending</button>
-          <button class="ftab" onclick="filterIssues('in-progress',this)">🔵 In Progress</button>
-          <button class="ftab" onclick="filterIssues('resolved',this)">🟢 Resolved</button>
+          <button class="ftab" onclick="filterIssues('urgent',this)"> Urgent</button>
+          <button class="ftab" onclick="filterIssues('pending',this)"> Pending</button>
+          <button class="ftab" onclick="filterIssues('in-progress',this)"> In Progress</button>
+          <button class="ftab" onclick="filterIssues('resolved',this)"> Resolved</button>
         </div>
       </div>
       <div class="table-card">
@@ -168,9 +168,9 @@
         </div>
         <div class="filter-tabs">
           <button class="ftab active" onclick="filterUsers('all',this)">All</button>
-          <button class="ftab" onclick="filterUsers('approved',this)">✅ Approved</button>
-          <button class="ftab" onclick="filterUsers('pending',this)">⏳ Pending</button>
-          <button class="ftab" onclick="filterUsers('suspended',this)">🚫 Suspended</button>
+          <button class="ftab" onclick="filterUsers('approved',this)"> Approved</button>
+          <button class="ftab" onclick="filterUsers('pending',this)"> Pending</button>
+          <button class="ftab" onclick="filterUsers('suspended',this)">Suspended</button>
         </div>
       </div>
       <div class="table-card">
@@ -337,10 +337,10 @@ function renderIssues(filter) {
       <td><div class="upvote-count">▲ ${i.upvotes}</div></td>
       <td>
         <select class="status-select" onchange="changeIssueStatus(${i.id},this.value)">
-          <option value="urgent"     ${i.status==='urgent'?'selected':''}>🔴 Urgent</option>
-          <option value="pending"    ${i.status==='pending'?'selected':''}>🟡 Pending</option>
-          <option value="in-progress"${i.status==='in-progress'?'selected':''}>🔵 In Progress</option>
-          <option value="resolved"   ${i.status==='resolved'?'selected':''}>🟢 Resolved</option>
+          <option value="urgent"     ${i.status==='urgent'?'selected':''}>Urgent</option>
+          <option value="pending"    ${i.status==='pending'?'selected':''}>Pending</option>
+          <option value="in-progress"${i.status==='in-progress'?'selected':''}>In Progress</option>
+          <option value="resolved"   ${i.status==='resolved'?'selected':''}>Resolved</option>
         </select>
       </td>
       <td>
@@ -446,10 +446,10 @@ function openIssueModal(id) {
   document.getElementById('modalIssueDesc').textContent = i.desc;
   document.getElementById('modalIssueActions').innerHTML = `
     <select class="status-select" style="border-radius:.6rem;padding:.6rem 1rem;" onchange="changeIssueStatus(${i.id},this.value);document.getElementById('modalIssueSub').textContent='Status updated — '+this.options[this.selectedIndex].text;showToast('Status updated','success')">
-      <option value="urgent"     ${i.status==='urgent'?'selected':''}>🔴 Urgent</option>
-      <option value="pending"    ${i.status==='pending'?'selected':''}>🟡 Pending</option>
-      <option value="in-progress"${i.status==='in-progress'?'selected':''}>🔵 In Progress</option>
-      <option value="resolved"   ${i.status==='resolved'?'selected':''}>🟢 Resolved</option>
+      <option value="urgent"     ${i.status==='urgent'?'selected':''}>Urgent</option>
+      <option value="pending"    ${i.status==='pending'?'selected':''}> Pending</option>
+      <option value="in-progress"${i.status==='in-progress'?'selected':''}> In Progress</option>
+      <option value="resolved"   ${i.status==='resolved'?'selected':''}> Resolved</option>
     </select>
     <button class="btn btn-success" onclick="changeIssueStatus(${i.id},'resolved');showToast('Issue marked resolved','success');closeModal('issueModal')">✅ Mark Resolved</button>
     <button class="btn btn-ghost" onclick="closeModal('issueModal')">Close</button>`;
@@ -494,12 +494,12 @@ function updateBadges() {
 
 function statusBadge(s) {
   const map = {urgent:'badge-urgent',pending:'badge-pending','in-progress':'badge-progress',resolved:'badge-resolved'};
-  const label = {urgent:'🔴 Urgent',pending:'🟡 Pending','in-progress':'🔵 In Progress',resolved:'🟢 Resolved'};
+  const label = {urgent:' Urgent',pending:' Pending','in-progress':' In Progress',resolved:'Resolved'};
   return `<span class="badge ${map[s]||'badge-pending'}">${label[s]||s}</span>`;
 }
 function userStatusBadge(s) {
   const map = {approved:'badge-approved',pending:'badge-pending-u',suspended:'badge-suspended'};
-  const label = {approved:'✅ Approved',pending:'⏳ Pending',suspended:'🚫 Suspended'};
+  const label = {approved:' Approved',pending:'Pending',suspended:'Suspended'};
   return `<span class="badge ${map[s]||''}">${label[s]||s}</span>`;
 }
 function initials(name) { return name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase(); }
