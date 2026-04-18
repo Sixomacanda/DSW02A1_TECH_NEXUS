@@ -82,9 +82,10 @@ form#loginForm {
 }
 
 .container {
-  width: auto;
+  /* width: 350px; */
   flex: 1;
-  min-width: 260px;
+  min-width: 300px;
+  max-width: 350px;
   padding: 30px;
   border-radius: 20px;
 
