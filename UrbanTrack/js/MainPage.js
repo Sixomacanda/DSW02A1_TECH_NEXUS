@@ -1,28 +1,40 @@
-// ============================================
+
 // UrbanTrack - Complete User Authentication System
 // Handles Signup, Login, Local Storage & Dashboard Redirect
-// ============================================
+
 
 // Storage Keys
 const STORAGE_USERS = 'urbanTrack_users';
 const STORAGE_CURRENT_USER = 'urbanTrack_currentUser';
 const STORAGE_ISSUES = 'urbanTrack_issues';
 
-// ========== INITIALIZE STORAGE WITH DEFAULT DATA ==========
+// Admin hardcoded credentials
+const ADMIN_EMAIL = 'admin@urbantrack.com';
+const ADMIN_PASSWORD = 'Admin@1234';
+
 function initializeUserStorage() {
     // Initialize users if empty
     if (!localStorage.getItem(STORAGE_USERS)) {
         const defaultUsers = [
             {
+                id: 'admin_001',
+                name: 'Administrator',
+                email: 'admin@urbantrack.com',
+                password: 'Admin@1234',
+                role: 'admin',
+                createdAt: new Date().toISOString()
+            },
+            {
                 id: 'user_demo_001',
                 name: 'Demo User',
                 email: 'demo@example.com',
                 password: 'Demo@1234',
+                role: 'user',
                 createdAt: new Date().toISOString()
             }
         ];
         localStorage.setItem(STORAGE_USERS, JSON.stringify(defaultUsers));
-        console.log('✅ Users database initialized');
+        console.log('✅ Users database initialized with Admin + Demo User');
     }
 
     // Initialize sample issues for dashboard
@@ -88,6 +100,12 @@ function setCurrentUser(user) {
 function getCurrentUser() {
     const userJson = localStorage.getItem(STORAGE_CURRENT_USER);
     return userJson ? JSON.parse(userJson) : null;
+}
+
+// ========== ADD THIS NEW FUNCTION ==========
+function isAdmin() {
+    const user = getCurrentUser();
+    return user && user.role === 'admin';
 }
 
 function isLoggedIn() {
@@ -237,6 +255,9 @@ function initSignup() {
         } else if (!validateEmail(signupEmail.value.trim())) {
             setError(signupEmail, "Please enter a valid email address.");
             valid = false;
+        } else if (signupEmail.value.trim().toLowerCase() === ADMIN_EMAIL) {
+            setError(signupEmail, "This email is reserved for admin login.");
+            valid = false;
         } else {
             // Check if email already exists
             const existingUser = findUserByEmail(signupEmail.value.trim());
@@ -330,13 +351,34 @@ function initLogin() {
         }
         
         if (valid) {
-            // Authenticate user
-            const user = findUserByEmail(loginEmail.value.trim());
+            const enteredEmail = loginEmail.value.trim().toLowerCase();
+            const enteredPassword = loginPassword.value;
+
+            // Admin login using hardcoded credentials
+            if (enteredEmail === ADMIN_EMAIL && enteredPassword === ADMIN_PASSWORD) {
+                const adminUser = {
+                    id: 'admin_001',
+                    name: 'Administrator',
+                    email: ADMIN_EMAIL,
+                    role: 'admin',
+                    createdAt: new Date().toISOString()
+                };
+
+                setCurrentUser(adminUser);
+                showToast('Welcome Admin! Redirecting to Admin dashboard...');
+                setTimeout(() => {
+                    window.location.href = "../Adminside/Admin.html";
+                }, 1200);
+                return;
+            }
+
+            // Authenticate regular user
+            const user = findUserByEmail(enteredEmail);
             
             if (!user) {
                 setError(loginEmail, "No account found with this email. Please sign up.");
                 showToast("Account not found. Please sign up first.", true);
-            } else if (user.password !== loginPassword.value) {
+            } else if (user.password !== enteredPassword) {
                 setError(loginPassword, "Incorrect password. Please try again.");
             } else {
                 // Login success
