@@ -119,6 +119,17 @@
         }
         .page-subtitle { font-size:1.1rem; color:var(--text-secondary); }
 
+        /* ===== Welcome Header ===== */
+        .welcome-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .welcome-title {
+            font-size:clamp(1.8rem,3.5vw,2.6rem); font-weight:800;
+            color:var(--accent-hover); line-height:1.1;
+            letter-spacing:-.5px; margin-bottom:.5rem;
+        }
+
         /* ===== Form Card ===== */
         .form-card {
             background:var(--glass-bg); backdrop-filter:blur(15px);
