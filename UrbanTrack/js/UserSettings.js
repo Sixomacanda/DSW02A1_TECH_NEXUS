@@ -1,4 +1,4 @@
-// ===== HELPERS =====
+//  HELPERS 
 function getCurrentUser() {
   return JSON.parse(localStorage.getItem('urbanTrack_currentUser') || 'null');
 }
@@ -64,7 +64,7 @@ function initUserSettings() {
 
 document.addEventListener('DOMContentLoaded', initUserSettings);
 
-// ===== NAVIGATION =====
+//  NAVIGATION 
 function showSection(name, el) {
   document.querySelectorAll('.panel-section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.snav-item').forEach(b=>b.classList.remove('active'));
@@ -72,7 +72,7 @@ function showSection(name, el) {
   el.classList.add('active');
 }
 
-// ===== PROFILE =====
+//  PROFILE 
 function saveProfile() {
   const fn = document.getElementById('firstName').value.trim();
   const ln = document.getElementById('lastName').value.trim();
@@ -110,7 +110,7 @@ function resetProfile() {
   showToast('Changes discarded.');
 }
 
-// ===== PASSWORD =====
+//  PASSWORD 
 function togglePw(id, btn) {
   const inp = document.getElementById(id);
   const show = inp.type === 'password';
@@ -168,7 +168,7 @@ function changePassword() {
   showToast('Password changed successfully!','success');
 }
 
-// ===== TOGGLES =====
+//  TOGGLES 
 function saveToggle(el, name) {
   showToast((el.checked ? '✓ ' : '✗ ') + name + (el.checked ? ' enabled' : ' disabled'), el.checked ? 'success' : '');
 }
@@ -181,7 +181,7 @@ function requestPush(el) {
   }
 }
 
-// ===== SESSIONS =====
+//  SESSIONS 
 function revokeSession(btn, name) {
   const row = btn.closest('.session-item');
   row.style.opacity = '0';
@@ -207,12 +207,12 @@ function signOutAll() {
   showToast('Signed out of all other sessions.','success');
 }
 
-// ===== DATA EXPORT =====
+//  DATA EXPORT 
 function requestExport() {
-  showToast('📥 Export requested — you\'ll receive an email within 24 hours.','success');
+  showToast('Export requested — you\'ll receive an email within 24 hours.','success');
 }
 
-// ===== MODALS =====
+//  MODALS 
 function openModal(id) { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
@@ -237,7 +237,7 @@ function deactivateAccount() {
   setTimeout(()=>{ window.location.href='login.html'; }, 2000);
 }
 
-// ===== HELPERS =====
+//  HELPERS  
 function showSavedMsg(id) {
   const el = document.getElementById(id);
   el.classList.add('show');
