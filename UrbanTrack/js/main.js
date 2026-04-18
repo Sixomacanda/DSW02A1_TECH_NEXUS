@@ -130,3 +130,104 @@ if (signupForm) {
     }
   });
 }
+
+//code for home page
+ (function () {
+            // Mobile menu toggle
+            const mobileBtn = document.getElementById('mobileMenuBtn');
+            const navLinks = document.querySelector('.nav-links');
+            if (mobileBtn && navLinks) {
+                mobileBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const isOpen = navLinks.style.display === 'flex' && window.innerWidth <= 768;
+                    if (isOpen) {
+                        navLinks.style.display = 'none';
+                    } else if (window.innerWidth <= 768) {
+                        Object.assign(navLinks.style, {
+                            display: 'flex',
+                            flexDirection: 'column',
+                            position: 'absolute',
+                            top: '70px',
+                            left: '0',
+                            right: '0',
+                            backgroundColor: 'rgba(15, 23, 42, 0.96)',
+                            backdropFilter: 'blur(20px)',
+                            padding: '1.5rem',
+                            gap: '1.2rem',
+                            borderBottom: '1px solid rgba(56,189,248,0.3)',
+                            zIndex: '999'
+                        });
+                    }
+                });
+                window.addEventListener('resize', function () {
+                    if (window.innerWidth > 768) {
+                        Object.assign(navLinks.style, {
+                            display: 'flex',
+                            flexDirection: 'row',
+                            position: 'relative',
+                            top: 'auto',
+                            backgroundColor: 'transparent',
+                            padding: '0',
+                            gap: '2rem',
+                            borderBottom: 'none'
+                        });
+                    } else if (navLinks.style.display !== 'flex') {
+                        navLinks.style.display = 'none';
+                    }
+                });
+            }
+
+            // Report button with toast
+            const locationField = document.getElementById('locationInput');
+            const reportBtn = document.getElementById('reportCta');
+            if (locationField && reportBtn) {
+                reportBtn.addEventListener('click', function (e) {
+                    const locationVal = locationField.value.trim();
+                    if (locationVal !== '') {
+                        showToast('📍 Preparing report for: ' + locationVal + ' — redirecting to dashboard.', 'linear-gradient(135deg, #0ea5e9, #4f46e5)');
+                        sessionStorage.setItem('urbanTrack_lastLocation', locationVal);
+                    } else {
+                        e.preventDefault();
+                        showToast('📍 Please enter a location first to continue.', '#f59e0b', '#0f172a');
+                    }
+                });
+            }
+
+            function showToast(msg, bg, color) {
+                const toast = document.createElement('div');
+                toast.textContent = msg;
+                Object.assign(toast.style, {
+                    position: 'fixed',
+                    bottom: '20px',
+                    left: '20px',
+                    background: bg || 'linear-gradient(135deg,#0ea5e9,#4f46e5)',
+                    color: color || 'white',
+                    padding: '10px 20px',
+                    borderRadius: '40px',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    zIndex: '9999',
+                    boxShadow: '0 6px 14px rgba(0,0,0,0.3)',
+                    transition: 'opacity 0.4s'
+                });
+                document.body.appendChild(toast);
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 500);
+                }, 2000);
+            }
+
+            // Smooth scroll
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId && targetId !== '#') {
+                        const targetEl = document.querySelector(targetId);
+                        if (targetEl) {
+                            e.preventDefault();
+                            targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }
+                });
+            });
+        })();

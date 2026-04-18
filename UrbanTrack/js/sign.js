@@ -32,7 +32,5 @@ document.getElementById("sign").onclick = function(event){
         alert("Invalid email")
     }
 
-    }
-
-    
+    } 
 }
