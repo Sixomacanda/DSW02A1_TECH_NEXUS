@@ -62,9 +62,9 @@ if (loginForm) {
     if (!loginPassword.value.trim()) {
       setError(loginPassword, "Password is required.");
       valid = false;
-    } else if (loginPassword.value.length < 6) {
-      setError(loginPassword, "Password must be at least 6 characters.");
-      valid = false;
+    // } else if (loginPassword.value.length < 6) {
+    //   setError(loginPassword, "Password must be at least 6 characters.");
+    //   valid = false;
     } else {
       clearError(loginPassword);
     }
