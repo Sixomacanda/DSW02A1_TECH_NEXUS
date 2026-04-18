@@ -23,7 +23,8 @@ function validateEmail(value) {
 }
 
 function setError(input, message) {
-  const error = input.parentElement.querySelector(".error");
+  const formGroup = input.closest(".form-group");
+  const error = formGroup ? formGroup.querySelector(".error") : null;
   if (error) {
     error.textContent = message;
   }
@@ -31,7 +32,8 @@ function setError(input, message) {
 }
 
 function clearError(input) {
-  const error = input.parentElement.querySelector(".error");
+  const formGroup = input.closest(".form-group");
+  const error = formGroup ? formGroup.querySelector(".error") : null;
   if (error) {
     error.textContent = "";
   }
