@@ -1,176 +1,256 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Urban Track - Home</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="UrbanTrack/Styles/homePage.css" />
-  </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>UrbanTrack - Report Community Issues in Real-Time</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="UrbanTrack/Styles/homePage.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="#" class="nav-brand">UrbanTrack</a>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#how-it-works">How it works</a>
+                <a href="#about">About</a>
+                <a href="UrbanTrack/pages/login.html">Login</a>
+                <a href="UrbanTrack/pages/signUpPage.html" class="btn-primary btn-small">Sign Up</a>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">☰</button>
+        </nav>
+    </header>
 
-  <body>
-    <nav class="navbar">
-      <div class="logo">Urban Track</div>
-
-      <ul class="nav-links">
-        <li>
-          <a href="#hero">Home</a>
-        </li>
-        <li>
-          <a href="#about">About Us</a>
-        </li>
-        <li>
-          <a href="UrbanTrack/pages/signUpPage.html">Sign Up</a>
-        </li>
-        <li>
-          <a href="UrbanTrack/pages/login.html">Login</a>
-        </li>
-      </ul>
-    </nav>
-
-    <section id="hero" class="hero">
-      <div class="greeting">
-        <h1>Welcome to Urban Track</h1>
-        <p>Report and track community issues easily</p>
-      </div>
-      <h2>What We Offer</h2>
-      <div class="cards">
-        <div class="card">
-          <h3>Report Issues</h3>
-          <p>Log problems like potholes, broken lights, and more.</p>
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title animate-fade-up">Report Community Issues in Real-Time</h1>
+            <p class="hero-subtitle animate-fade-up delay-1">Fix potholes, broken lights, and drains with transparency.</p>
+            <div class="hero-form animate-fade-up delay-2">
+                <input type="text" placeholder="Enter location, e.g., Main Street, Downtown..." id="locationInput">
+                <a href="user-dashboard.html" class="btn-primary btn-large" id="reportCta">Report Issue →</a>
+            </div>
         </div>
-        <div class="card">
-          <h3>Track Progress</h3>
-          <p>See updates on reported issues in real time.</p>
-        </div>
-        <div class="card">
-          <h3>Community Support</h3>
-          <p>Work together to improve your area.</p>
-        </div>
-      </div>
     </section>
 
-    <!-- <section class="features">
-      <h2>What You Can Do</h2>
-
-      <div class="card">
-        <div class="card">
-          <h3>Report Issues</h3>
-          <p>Log problems like potholes, broken lights, and more.</p>
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Why UrbanTrack?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"></div>
+                    <h3>Track Issues</h3>
+                    <p>Monitor community problems on an interactive map in real-time</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"></div>
+                    <h3>Upvote Priority</h3>
+                    <p>Vote on issues that matter most to increase visibility</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"></div>
+                    <h3>Real-time Updates</h3>
+                    <p>Get instant notifications when issues are resolved</p>
+                </div>
+            </div>
         </div>
-
-        <div class="card">
-          <h3>Track Progress</h3>
-          <p>See updates on reported issues in real time.</p>
-        </div>
-
-        <div class="card">
-          <h3>Community Support</h3>
-          <p>Work together to improve your area.</p>
-        </div>
-      </div>
-    </section> -->
-
-    <section class="how-it-works">
-      <h2>How It Works</h2>
-
-      <div class="steps">
-        <div class="step">
-          <h3>1. Report an Issue</h3>
-          <p>
-            Use our easy form to submit details about the problem, including
-            photos and location.
-          </p>
-        </div>
-
-        <div class="step">
-          <h3>2. Track Progress</h3>
-          <p>Receive real-time updates as authorities address your report.</p>
-        </div>
-
-        <div class="step">
-          <h3>3. Make a Difference</h3>
-          <p>
-            Join a community of engaged citizens improving their neighborhoods.
-          </p>
-        </div>
-      </div>
     </section>
 
-    <section id="about" class="about">
-      <h2>About Us</h2>
-      <br />
-      <p>
-        Urban Track is a smart platform designed to help communities report and
-        manage public issues quickly and efficiently. Our mission is to empower
-        citizens to take an active role in maintaining their cities.
-      </p>
-      <br /><br />
-      <p>
-        Founded in 2026, Urban Track connects residents with local authorities,
-        ensuring that problems like infrastructure issues, safety concerns, and
-        environmental hazards are addressed promptly.
-      </p>
-      <br /><br />
-      <p>
-        Join thousands of users who are already making a difference in their
-        communities. Together, we can build better cities for everyone.
-      </p>
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-icon"></div>
+                    <h3>Submit Report</h3>
+                    <p>Fill out a simple form with location and issue details</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-icon"></div>
+                    <h3>Community Upvotes</h3>
+                    <p>Other residents vote to prioritize urgent issues</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-icon"></div>
+                    <h3>Admin Resolves</h3>
+                    <p>Local authorities take action and update status</p>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section class="testimonials">
-      <h2>What Our Users Say</h2>
-
-      <div class="testimonial-cards">
-        <div class="testimonial">
-          <p>
-            "Urban Track made it so easy to report the pothole on my street. It
-            was fixed within a week!"
-          </p>
-          <cite>- Sxolile Macanda, Resident</cite>
+    <section id="about" class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Community Says</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-icon" style="font-size:2.5rem;margin-bottom:1rem;">👥</div>
+                    <p class="testimonial-quote">"UrbanTrack helped fix the streetlight outside my home in just 3 days. Amazing response time!"</p>
+                    <p class="testimonial-name">Sarah Johnson</p>
+                    <p class="testimonial-role">Downtown Resident</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-icon" style="font-size:2.5rem;margin-bottom:1rem;">👥</div>
+                    <p class="testimonial-quote">"Finally, a transparent way to report issues. I can track progress and see real results."</p>
+                    <p class="testimonial-name">Michael Chen</p>
+                    <p class="testimonial-role">Business Owner</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-icon" style="font-size:2.5rem;margin-bottom:1rem;">👥</div>
+                    <p class="testimonial-quote">"This platform has strengthened our neighborhood. We're working together to improve our city."</p>
+                    <p class="testimonial-name">Emily Rodriguez</p>
+                    <p class="testimonial-role">Community Leader</p>
+                </div>
+            </div>
         </div>
-
-        <div class="testimonial">
-          <p>
-            "I love seeing the progress updates. It keeps me informed and
-            engaged."
-          </p>
-          <cite>- Nkanyiso Msinga, Community Member</cite>
-        </div>
-
-        <div class="testimonial">
-          <p>
-            "This platform has transformed how we handle public issues in our
-            city."
-          </p>
-          <cite>- Mayor Zethembe Mthiyane</cite>
-        </div>
-      </div>
     </section>
 
-    <footer>
-      <div class="footer-content">
-        <div class="footer-section">
-          <h3>Urban Track</h3>
-          <p>Empowering communities to improve their cities.</p>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="user-dashboard.html">Dashboard</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>UrbanTrack</h4>
+                    <p>Making communities better, one report at a time.</p>
+                    <p style="margin-top: 0.5rem;">
+                        <a href="UrbanTrack/pages/login.html" style="color: #38bdf8;">Login</a> |
+                        <a href="UrbanTrack/pages/signUpPage.html" style="color: #38bdf8;">Sign Up</a>
+                    </p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 UrbanTrack. All rights reserved.</p>
+            </div>
         </div>
-        <div class="footer-section">
-          <h3>Quick Links</h3>
-          <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About Us</a></li>
-            <li><a href="pages/signUpPage.html">Sign Up</a></li>
-            <li><a href="pages/login.html">Login</a></li>
-          </ul>
-        </div>
-        <div class="footer-section">
-          <h3>Contact</h3>
-          <p>Email: info@urbantrack.com</p>
-          <p>Phone: (123) 456-7890</p>
-        </div>
-      </div>
-      <p>© 2026 Urban Track | All Rights Reserved</p>
     </footer>
 
-    <script src="js/main.js"></script>
-  </body>
+    <script>
+        (function () {
+            // Mobile menu toggle
+            const mobileBtn = document.getElementById('mobileMenuBtn');
+            const navLinks = document.querySelector('.nav-links');
+            if (mobileBtn && navLinks) {
+                mobileBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const isOpen = navLinks.style.display === 'flex' && window.innerWidth <= 768;
+                    if (isOpen) {
+                        navLinks.style.display = 'none';
+                    } else if (window.innerWidth <= 768) {
+                        Object.assign(navLinks.style, {
+                            display: 'flex',
+                            flexDirection: 'column',
+                            position: 'absolute',
+                            top: '70px',
+                            left: '0',
+                            right: '0',
+                            backgroundColor: 'rgba(15, 23, 42, 0.96)',
+                            backdropFilter: 'blur(20px)',
+                            padding: '1.5rem',
+                            gap: '1.2rem',
+                            borderBottom: '1px solid rgba(56,189,248,0.3)',
+                            zIndex: '999'
+                        });
+                    }
+                });
+                window.addEventListener('resize', function () {
+                    if (window.innerWidth > 768) {
+                        Object.assign(navLinks.style, {
+                            display: 'flex',
+                            flexDirection: 'row',
+                            position: 'relative',
+                            top: 'auto',
+                            backgroundColor: 'transparent',
+                            padding: '0',
+                            gap: '2rem',
+                            borderBottom: 'none'
+                        });
+                    } else if (navLinks.style.display !== 'flex') {
+                        navLinks.style.display = 'none';
+                    }
+                });
+            }
+
+            // Report button with toast
+            const locationField = document.getElementById('locationInput');
+            const reportBtn = document.getElementById('reportCta');
+            if (locationField && reportBtn) {
+                reportBtn.addEventListener('click', function (e) {
+                    const locationVal = locationField.value.trim();
+                    if (locationVal !== '') {
+                        showToast('📍 Preparing report for: ' + locationVal + ' — redirecting to dashboard.', 'linear-gradient(135deg, #0ea5e9, #4f46e5)');
+                        sessionStorage.setItem('urbanTrack_lastLocation', locationVal);
+                    } else {
+                        e.preventDefault();
+                        showToast('📍 Please enter a location first to continue.', '#f59e0b', '#0f172a');
+                    }
+                });
+            }
+
+            function showToast(msg, bg, color) {
+                const toast = document.createElement('div');
+                toast.textContent = msg;
+                Object.assign(toast.style, {
+                    position: 'fixed',
+                    bottom: '20px',
+                    left: '20px',
+                    background: bg || 'linear-gradient(135deg,#0ea5e9,#4f46e5)',
+                    color: color || 'white',
+                    padding: '10px 20px',
+                    borderRadius: '40px',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    zIndex: '9999',
+                    boxShadow: '0 6px 14px rgba(0,0,0,0.3)',
+                    transition: 'opacity 0.4s'
+                });
+                document.body.appendChild(toast);
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 500);
+                }, 2000);
+            }
+
+            // Smooth scroll
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId && targetId !== '#') {
+                        const targetEl = document.querySelector(targetId);
+                        if (targetEl) {
+                            e.preventDefault();
+                            targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }
+                });
+            });
+        })();
+    </script>
+
+</body>
 </html>
