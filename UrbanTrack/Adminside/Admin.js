@@ -1,6 +1,4 @@
-// ==============================
-// SAMPLE DATA (replace with backend later)
-// ==============================
+
 const issues = [
     { id: 1, location: "Braamfontein", category: "Road", status: "pending", upvotes: 12 },
     { id: 2, location: "Soweto", category: "Water", status: "in-progress", upvotes: 5 },
@@ -8,9 +6,7 @@ const issues = [
     { id: 4, location: "Midrand", category: "Road", status: "pending", upvotes: 8 }
 ];
 
-// ==============================
-// LOAD DASHBOARD ON START
-// ==============================
+
 document.addEventListener("DOMContentLoaded", () => {
     loadStats();
     loadTable();
@@ -18,9 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupSidebar();
 });
 
-// ==============================
-// STATS CARDS
-// ==============================
+
 function loadStats() {
     const total = issues.length;
     const pending = issues.filter(i => i.status === "pending").length;
@@ -33,9 +27,7 @@ function loadStats() {
     document.getElementById("resolvedIssues").textContent = resolved;
 }
 
-// ==============================
-// TABLE RENDERING
-// ==============================
+
 function loadTable() {
     const table = document.getElementById("adminIssuesTable");
     table.innerHTML = "";
@@ -67,9 +59,7 @@ function loadTable() {
     });
 }
 
-// ==============================
-// UPDATE STATUS
-// ==============================
+
 function updateStatus(id, newStatus) {
     const issue = issues.find(i => i.id === id);
     if (issue) {
@@ -79,9 +69,7 @@ function updateStatus(id, newStatus) {
     }
 }
 
-// ==============================
-// DELETE ISSUE
-// ==============================
+
 function deleteIssue(id) {
     const index = issues.findIndex(i => i.id === id);
     if (index !== -1) {
@@ -92,17 +80,13 @@ function deleteIssue(id) {
     }
 }
 
-// ==============================
-// EDIT ISSUE (simple alert for now)
-// ==============================
+
 function editIssue(id) {
     const issue = issues.find(i => i.id === id);
     alert(`Edit Issue:\nLocation: ${issue.location}\nCategory: ${issue.category}`);
 }
 
-// ==============================
-// SIMPLE BAR CHART
-// ==============================
+
 function loadChart() {
     const chart = document.getElementById("weeklyChart");
     chart.innerHTML = "";
@@ -133,9 +117,6 @@ function loadChart() {
     });
 }
 
-// ==============================
-// SIDEBAR NAVIGATION
-// ==============================
 function setupSidebar() {
     const links = document.querySelectorAll(".sidebar-link");
 
