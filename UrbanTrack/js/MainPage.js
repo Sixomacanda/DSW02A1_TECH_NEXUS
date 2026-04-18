@@ -367,7 +367,7 @@ function initLogin() {
                 setCurrentUser(adminUser);
                 showToast('Welcome Admin! Redirecting to Admin dashboard...');
                 setTimeout(() => {
-                    window.location.href = "../Adminside/Admin.html";
+                    window.location.href = "../Adminside/AdminDashboard.html";
                 }, 1200);
                 return;
             }
