@@ -63,7 +63,7 @@
     </div>
     <div class="topbar-right">
       <div class="search-box">
-        <span>🔍</span>
+        <span></span>
         <input type="text" placeholder="Search issues, users…" id="globalSearch" oninput="handleSearch(this.value)">
       </div>
     </div>
@@ -421,8 +421,8 @@ function renderPending() {
       <td style="font-size:.82rem;color:var(--text-secondary);max-width:280px;">"${u.reason}"</td>
       <td>
         <div class="action-row">
-          <button class="btn btn-success" style="padding:.45rem 1rem;font-size:.78rem;" onclick="approveUser(${u.id})">✅ Approve</button>
-          <button class="btn btn-danger" style="padding:.45rem 1rem;font-size:.78rem;" onclick="suspendUser(${u.id})">🚫 Reject</button>
+          <button class="btn btn-success" style="padding:.45rem 1rem;font-size:.78rem;" onclick="approveUser(${u.id})">Approve</button>
+          <button class="btn btn-danger" style="padding:.45rem 1rem;font-size:.78rem;" onclick="suspendUser(${u.id})"> Reject</button>
         </div>
       </td>
     </tr>`).join('') : `<tr><td colspan="4"><div class="empty-state"><div class="empty-icon">✅</div><p>No pending approvals. All users reviewed!</p></div></td></tr>`;
