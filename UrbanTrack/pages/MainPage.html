@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UrbanTrack — Report an Issue</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../Styles/MainPage.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+    <nav class="nav-container">
+        <a href="index.html" class="nav-brand">UrbanTrack</a>
+        <div class="nav-links">
+            <a href="index.html#home">Home</a>
+            <a href="index.html#how-it-works">How it works</a>
+            <a href="index.html#about">About</a>
+            <a href="login.html">Login</a>
+            <a href="user-dashboard.html" class="btn-primary btn-small">Dashboard</a>
+        </div>
+    </nav>
+</header>
+
+<!-- Page -->
+<div class="page-wrap">
+
+    <!-- Header -->
+    <div class="page-header animate-fade-up">
+        <div class="page-badge">New Report</div>
+        <h1 class="page-title">Report a Community Issue</h1>
+        <p class="page-subtitle">Help keep your neighbourhood safe. Issues with more upvotes get prioritised first.</p>
+    </div>
+
+    <!-- ===== FORM ===== -->
+    <div class="animate-fade-up delay-1">
+        <div class="form-card">
+
+            <div class="steps-indicator">
+                <div class="step-dot active" id="dot-1"><div class="step-circle">1</div><span class="step-label">Category</span></div>
+                <div class="step-dot"        id="dot-2"><div class="step-circle">2</div><span class="step-label">Details</span></div>
+                <div class="step-dot"        id="dot-3"><div class="step-circle">3</div><span class="step-label">Location</span></div>
+                <div class="step-dot"        id="dot-4"><div class="step-circle">4</div><span class="step-label">Review</span></div>
+            </div>
+
+            <!-- STEP 1 -->
+            <div class="form-section active" id="step-1">
+                <p class="section-heading">What type of issue is this?</p>
+                <p class="section-desc">Select the category that best describes the problem.</p>
+                <div class="category-grid">
+                    <button class="cat-btn" data-cat="Pothole / Road"><span class="cat-icon">🛣️</span>Pothole / Road</button>
+                    <button class="cat-btn" data-cat="Streetlight"><span class="cat-icon">💡</span>Streetlight</button>
+                    <button class="cat-btn" data-cat="Blocked Drain"><span class="cat-icon">🌊</span>Blocked Drain</button>
+                    <button class="cat-btn" data-cat="Littering / Waste"><span class="cat-icon">🗑️</span>Littering / Waste</button>
+                    <button class="cat-btn" data-cat="Graffiti / Vandalism"><span class="cat-icon">🎨</span>Graffiti</button>
+                    <button class="cat-btn" data-cat="Overgrown Vegetation"><span class="cat-icon">🌿</span>Vegetation</button>
+                    <button class="cat-btn" data-cat="Broken Pavement"><span class="cat-icon">🧱</span>Pavement</button>
+                    <button class="cat-btn" data-cat="Water Leak"><span class="cat-icon">💧</span>Water Leak</button>
+                    <button class="cat-btn" data-cat="Other"><span class="cat-icon">📋</span>Other</button>
+                </div>
+                <div class="field-group" style="margin-top:1.5rem;">
+                    <label>Severity <span class="req">*</span></label>
+                    <div class="severity-row">
+                        <button class="severity-btn" data-sev="low"    onclick="setSeverity(this,'low')">🟢 Low</button>
+                        <button class="severity-btn" data-sev="medium" onclick="setSeverity(this,'medium')">🟡 Medium</button>
+                        <button class="severity-btn" data-sev="high"   onclick="setSeverity(this,'high')">🔴 High / Urgent</button>
+                    </div>
+                </div>
+                <div class="form-nav">
+                    <span></span>
+                    <button class="btn-primary btn-medium" onclick="goStep(2)">Next: Details →</button>
+                </div>
+            </div>
+
+            <!-- STEP 2 -->
+            <div class="form-section" id="step-2">
+                <p class="section-heading">Describe the issue</p>
+                <p class="section-desc">The more detail you provide, the faster it gets resolved.</p>
+                <div class="field-group">
+                    <label>Title <span class="req">*</span></label>
+                    <input id="issueTitle" type="text" class="field-input" placeholder="e.g., Large pothole on Main Street near bus stop" maxlength="100">
+                    <div class="char-count" id="titleCount">0 / 100</div>
+                </div>
+                <div class="field-group">
+                    <label>Description <span class="req">*</span></label>
+                    <textarea id="issueDesc" class="field-input" placeholder="Describe the issue in detail — when did you first notice it? Any safety concerns?" maxlength="500"></textarea>
+                    <div class="char-count" id="descCount">0 / 500</div>
+                </div>
+                <div class="field-group">
+                    <label>Photos <span style="opacity:.5;font-size:.65rem;">(optional)</span></label>
+                    <div class="upload-zone" onclick="document.getElementById('photoInput').click()">
+                        <div class="upload-icon">📷</div>
+                        <p><strong>Click to upload</strong> or drag & drop</p>
+                        <p style="opacity:.6;margin-top:.25rem;">JPG, PNG · Max 5MB each · Up to 3 photos</p>
+                    </div>
+                    <input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="handlePhotos(this)">
+                    <div class="photo-preview" id="photoPreview"></div>
+                </div>
+                <div class="form-nav">
+                    <button class="btn-ghost" onclick="goStep(1)">← Back</button>
+                    <button class="btn-primary btn-medium" onclick="goStep(3)">Next: Location →</button>
+                </div>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="form-section" id="step-3">
+                <p class="section-heading">Where is the issue?</p>
+                <p class="section-desc">Be specific — a nearby landmark helps workers find it faster.</p>
+                <div class="field-group">
+                    <label>Street Address / Landmark <span class="req">*</span></label>
+                    <input id="issueAddress" type="text" class="field-input" placeholder="e.g., 14 Elm Street, near the Pick n Pay">
+                    <p class="field-hint">Include a street number or nearby landmark if possible.</p>
+                </div>
+                <div class="field-group">
+                    <label>Area / Suburb</label>
+                    <select id="issueArea" class="field-input">
+                        <option value="">Select area…</option>
+                        <option>Sandton CBD</option>
+                        <option>Rosebank</option>
+                        <option>Melville</option>
+                        <option>Soweto</option>
+                        <option>Midrand</option>
+                        <option>Fourways</option>
+                        <option>Randburg</option>
+                        <option>Alexandra</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="field-group">
+                    <label>Pin on Map</label>
+                    <div class="map-box" onclick="showToast('🗺️ Interactive map coming soon!')">
+                        <div class="map-marker m1"></div>
+                        <div class="map-marker m2"></div>
+                        <div class="map-marker m3"></div>
+                        <div class="map-pin-icon">📍</div>
+                        <p>Click to pin exact location</p>
+                        <small>Interactive map integration coming soon</small>
+                    </div>
+                </div>
+                <div class="field-group">
+                    <label>Additional Notes</label>
+                    <input id="issueNotes" type="text" class="field-input" placeholder="e.g., North side of road, past the traffic light">
+                </div>
+                <div class="form-nav">
+                    <button class="btn-ghost" onclick="goStep(2)">← Back</button>
+                    <button class="btn-primary btn-medium" onclick="goStep(4)">Next: Review →</button>
+                </div>
+            </div>
+
+            <!-- STEP 4 -->
+            <div class="form-section" id="step-4">
+                <p class="section-heading">Review your report</p>
+                <p class="section-desc">Double-check everything before submitting to the community.</p>
+                <div id="reviewContent"></div>
+                <div class="field-group" style="margin-top:1.25rem;">
+                    <label class="check-label">
+                        <input type="checkbox" id="agreeCheck">
+                        I confirm this is a genuine issue and the information provided is accurate.
+                    </label>
+                </div>
+                <div class="field-group">
+                    <label class="check-label">
+                        <input type="checkbox" id="notifyCheck" checked>
+                        Notify me when this issue is updated or resolved.
+                    </label>
+                </div>
+                <div class="form-nav">
+                    <button class="btn-ghost" onclick="goStep(3)">← Back</button>
+                    <button class="btn-primary btn-medium btn-success" id="submitBtn" onclick="submitReport()">✓ Submit Report</button>
+                </div>
+            </div>
+
+            <!-- SUCCESS -->
+            <div class="success-state" id="successState">
+                <div class="success-icon-wrap">✅</div>
+                <h2>Report Submitted!</h2>
+                <p>Your issue is now live and visible to the community.<br>Others can upvote it to boost its priority.</p>
+                <div class="issue-ref" id="issueRef">#UT-0000</div>
+                <p style="font-size:.8rem;opacity:.5;margin-bottom:1.5rem;">Save this reference number to track your report.</p>
+                <div class="success-actions">
+                    <button class="btn-primary btn-medium" onclick="location.reload()">+ Report Another Issue</button>
+                    <a href="user-dashboard.html" class="btn-ghost">View on Dashboard</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar animate-fade-up delay-2">
+
+        <div class="sidebar-card">
+            <p class="sidebar-title">📊 Community Stats</p>
+            <div class="stats-grid">
+                <div class="stat-item"><div class="stat-num">247</div><div class="stat-label">This Month</div></div>
+                <div class="stat-item"><div class="stat-num" style="color:var(--success);">189</div><div class="stat-label">Resolved</div></div>
+                <div class="stat-item"><div class="stat-num" style="color:var(--warning);">43</div><div class="stat-label">In Progress</div></div>
+                <div class="stat-item"><div class="stat-num" style="color:var(--destructive);">15</div><div class="stat-label">Urgent</div></div>
+            </div>
+        </div>
+
+        <div class="sidebar-card">
+            <p class="sidebar-title">🕐 Recent Reports</p>
+            <div class="feed-item">
+                <div class="feed-dot" style="background:var(--destructive)"></div>
+                <div class="feed-content">
+                    <div class="feed-title">Broken streetlight near school</div>
+                    <div class="feed-meta">Melville · 2h ago <span class="status-badge status-urgent">Urgent</span></div>
+                </div>
+                <div class="feed-votes">▲ 34</div>
+            </div>
+            <div class="feed-item">
+                <div class="feed-dot" style="background:var(--warning)"></div>
+                <div class="feed-content">
+                    <div class="feed-title">Pothole on Jan Smuts Ave</div>
+                    <div class="feed-meta">Rosebank · 5h ago <span class="status-badge status-pending">Pending</span></div>
+                </div>
+                <div class="feed-votes">▲ 21</div>
+            </div>
+            <div class="feed-item">
+                <div class="feed-dot" style="background:var(--success)"></div>
+                <div class="feed-content">
+                    <div class="feed-title">Blocked drain — flooding risk</div>
+                    <div class="feed-meta">Sandton · 1d ago <span class="status-badge status-resolved">Resolved</span></div>
+                </div>
+                <div class="feed-votes">▲ 18</div>
+            </div>
+            <div class="feed-item">
+                <div class="feed-dot" style="background:var(--warning)"></div>
+                <div class="feed-content">
+                    <div class="feed-title">Graffiti on community wall</div>
+                    <div class="feed-meta">Soweto · 2d ago <span class="status-badge status-pending">Pending</span></div>
+                </div>
+                <div class="feed-votes">▲ 9</div>
+            </div>
+            <div class="feed-item">
+                <div class="feed-dot" style="background:var(--destructive)"></div>
+                <div class="feed-content">
+                    <div class="feed-title">Water leak on Harris Road</div>
+                    <div class="feed-meta">Midrand · 2d ago <span class="status-badge status-urgent">Urgent</span></div>
+                </div>
+                <div class="feed-votes">▲ 7</div>
+            </div>
+        </div>
+
+        <div class="sidebar-card">
+            <p class="sidebar-title">💡 Reporting Tips</p>
+            <div class="tip-item"><span class="tip-icon">📸</span><span>Adding a photo increases resolution speed by 3×.</span></div>
+            <div class="tip-item"><span class="tip-icon">📍</span><span>Include a nearby landmark or street number for accuracy.</span></div>
+            <div class="tip-item"><span class="tip-icon">👍</span><span>Share your report so neighbours can upvote and boost priority.</span></div>
+            <div class="tip-item"><span class="tip-icon">🔔</span><span>Enable notifications to be updated when status changes.</span></div>
+        </div>
+
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    let currentStep = 1, selectedCategory = '', selectedSeverity = '', uploadedPhotos = [];
+
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedCategory = btn.dataset.cat;
+        });
+    });
+
+    function setSeverity(el, sev) {
+        document.querySelectorAll('.severity-btn').forEach(b => b.classList.remove('sel-low','sel-med','sel-hig'));
+        selectedSeverity = sev;
+        el.classList.add({ low:'sel-low', medium:'sel-med', high:'sel-hig' }[sev]);
+    }
+
+    ['issueTitle:titleCount:100','issueDesc:descCount:500'].forEach(s => {
+        const [inp, cnt, max] = s.split(':');
+        const el = document.getElementById(inp), co = document.getElementById(cnt);
+        if (!el || !co) return;
+        el.addEventListener('input', () => {
+            const n = el.value.length;
+            co.textContent = n + ' / ' + max;
+            co.className = 'char-count' + (n >= max ? ' over' : n > max * .85 ? ' warn' : '');
+        });
+    });
+
+    function goStep(n) {
+        if (n > currentStep) {
+            if (currentStep === 1 && !selectedCategory)  { showToast('⚠️ Please select a category.'); return; }
+            if (currentStep === 1 && !selectedSeverity)  { showToast('⚠️ Please select a severity level.'); return; }
+            if (currentStep === 2 && !document.getElementById('issueTitle').value.trim()) { showToast('⚠️ Please add a title.'); return; }
+            if (currentStep === 2 && !document.getElementById('issueDesc').value.trim())  { showToast('⚠️ Please add a description.'); return; }
+            if (currentStep === 3 && !document.getElementById('issueAddress').value.trim()) { showToast('⚠️ Please enter the issue location.'); return; }
+        }
+        document.getElementById('step-'+currentStep).classList.remove('active');
+        document.getElementById('dot-'+currentStep).classList.remove('active');
+        document.getElementById('dot-'+currentStep).classList.add('done');
+        currentStep = n;
+        for (let i=1; i<n; i++) { document.getElementById('dot-'+i).classList.add('done'); document.getElementById('dot-'+i).classList.remove('active'); }
+        for (let i=n+1; i<=4; i++) { document.getElementById('dot-'+i).classList.remove('done','active'); }
+        document.getElementById('dot-'+n).classList.add('active');
+        document.getElementById('dot-'+n).classList.remove('done');
+        document.getElementById('step-'+n).classList.add('active');
+        if (n === 4) buildReview();
+    }
+
+    function buildReview() {
+        const sevColors = { low:'var(--success)', medium:'var(--warning)', high:'var(--destructive)' };
+        const rows = [
+            ['Category', selectedCategory, ''],
+            ['Severity', selectedSeverity.charAt(0).toUpperCase()+selectedSeverity.slice(1), sevColors[selectedSeverity]],
+            ['Title',    document.getElementById('issueTitle').value, ''],
+            ['Address',  document.getElementById('issueAddress').value, ''],
+            ['Area',     document.getElementById('issueArea').value || '—', ''],
+            ['Photos',   uploadedPhotos.length > 0 ? uploadedPhotos.length+' attached' : 'None', ''],
+        ];
+        let html = '<div class="review-table">';
+        rows.forEach(([k,v,c]) => {
+            html += `<div class="review-row"><span class="review-key">${k}</span><span class="review-val" style="${c?'color:'+c+';':''}">${v||'—'}</span></div>`;
+        });
+        html += '</div>';
+        const desc = document.getElementById('issueDesc').value;
+        if (desc) html += `<div style="padding:1rem;background:rgba(255,255,255,.04);border:1px solid var(--glass-border);border-radius:var(--radius);font-size:.875rem;color:var(--text-secondary);line-height:1.7;margin-bottom:1rem;">${desc}</div>`;
+        document.getElementById('reviewContent').innerHTML = html;
+    }
+
+    function handlePhotos(input) {
+        const files = Array.from(input.files).slice(0, 3 - uploadedPhotos.length);
+        files.forEach(file => {
+            if (file.size > 5*1024*1024) { showToast('⚠️ '+file.name+' exceeds 5MB.'); return; }
+            const r = new FileReader();
+            r.onload = e => { uploadedPhotos.push(e.target.result); renderPhotos(); };
+            r.readAsDataURL(file);
+        });
+    }
+    function renderPhotos() {
+        const p = document.getElementById('photoPreview'); p.innerHTML = '';
+        uploadedPhotos.forEach((src,i) => {
+            const t = document.createElement('div'); t.className = 'photo-thumb';
+            t.innerHTML = `<img src="${src}" alt="photo"><button class="photo-remove" onclick="removePhoto(${i})">×</button>`;
+            p.appendChild(t);
+        });
+    }
+    function removePhoto(i) { uploadedPhotos.splice(i,1); renderPhotos(); }
+
+    function submitReport() {
+        if (!document.getElementById('agreeCheck').checked) { showToast('⚠️ Please confirm the declaration.'); return; }
+        const btn = document.getElementById('submitBtn');
+        btn.textContent = '⏳ Submitting…'; btn.disabled = true;
+        setTimeout(() => {
+            document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+            document.querySelector('.steps-indicator').style.display = 'none';
+            document.getElementById('issueRef').textContent = '#UT-'+Math.floor(1000+Math.random()*9000);
+            document.getElementById('successState').classList.add('active');
+        }, 1400);
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg; t.classList.add('show');
+        clearTimeout(t._t);
+        t._t = setTimeout(() => t.classList.remove('show'), 3000);
+    }
+</script>
+</body>
+</html>
