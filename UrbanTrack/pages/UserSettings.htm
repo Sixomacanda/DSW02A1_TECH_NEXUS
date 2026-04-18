@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UrbanTrack — Account Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../Styles/userSettings.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <nav class="nav-container">
+    <a href="index.html" class="nav-brand">UrbanTrack</a>
+    <div class="nav-right">
+      <a href="MainPage.html" class="nav-link">← Home</a>
+      <div class="user-pill">
+        <div class="user-av">JD</div>
+        <span id="settingsHeaderName">User</span>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- Page -->
+<div class="page">
+
+  <!-- Left Nav -->
+  <div class="settings-nav fu">
+    <div class="settings-nav-title">Account</div>
+    <button class="snav-item active" onclick="showSection('profile',this)"><span class="sicon"></span> Profile</button>
+    <button class="snav-item" onclick="showSection('security',this)"><span class="sicon"></span> Security</button>
+    <button class="snav-item" onclick="showSection('notifications',this)"><span class="sicon"></span> Notifications</button>
+    <button class="snav-item" onclick="showSection('privacy',this)"><span class="sicon"></span> Privacy</button>
+    <button class="snav-item" onclick="showSection('sessions',this)"><span class="sicon"></span> Sessions</button>
+    <div class="snav-divider"></div>
+    <div class="settings-nav-title">Danger</div>
+    <button class="snav-item danger" onclick="showSection('danger',this)"><span class="sicon">⚠️</span> Delete Account</button>
+  </div>
+
+  <!-- Right Panel -->
+  <div class="settings-panel">
+
+    <!-- ===== PROFILE ===== -->
+    <div class="panel-section active" id="section-profile">
+
+      <div class="settings-card fu d1">
+        <div class="card-header">
+          <div><div class="card-title">Profile Information</div><div class="card-sub">Update your name, bio and public details</div></div>
+        </div>
+        <div class="card-body">
+          <!-- Avatar -->
+          <div class="avatar-row">
+            <div class="avatar-large" id="avatarDisplay">JD
+              <div class="avatar-edit-btn" onclick="showToast('Photo upload coming soon','warn')">✏️</div>
+            </div>
+            <div class="avatar-info">
+              <h3 id="avatarName">Jane Doe</h3>
+              <p>Community Member · Rosebank</p>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label>First Name <span style="color:var(--accent-hover)">*</span></label>
+              <input type="text" id="firstName" value="Jane" placeholder="First name">
+            </div>
+            <div class="field">
+              <label>Last Name <span style="color:var(--accent-hover)">*</span></label>
+              <input type="text" id="lastName" value="Doe" placeholder="Last name">
+            </div>
+          </div>
+
+          <div class="form-row single">
+            <div class="field">
+              <label>Display Name</label>
+              <input type="text" id="displayName" value="Jane D." placeholder="How your name appears on reports">
+              <span class="field-hint">This is the name shown on your public reports and upvotes.</span>
+            </div>
+          </div>
+
+          <div class="form-row single">
+            <div class="field">
+              <label>Email Address <span style="color:var(--accent-hover)">*</span></label>
+              <input type="email" id="emailField" value="jane@email.com" placeholder="your@email.com">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label>Phone Number</label>
+              <input type="tel" id="phoneField" value="+27 82 000 0000" placeholder="+27 82 000 0000">
+            </div>
+            <div class="field">
+              <label>Area / Suburb</label>
+              <select id="areaField">
+                <option>Rosebank</option>
+                <option>Sandton CBD</option>
+                <option>Melville</option>
+                <option>Soweto</option>
+                <option>Midrand</option>
+                <option>Fourways</option>
+                <option>Randburg</option>
+                <option>Alexandra</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row single">
+            <div class="field">
+              <label>Bio <span style="font-size:.65rem;opacity:.5;">(optional)</span></label>
+              <textarea id="bioField" placeholder="Tell the community a bit about yourself…">Longtime Rosebank resident passionate about keeping our streets safe and clean.</textarea>
+            </div>
+          </div>
+
+          <div class="save-row">
+            <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+            <button class="btn btn-ghost" onclick="resetProfile()">Discard</button>
+            <span class="saved-msg" id="profileSavedMsg">✓ Profile updated!</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== SECURITY ===== -->
+    <div class="panel-section" id="section-security">
+
+      <!-- Change Password -->
+      <div class="settings-card fu d1">
+        <div class="card-header">
+          <div><div class="card-title">Change Password</div><div class="card-sub">Use a strong password you don't use elsewhere</div></div>
+        </div>
+        <div class="card-body">
+          <div class="form-row single">
+            <div class="field">
+              <label>Current Password</label>
+              <div class="pw-wrap">
+                <input type="password" id="currentPw" placeholder="Enter your current password">
+                <button class="pw-toggle" onclick="togglePw('currentPw',this)">👁</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="field">
+              <label>New Password</label>
+              <div class="pw-wrap">
+                <input type="password" id="newPw" placeholder="Minimum 8 characters" oninput="checkStrength(this.value)">
+                <button class="pw-toggle" onclick="togglePw('newPw',this)">👁</button>
+              </div>
+              <div class="pw-strength-bar"><div class="pw-strength-fill" id="pwFill"></div></div>
+              <div class="pw-label" id="pwLabel" style="font-size:.7rem;color:var(--text-secondary);opacity:.5;margin-top:.25rem;">Enter a password</div>
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="field">
+              <label>Confirm New Password</label>
+              <div class="pw-wrap">
+                <input type="password" id="confirmPw" placeholder="Re-enter new password" oninput="checkMatch()">
+                <button class="pw-toggle" onclick="togglePw('confirmPw',this)">👁</button>
+              </div>
+              <span class="field-hint" id="matchHint"></span>
+            </div>
+          </div>
+          <div class="save-row">
+            <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+            <span class="saved-msg" id="pwSavedMsg">✓ Password changed!</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two-Factor Auth -->
+      <div class="settings-card fu d2">
+        <div class="card-header">
+          <div><div class="card-title">Two-Factor Authentication</div><div class="card-sub">Add an extra layer of security to your account</div></div>
+        </div>
+        <div class="card-body" style="padding-top:1.25rem;padding-bottom:1.25rem;">
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <h4>Authenticator App (TOTP)</h4>
+              <p>Use Google Authenticator or Authy to generate codes</p>
+            </div>
+            <label class="toggle"><input type="checkbox" onchange="showToast('2FA via authenticator app coming soon','warn')"><div class="toggle-slider"></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <h4>SMS Verification</h4>
+              <p>Receive a one-time code to +27 82 *** 0000</p>
+            </div>
+            <label class="toggle"><input type="checkbox" checked onchange="showToast('SMS 2FA settings saved','success')"><div class="toggle-slider"></div></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Linked Accounts -->
+      <div class="settings-card fu d3">
+        <div class="card-header">
+          <div><div class="card-title">Linked Accounts</div><div class="card-sub">Connect social accounts for easier login</div></div>
+        </div>
+        <div class="card-body" style="padding-top:1.1rem;padding-bottom:1.1rem;">
+          <div class="linked-item">
+            <div class="linked-left">
+              <div class="linked-logo">G</div>
+              <div><div class="linked-name">Google</div><div class="linked-status">Not connected</div></div>
+            </div>
+            <button class="btn-link" onclick="showToast('Google login coming soon','warn')">Connect</button>
+          </div>
+          <div class="linked-item">
+            <div class="linked-left">
+              <div class="linked-logo">f</div>
+              <div><div class="linked-name">Facebook</div><div class="linked-status">Not connected</div></div>
+            </div>
+            <button class="btn-link" onclick="showToast('Facebook login coming soon','warn')">Connect</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== NOTIFICATIONS ===== -->
+    <div class="panel-section" id="section-notifications">
+      <div class="settings-card fu d1">
+        <div class="card-header">
+          <div><div class="card-title">Email Notifications</div><div class="card-sub">Choose what you want to hear about</div></div>
+        </div>
+        <div class="card-body" style="padding-top:1.1rem;padding-bottom:1.1rem;">
+          <div class="toggle-row">
+            <div class="toggle-info"><h4>Issue Status Updates</h4><p>When your report moves to In Progress or Resolved</p></div>
+            <label class="toggle"><input type="checkbox" checked onchange="saveToggle(this,'Issue status updates')"><div class="toggle-slider"></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><h4>Upvote Milestones</h4><p>When your report hits 10, 25, 50+ upvotes</p></div>
+            <label class="toggle"><input type="checkbox" checked onchange="saveToggle(this,'Upvote milestones')"><div class="toggle-slider"></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><h4>New Issues Nearby</h4><p>When a new report is submitted in your area</p></div>
+            <label class="toggle"><input type="checkbox" onchange="saveToggle(this,'Nearby issues')"><div class="toggle-slider"></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><h4>Community Digest</h4><p>Weekly summary of issues and resolutions in your area</p></div>
+            <label class="toggle"><input type="checkbox" checked onchange="saveToggle(this,'Community digest')"><div class="toggle-slider"></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><h4>Admin Announcements</h4><p>Important platform updates and maintenance notices</p></div>
+            <label class="toggle"><input type="checkbox" checked onchange="saveToggle(this,'Admin announcements')"><div class="toggle-slider"></div></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card fu d2">
+        <div class="card-header">
+          <div><div class="card-title">Push Notifications</div><div class="card-sub">Browser and mobile push alerts</div></div>
+        </div>
+        <div class="card-body" style="padding-top:1.1rem;padding-bottom:1.1rem;">
+          <div class="toggle-row">
+            <div class="toggle-info"><h4>Enable Push Notifications</h4><p>Allow UrbanTrack to send browser notifications</p></div>
+            <label class="toggle"><input type="checkbox" onchange="requestPush(this)"><div class="toggle-slider"></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><h4>Urgent Issue Alerts</h4><p>Immediate alert when a high-priority issue appears near you</p></div>
+            <label class="toggle"><input type="checkbox" onchange="saveToggle(this,'Urgent alerts')"><div class="toggle-slider"></div></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PRIVACY ===== -->
+    <div class="panel-section" id="section-privacy">
+      <div class="settings-card fu d1">
+        <div class="card-header">
+          <div><div class="card-title">Privacy Settings</div><div class="card-sub">Control how your information is visible to others</div></div>
+        </div>
+        <div class="card-body" style="padding-top:1.1rem;padding-bottom:1.1rem;">
+          <div class="toggle-row">
+            <div class="toggle-info"><h4>Public Profile</h4><p>Allow other community members to see your name on reports</p></div>
+            <label class="toggle"><input type="checkbox" checked onchange="saveToggle(this,'Public profile')"><div class="toggle-slider"></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><h4>Show Upvotes Publicly</h4><p>Display your upvoting activity on issue cards</p></div>
+            <label class="toggle"><input type="checkbox" onchange="saveToggle(this,'Public upvotes')"><div class="toggle-slider"></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><h4>Location Precision</h4><p>Share exact location on reports (vs. area-only)</p></div>
+            <label class="toggle"><input type="checkbox" checked onchange="saveToggle(this,'Location precision')"><div class="toggle-slider"></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info"><h4>Analytics & Improvement</h4><p>Help us improve UrbanTrack by sharing anonymised usage data</p></div>
+            <label class="toggle"><input type="checkbox" checked onchange="saveToggle(this,'Analytics')"><div class="toggle-slider"></div></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card fu d2">
+        <div class="card-header">
+          <div><div class="card-title">Data & Export</div><div class="card-sub">Download or manage your personal data</div></div>
+        </div>
+        <div class="card-body">
+          <p style="font-size:.875rem;color:var(--text-secondary);opacity:.75;margin-bottom:1.25rem;line-height:1.7;">You can request a full export of your account data including all reports you've submitted, upvotes, and account details. Exports are delivered to your registered email within 24 hours.</p>
+          <button class="btn btn-ghost" onclick="requestExport()"> Request Data Export</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SESSIONS ===== -->
+    <div class="panel-section" id="section-sessions">
+      <div class="settings-card fu d1">
+        <div class="card-header">
+          <div><div class="card-title">Active Sessions</div><div class="card-sub">Devices currently signed in to your account</div></div>
+        </div>
+        <div class="card-body" style="padding-top:1.1rem;padding-bottom:1.1rem;" id="sessionsList">
+          <div class="session-item">
+            <div style="display:flex;align-items:center;gap:.9rem;">
+              <span class="session-icon"></span>
+              <div class="session-info"><h4>Chrome on Windows <span class="session-current">Current</span></h4><p>Johannesburg, ZA · Active now</p></div>
+            </div>
+          </div>
+          <div class="session-item">
+            <div style="display:flex;align-items:center;gap:.9rem;">
+              <span class="session-icon"></span>
+              <div class="session-info"><h4>Safari on iPhone</h4><p>Johannesburg, ZA · 2 hours ago</p></div>
+            </div>
+            <button class="btn-revoke" onclick="revokeSession(this,'Safari on iPhone')">Revoke</button>
+          </div>
+          <div class="session-item">
+            <div style="display:flex;align-items:center;gap:.9rem;">
+              <span class="session-icon"></span>
+              <div class="session-info"><h4>Firefox on MacOS</h4><p>Cape Town, ZA · 3 days ago</p></div>
+            </div>
+            <button class="btn-revoke" onclick="revokeSession(this,'Firefox on MacOS')">Revoke</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-card fu d2">
+        <div class="card-header">
+          <div><div class="card-title">Sign Out Everywhere</div><div class="card-sub">Revoke access from all devices at once</div></div>
+        </div>
+        <div class="card-body">
+          <p style="font-size:.875rem;color:var(--text-secondary);opacity:.75;margin-bottom:1.25rem;line-height:1.7;">If you think your account may have been accessed without your permission, sign out of all sessions immediately. You'll need to log in again on each device.</p>
+          <button class="btn btn-warning" onclick="openModal('signoutAllModal')">Sign Out All Other Sessions</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== DANGER ZONE ===== -->
+    <div class="panel-section" id="section-danger">
+
+      <div class="settings-card fu d1">
+        <div class="card-header">
+          <div><div class="card-title" style="color:var(--warning);"></div>Sensitive Actions</div><div class="card-sub">These actions have significant consequences. Proceed carefully.</div></div>
+        </div>
+        <div class="card-body" style="padding-top:1.1rem;padding-bottom:1.1rem;">
+
+          <div class="danger-item">
+            <div class="danger-item-info">
+              <h4>Deactivate Account</h4>
+              <p>Temporarily hide your profile and reports. You can reactivate at any time by logging back in.</p>
+            </div>
+            <button class="btn btn-warning" onclick="openModal('deactivateModal')">Deactivate</button>
+          </div>
+
+          <div class="danger-item">
+            <div class="danger-item-info">
+              <h4>Export All Data</h4>
+              <p>Download a copy of all your reports, upvotes, and account information before taking any action.</p>
+            </div>
+            <button class="btn btn-ghost" onclick="requestExport()">Export</button>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="settings-card danger-card fu d2">
+        <div class="card-header">
+          <div><div class="card-title">Delete Account Permanently</div><div class="card-sub">This action is irreversible. All your data will be erased.</div></div>
+        </div>
+        <div class="card-body">
+          <p style="font-size:.875rem;color:var(--text-secondary);opacity:.8;line-height:1.75;margin-bottom:1.25rem;">Permanently deleting your account will:</p>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem;">
+            <li style="font-size:.85rem;color:var(--text-secondary);opacity:.75;display:flex;align-items:center;gap:.6rem;"><span style="color:var(--destructive);font-weight:700;">✕</span> Remove your profile and all personal information</li>
+            <li style="font-size:.85rem;color:var(--text-secondary);opacity:.75;display:flex;align-items:center;gap:.6rem;"><span style="color:var(--destructive);font-weight:700;">✕</span> Delete all reports and comments you've submitted</li>
+            <li style="font-size:.85rem;color:var(--text-secondary);opacity:.75;display:flex;align-items:center;gap:.6rem;"><span style="color:var(--destructive);font-weight:700;">✕</span> Remove your upvotes from all community issues</li>
+            <li style="font-size:.85rem;color:var(--text-secondary);opacity:.75;display:flex;align-items:center;gap:.6rem;"><span style="color:var(--destructive);font-weight:700;">✕</span> Cannot be undone — there is no recovery option</li>
+          </ul>
+          <button class="btn btn-danger" onclick="openModal('deleteModal')">Delete My Account Permanently</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- /settings-panel -->
+</div><!-- /page -->
+
+<!-- ===== MODALS ===== -->
+
+<!-- Delete Account Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal danger-modal">
+    <button class="modal-close-x" onclick="closeModal('deleteModal')">✕</button>
+    <div class="modal-icon"></div>
+    <div class="modal-title red">Delete Account Permanently</div>
+    <div class="modal-body">This will immediately and permanently delete your account, all your reports, and all associated data. <strong style="color:var(--destructive);">This cannot be undone.</strong></div>
+    <div class="modal-confirm-field">
+      <label>Type <strong>DELETE</strong> to confirm</label>
+      <input type="text" id="deleteConfirmInput" placeholder="Type DELETE here" oninput="checkDeleteConfirm()">
+    </div>
+    <div class="modal-confirm-field">
+      <label>Enter your password</label>
+      <input type="password" id="deletePasswordInput" placeholder="Your current password">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('deleteModal')">Cancel</button>
+      <button class="btn btn-danger" id="deleteConfirmBtn" disabled onclick="deleteAccount()">Delete Forever</button>
+    </div>
+  </div>
+</div>
+
+<!-- Deactivate Modal -->
+<div class="modal-overlay" id="deactivateModal">
+  <div class="modal">
+    <button class="modal-close-x" onclick="closeModal('deactivateModal')">✕</button>
+    <div class="modal-icon"></div>
+    <div class="modal-title">Deactivate Account</div>
+    <div class="modal-body">Your profile and reports will be hidden from the community. You can reactivate by simply logging back in at any time.</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('deactivateModal')">Cancel</button>
+      <button class="btn btn-warning" onclick="deactivateAccount()">Deactivate</button>
+    </div>
+  </div>
+</div>
+
+<!-- Sign Out All Modal -->
+<div class="modal-overlay" id="signoutAllModal">
+  <div class="modal">
+    <button class="modal-close-x" onclick="closeModal('signoutAllModal')">✕</button>
+    <div class="modal-icon"></div>
+    <div class="modal-title">Sign Out All Sessions?</div>
+    <div class="modal-body">You'll be signed out of all devices except this one. Any unsaved work on other devices will be lost.</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('signoutAllModal')">Cancel</button>
+      <button class="btn btn-warning" onclick="signOutAll()">Sign Out All</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../js/userSettings.js"></script>
+</body>
+</html>

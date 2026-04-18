@@ -14,11 +14,13 @@
     <nav class="nav-container">
         <a href="index.html" class="nav-brand">UrbanTrack</a>
         <div class="nav-links">
-            <a href="index.html#home">Home</a>
-            <a href="index.html#how-it-works">How it works</a>
-            <a href="index.html#about">About</a>
-            <a href="login.html">Login</a>
-            <a href="user-dashboard.html" class="btn-primary btn-small">Dashboard</a>
+            <a href="MainPage.html">Home</a>
+            <a href="UserSettings.htm">Settings</a>
+            <div id="mainUserInfo" style="display:flex;align-items:center;gap:.5rem;padding:0 .75rem;color:inherit;">
+                <div id="mainUserInitials" style="width:32px;height:32px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:#ffffff;color:#111111;font-weight:700;font-size:.85rem;">JD</div>
+                <span id="mainUserName" style="font-size:.95rem;">Jane Doe</span>
+            </div>
+            <button class="btn-primary btn-small" onclick="localStorage.removeItem('urbanTrack_currentUser'); location.href='../../homePage.html'" style="border:none;background:inherit;cursor:pointer;">Logout</button>
         </div>
     </nav>
 </header>
@@ -49,15 +51,15 @@
                 <p class="section-heading">What type of issue is this?</p>
                 <p class="section-desc">Select the category that best describes the problem.</p>
                 <div class="category-grid">
-                    <button class="cat-btn" data-cat="Pothole / Road"><span class="cat-icon">🛣️</span>Pothole / Road</button>
-                    <button class="cat-btn" data-cat="Streetlight"><span class="cat-icon">💡</span>Streetlight</button>
-                    <button class="cat-btn" data-cat="Blocked Drain"><span class="cat-icon">🌊</span>Blocked Drain</button>
-                    <button class="cat-btn" data-cat="Littering / Waste"><span class="cat-icon">🗑️</span>Littering / Waste</button>
-                    <button class="cat-btn" data-cat="Graffiti / Vandalism"><span class="cat-icon">🎨</span>Graffiti</button>
-                    <button class="cat-btn" data-cat="Overgrown Vegetation"><span class="cat-icon">🌿</span>Vegetation</button>
-                    <button class="cat-btn" data-cat="Broken Pavement"><span class="cat-icon">🧱</span>Pavement</button>
-                    <button class="cat-btn" data-cat="Water Leak"><span class="cat-icon">💧</span>Water Leak</button>
-                    <button class="cat-btn" data-cat="Other"><span class="cat-icon">📋</span>Other</button>
+                    <button class="cat-btn" data-cat="Pothole / Road"><span class="cat-icon"></span>Pothole / Road</button>
+                    <button class="cat-btn" data-cat="Streetlight"><span class="cat-icon"></span>Streetlight</button>
+                    <button class="cat-btn" data-cat="Blocked Drain"><span class="cat-icon"></span>Blocked Drain</button>
+                    <button class="cat-btn" data-cat="Littering / Waste"><span class="cat-icon"></span>Littering / Waste</button>
+                    <button class="cat-btn" data-cat="Graffiti / Vandalism"><span class="cat-icon"></span>Graffiti</button>
+                    <button class="cat-btn" data-cat="Overgrown Vegetation"><span class="cat-icon"></span>Vegetation</button>
+                    <button class="cat-btn" data-cat="Broken Pavement"><span class="cat-icon"></span>Pavement</button>
+                    <button class="cat-btn" data-cat="Water Leak"><span class="cat-icon"></span>Water Leak</button>
+                    <button class="cat-btn" data-cat="Other"><span class="cat-icon"></span>Other</button>
                 </div>
                 <div class="field-group" style="margin-top:1.5rem;">
                     <label>Severity <span class="req">*</span></label>
@@ -90,7 +92,7 @@
                 <div class="field-group">
                     <label>Photos <span style="opacity:.5;font-size:.65rem;">(optional)</span></label>
                     <div class="upload-zone" onclick="document.getElementById('photoInput').click()">
-                        <div class="upload-icon">📷</div>
+                        <div class="upload-icon"></div>
                         <p><strong>Click to upload</strong> or drag & drop</p>
                         <p style="opacity:.6;margin-top:.25rem;">JPG, PNG · Max 5MB each · Up to 3 photos</p>
                     </div>
@@ -133,7 +135,7 @@
                         <div class="map-marker m1"></div>
                         <div class="map-marker m2"></div>
                         <div class="map-marker m3"></div>
-                        <div class="map-pin-icon">📍</div>
+                        <div class="map-pin-icon"></div>
                         <p>Click to pin exact location</p>
                         <small>Interactive map integration coming soon</small>
                     </div>
@@ -180,7 +182,7 @@
                 <p style="font-size:.8rem;opacity:.5;margin-bottom:1.5rem;">Save this reference number to track your report.</p>
                 <div class="success-actions">
                     <button class="btn-primary btn-medium" onclick="location.reload()">+ Report Another Issue</button>
-                    <a href="user-dashboard.html" class="btn-ghost">View on Dashboard</a>
+                    <a href="UserDashboard.html" class="btn-ghost">View on Dashboard</a>
                 </div>
             </div>
 
@@ -191,7 +193,7 @@
     <div class="sidebar animate-fade-up delay-2">
 
         <div class="sidebar-card">
-            <p class="sidebar-title">📊 Community Stats</p>
+            <p class="sidebar-title">Community Stats</p>
             <div class="stats-grid">
                 <div class="stat-item"><div class="stat-num">247</div><div class="stat-label">This Month</div></div>
                 <div class="stat-item"><div class="stat-num" style="color:var(--success);">189</div><div class="stat-label">Resolved</div></div>
@@ -201,7 +203,7 @@
         </div>
 
         <div class="sidebar-card">
-            <p class="sidebar-title">🕐 Recent Reports</p>
+            <p class="sidebar-title">ecent Reports</p>
             <div class="feed-item">
                 <div class="feed-dot" style="background:var(--destructive)"></div>
                 <div class="feed-content">
@@ -245,11 +247,11 @@
         </div>
 
         <div class="sidebar-card">
-            <p class="sidebar-title">💡 Reporting Tips</p>
-            <div class="tip-item"><span class="tip-icon">📸</span><span>Adding a photo increases resolution speed by 3×.</span></div>
-            <div class="tip-item"><span class="tip-icon">📍</span><span>Include a nearby landmark or street number for accuracy.</span></div>
-            <div class="tip-item"><span class="tip-icon">👍</span><span>Share your report so neighbours can upvote and boost priority.</span></div>
-            <div class="tip-item"><span class="tip-icon">🔔</span><span>Enable notifications to be updated when status changes.</span></div>
+            <p class="sidebar-title">Reporting Tips</p>
+            <div class="tip-item"><span class="tip-icon">-</span><span>Adding a photo increases resolution speed by 3×.</span></div>
+            <div class="tip-item"><span class="tip-icon">-</span><span>Include a nearby landmark or street number for accuracy.</span></div>
+            <div class="tip-item"><span class="tip-icon">-</span><span>Share your report so neighbours can upvote and boost priority.</span></div>
+            <div class="tip-item"><span class="tip-icon">-</span><span>Enable notifications to be updated when status changes.</span></div>
         </div>
 
     </div>
@@ -258,6 +260,24 @@
 <div class="toast" id="toast"></div>
 
 <script>
+    function getInitials(name) {
+        if (!name) return 'U';
+        const parts = name.trim().split(/\s+/).filter(Boolean);
+        return parts.slice(0,2).map(p => p[0].toUpperCase()).join('') || 'U';
+    }
+
+    function initMainPageUser() {
+        const currentUser = JSON.parse(localStorage.getItem('urbanTrack_currentUser') || 'null');
+        const nameEl = document.getElementById('mainUserName');
+        const initialsEl = document.getElementById('mainUserInitials');
+        if (!currentUser || !nameEl || !initialsEl) return;
+        const displayName = currentUser.name || currentUser.email || 'User';
+        nameEl.textContent = displayName;
+        initialsEl.textContent = getInitials(displayName).slice(0,2);
+    }
+
+    document.addEventListener('DOMContentLoaded', initMainPageUser);
+
     let currentStep = 1, selectedCategory = '', selectedSeverity = '', uploadedPhotos = [];
 
     document.querySelectorAll('.cat-btn').forEach(btn => {
