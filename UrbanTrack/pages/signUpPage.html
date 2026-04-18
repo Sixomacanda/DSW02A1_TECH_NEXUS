@@ -26,14 +26,15 @@
      <form id="signupForm" novalidate>
       <div class="left">
         <div class="left-content">
-          <h1>Welcome Back to Urban Track</h1>
-          <h3>Empowering communities to improve their cities.</h3>
+          <h1>Create Account</h1><br><br>
+          <h2>Welcome to Urban Track</h2>
+          <h4>Empowering communities to improve their cities.</h4>
           <p>Join our community today and help make a difference in your city!</p>
         </div>
       </div>
       <div class="divider"></div>
         <div class="signup-container">
-        <h2>Create Account</h2>
+        
       
         <div class="form-group">
           <label for="surname">Surname</label>
@@ -59,27 +60,33 @@
         </div>
         <div class="form-group password-group">
           <label for="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="Signup-password"
-            placeholder="Enter your password"
-            required
-          />
-          <i class="fa-solid fa-eye"></i>
-          <i class="fa-solid fa-eye-slash hide"></i>
+          <div class="input-wrapper">
+            <input
+              type="password"
+              name="password"
+              id="Signup-password"
+              placeholder="Enter your password"
+              required
+            />
+            <i class="fa-solid fa-eye"></i>
+            <i class="fa-solid fa-eye-slash hide"></i>
+          </div>
+          <small class="error"></small>
         </div>
         <div class="form-group password-group">
           <label for="confirm-password">Confirm Password</label>
-          <input
-            type="password"
-            name="confirm-password"
-            id="Signup-confirm-password"
-            placeholder="Confirm your password"
-            required
-          />
-          <i class="fa-solid fa-eye"></i>
-          <i class="fa-solid fa-eye-slash hide"></i>
+          <div class="input-wrapper">
+            <input
+              type="password"
+              name="confirm-password"
+              id="Signup-confirm-password"
+              placeholder="Confirm your password"
+              required
+            />
+            <i class="fa-solid fa-eye"></i>
+            <i class="fa-solid fa-eye-slash hide"></i>
+          </div>
+          <small class="error"></small>
         </div>
         <button type="submit" id="sign" class="btn" name="signup">
           Sign Up
