@@ -1,72 +1,153 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <link rel="stylesheet" href="../Styles/passRecovery.css" />
-  </head>
-  <body>
-    <nav class="navbar">
-      <div class="logo">Urban Track</div>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UrbanTrack - Reset Password</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../Styles/passRecovery.css">
+</head>
+<body>
 
-      <!-- <ul class="nav-links">
-        <li><a href="../../homePage.html">Home</a></li>
-        <li><a href="signUpPage.html">Sign Up</a></li>
-      </ul> -->
-    </nav>
-    <a class="back" href="login.html"
-      ><i class="fa-solid fa-angle-left"></i>
-    </a>
-    <!-- <h1 class="heading">Password Recovery</h1> -->
-    <form action="/recover" method="POST" novalidate>
-        <h1 class="heading">Password Recovery</h1>
-      <div class="container">
-        <div class="form-group">
-          <p>Enter your email address to receive a password reset link.</p>
-          <br /><br />
-          <label for="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="example@gmail.com"
-            required
-          />
-          <small class="error"></small>
-          <button class="btn" id="resetBtn" type="button">
-            Send Reset Link
+<!-- Header -->
+<header class="header">
+  <a href="index.html" class="brand">UrbanTrack</a>
+  <div class="nav-links">
+    <a href="../../homePage.html">Home</a>
+    <a href="login.html">Login</a>
+    <a href="signUpPage.html">Sign Up</a>
+  </div>
+</header>
+
+<!-- Page -->
+<div class="page">
+  <div class="wrapper">
+
+    <!-- STEP 1: Email -->
+    <div class="step active" id="s1">
+      <div class="card">
+        <div class="dots">
+          <div class="dot active" id="d1a"></div>
+          <div class="dot" id="d2a"></div>
+          <div class="dot" id="d3a"></div>
+        </div>
+        <div class="icon-circle"></div>
+        <h1 class="card-title">Forgot Password?</h1>
+        <p class="card-sub">Enter your registered email address and we'll send you a 6-digit reset code.</p>
+
+        <div class="field">
+          <label>Email Address *</label>
+          <input type="email" id="emailIn" placeholder="your@email.com">
+          <span class="hint err" id="emailErr" style="display:none;"></span>
+        </div>
+
+        <button class="btn-main" id="sendBtn" onclick="sendCode()">
+          <div class="spinner" id="sp1"></div>
+          <span id="sendTxt">Send Reset Code</span>
+        </button>
+
+        <div class="footer-link">Remember your password? <a href="login.html">Back to Login</a></div>
+      </div>
+    </div>
+
+    <!-- STEP 2: OTP -->
+    <div class="step" id="s2">
+      <div class="card">
+        <div class="dots">
+          <div class="dot done"></div>
+          <div class="dot active"></div>
+          <div class="dot"></div>
+        </div>
+        <div class="icon-circle"></div>
+        <h1 class="card-title">Enter OTP Code</h1>
+        <p class="card-sub" id="otpSub">We sent a 6-digit code to <strong>your@email.com</strong>. Check your inbox.</p>
+
+        <div class="otp-row" id="otpRow">
+          <input class="otp-box" maxlength="1" type="text" inputmode="numeric">
+          <input class="otp-box" maxlength="1" type="text" inputmode="numeric">
+          <input class="otp-box" maxlength="1" type="text" inputmode="numeric">
+          <input class="otp-box" maxlength="1" type="text" inputmode="numeric">
+          <input class="otp-box" maxlength="1" type="text" inputmode="numeric">
+          <input class="otp-box" maxlength="1" type="text" inputmode="numeric">
+        </div>
+
+        <button class="btn-main" id="verifyBtn" onclick="verifyOtp()" disabled>
+          <div class="spinner" id="sp2"></div>
+          <span id="verifyTxt">Verify Code</span>
+        </button>
+
+        <div class="resend-row">
+          Didn't get it?
+          <button class="resend-btn" id="resendBtn" onclick="resend()" disabled>
+            Resend in <span id="timerTxt">60s</span>
           </button>
         </div>
+
+        <button class="btn-ghost" onclick="goTo(1)">← Try a different email</button>
       </div>
-    </form>
+    </div>
 
-    <script src="../js/main.js"></script>
-    <script>
-      document
-        .getElementById("resetBtn")
-        .addEventListener("click", function (e) {
-          e.preventDefault();
-          const emailInput = document.getElementById("email");
-          const emailValue = emailInput.value.trim();
+    <!-- STEP 3: New Password -->
+    <div class="step" id="s3">
+      <div class="card">
+        <div class="dots">
+          <div class="dot done"></div>
+          <div class="dot done"></div>
+          <div class="dot active"></div>
+        </div>
+        <div class="icon-circle"></div>
+        <h1 class="card-title">New Password</h1>
+        <p class="card-sub">Choose a strong password that you haven't used before.</p>
 
-          if (!emailValue) {
-            setError(emailInput, "Email is required.");
-          } else if (!validateEmail(emailValue)) {
-            setError(emailInput, "Please enter a valid email address.");
-          } else {
-            clearError(emailInput);
-            // Submit the form if valid
-            document.querySelector("form").submit();
-          }
-        });
-    </script>
-  </body>
+        <div class="field">
+          <label>New Password *</label>
+          <div class="pw-wrap">
+            <input type="password" id="pw1" placeholder="Minimum 8 characters" oninput="checkStr(); checkMatch();">
+            <button class="pw-eye" onclick="eyeToggle('pw1',this)" type="button">👁</button>
+          </div>
+          <div class="strength-wrap">
+            <div class="strength-bar"><div class="strength-fill" id="strFill"></div></div>
+            <div class="strength-txt" id="strTxt">Enter a password</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Confirm New Password *</label>
+          <div class="pw-wrap">
+            <input type="password" id="pw2" placeholder="Re-enter your new password" oninput="checkMatch();">
+            <button class="pw-eye" onclick="eyeToggle('pw2',this)" type="button">👁</button>
+          </div>
+          <span class="hint" id="matchHint"></span>
+        </div>
+
+        <button class="btn-main" id="resetBtn" onclick="doReset()">
+          <div class="spinner" id="sp3"></div>
+          <span id="resetTxt">Reset Password</span>
+        </button>
+      </div>
+    </div>
+    
+
+    <!-- STEP 4: Success -->
+    <div class="step" id="s4">
+      <div class="card" style="text-align:center;">
+        <div class="icon-circle green" style="margin-bottom:1.5rem;"></div>
+        <h1 class="card-title">Password Reset!</h1>
+        <p class="card-sub">Your password has been updated successfully. You can now log in with your new password.</p>
+
+        <button class="btn-main" onclick="window.location.href='login.html'">Go to Login →</button>
+        <div class="footer-link" style="margin-top:1rem;"><a href="index.html">← Back to Home</a></div>
+      </div>
+      
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="../js/passRecovery.js"></script>
+
+</body>
 </html>
