@@ -191,3 +191,4 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#0f172a,#1
 /* Responsive */
 @media(max-width:900px){.dashboard-grid{grid-template-columns:1fr;}.stats-row{grid-template-columns:1fr 1fr;}}
 @media(max-width:520px){.stats-row{grid-template-columns:1fr 1fr;}.nav-links{display:none;}}
+

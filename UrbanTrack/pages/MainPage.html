@@ -131,14 +131,21 @@
                 </div>
                 <div class="field-group">
                     <label>Pin on Map</label>
-                    <div class="map-box" onclick="showToast('🗺️ Interactive map coming soon!')">
+                    <div class="map-box">
+                    <button type="button" onclick="showMap()">view map </button>
+                        
                         <div class="map-marker m1"></div>
                         <div class="map-marker m2"></div>
                         <div class="map-marker m3"></div>
                         <div class="map-pin-icon"></div>
                         <p>Click to pin exact location</p>
                         <small>Interactive map integration coming soon</small>
+                        <p id="location"></p>
+                        <div id="map" style="height: 400px; display: none;"></div>
+                        
                     </div>
+                    
+                    
                 </div>
                 <div class="field-group">
                     <label>Additional Notes</label>
@@ -257,9 +264,11 @@
     </div>
 </div>
 
+<!-- <script src="../js/MainPage.js"></script> -->
 <div class="toast" id="toast"></div>
 
 <script>
+    
     function getInitials(name) {
         if (!name) return 'U';
         const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -382,6 +391,204 @@
         clearTimeout(t._t);
         t._t = setTimeout(() => t.classList.remove('show'), 3000);
     }
+         /*
+    let map;
+let marker;
+
+function showMap() {
+
+    const mapDiv = document.getElementById("map");
+
+    // show map
+    mapDiv.style.display = "block";
+
+    // create map only once
+    if (!map && window.google) {
+
+        map = new google.maps.Map(mapDiv, {
+            center: { lat: -26.2041, lng: 28.0473 },
+            zoom: 12
+        });
+
+        map.addListener("click", function(event) {
+
+            const location = {
+                lat: event.latLng.lat(),
+                lng: event.latLng.lng()
+            };
+
+            if (marker) marker.setMap(null);
+
+            marker = new google.maps.Marker({
+                position: location,
+                map: map
+            });
+
+            console.log("Selected:", location);
+        });
+    }
+}
+    */
+   /*
+let map;
+let marker;
+
+function showMap() {
+
+    const mapDiv = document.getElementById("map");
+
+    // show map
+    mapDiv.style.display = "block";
+     setTimeout(() => {
+        if (map) {
+            google.maps.event.trigger(map, "resize");
+            map.setCenter({ lat: -26.2041, lng: 28.0473 });
+        }
+    }, 200);
+
+    // hide fake UI
+    document.querySelectorAll(".map-marker, .map-pin-icon, .map-box p, .map-box small")
+        .forEach(el => el.style.display = "none");
+
+    // create map once
+    if (!map) {
+
+        map = new google.maps.Map(mapDiv, {
+            center: { lat: -26.2041, lng: 28.0473 },
+            zoom: 12
+        });
+
+        map.addListener("click", function(event) {
+
+            const location = {
+                lat: event.latLng.lat(),
+                lng: event.latLng.lng()
+            };
+
+            if (marker) marker.setMap(null);
+
+            marker = new google.maps.Marker({
+                position: location,
+                map: map
+            });
+
+            document.getElementById("location").textContent =
+                "Lat: " + location.lat.toFixed(5) +
+                " | Lng: " + location.lng.toFixed(5);
+        });
+    }
+}*/
+
+ /*let map;
+let marker;
+
+function showMap() {
+
+    alert("Map is opening..."); // test if click works
+
+    const mapDiv = document.getElementById("map");
+
+    mapDiv.style.display = "block";
+
+    document.querySelectorAll(".map-marker, .map-pin-icon, .map-box p, .map-box small")
+        .forEach(el => el.style.display = "none");
+
+    if (!map) {
+
+        map = new google.maps.Map(mapDiv, {
+            center: { lat: -26.2041, lng: 28.0473 },
+            zoom: 12
+        });
+
+        map.addListener("click", function(event) {
+
+            const location = {
+                lat: event.latLng.lat(),
+                lng: event.latLng.lng()
+            };
+
+            if (marker) marker.setMap(null);
+
+            marker = new google.maps.Marker({
+                position: location,
+                map: map
+            });
+
+            document.getElementById("location").textContent =
+                "Lat: " + location.lat.toFixed(5) +
+                " | Lng: " + location.lng.toFixed(5);
+        });
+    }
+
+    setTimeout(() => {
+        if (map) {
+            google.maps.event.trigger(map, "resize");
+        }
+    }, 200);
+}*/
+let map;
+let marker;
+
+function showMap() {
+    alert("Button works "); // test
+
+    const mapDiv = document.getElementById("map");
+
+    if (!mapDiv) {
+        alert("Map div not found ");
+        return;
+    }
+
+    mapDiv.style.display = "block";
+
+    
+    document.querySelectorAll(".map-marker, .map-pin-icon, .map-box p, .map-box small")
+        .forEach(el => el.style.display = "none");
+
+    // CHECK if Google Maps loaded
+    if (!window.google) {
+        alert("Google Maps not loaded ❌");
+        return;
+    }
+
+    // create map
+    if (!map) {
+        map = new google.maps.Map(mapDiv, {
+            center: { lat: -26.2041, lng: 28.0473 },
+            zoom: 12
+        });
+
+        map.addListener("click", function(event) {
+            const location = {
+                lat: event.latLng.lat(),
+                lng: event.latLng.lng()
+            };
+
+            if (marker) marker.setMap(null);
+
+            marker = new google.maps.Marker({
+                position: location,
+                map: map
+            });
+
+            document.getElementById("location").textContent =
+                "Lat: " + location.lat.toFixed(5) +
+                " | Lng: " + location.lng.toFixed(5);
+        });
+    }
+
+    // fix resize
+    setTimeout(() => {
+        google.maps.event.trigger(map, "resize");
+        map.setCenter({ lat: -26.2041, lng: 28.0473 });
+    }, 300);
+}
+
+    
+
 </script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCgvhEjbV7SjgvkRk5gSu_lxPwRDlT1wc8"></script>
+
 </body>
 </html>
