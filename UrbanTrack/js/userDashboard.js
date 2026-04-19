@@ -17,10 +17,10 @@ const communityIssues = [
 ];
 
 const statusMap = {
-  urgent:{badge:'badge-urgent',label:'🔴 Urgent'},
-  pending:{badge:'badge-pending',label:'🟡 Pending'},
-  'in-progress':{badge:'badge-progress',label:'🔵 In Progress'},
-  resolved:{badge:'badge-resolved',label:'🟢 Resolved'},
+  urgent:{badge:'badge-urgent',label:'Urgent'},
+  pending:{badge:'badge-pending',label:'Pending'},
+  'in-progress':{badge:'badge-progress',label:'In Progress'},
+  resolved:{badge:'badge-resolved',label:'Resolved'},
 };
 
 function badge(status){ const s=statusMap[status]||{badge:'badge-pending',label:status}; return `<span class="badge ${s.badge}">${s.label}</span>`; }
