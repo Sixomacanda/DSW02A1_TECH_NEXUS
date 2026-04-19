@@ -144,14 +144,31 @@ form#signupForm {
   position: relative;
 }
 
-i {
+.input-wrapper {
+  position: relative;
+}
+
+.password-group input {
+  width: 100%;
+  padding: 12px 50px 12px 12px;
+  border-radius: 30px;
+  border: 1px solid #ffffff33;
+  border-color: #38bdf8;
+  outline: none;
+
+  background: #ffffff1a;
+  color: white;
+
+  transition: 0.3s;
+}
+
+.password-group i {
   position: absolute;
   right: 15px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
   font-size: 18px;
-  margin-top: 15px;
 }
 
 .fa-eye {
@@ -220,7 +237,7 @@ i {
   padding: 30px;
   color: white;
   animation: floatUp 2s ease;
-  margin-top: 10%;
+  margin-top: 5%;
 }
 
 .left-content {
@@ -242,7 +259,7 @@ i {
     gap: 20px;
     width: auto;
   }
-  .left{
+  .left {
     display: none;
   }
 
