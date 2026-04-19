@@ -15,6 +15,7 @@
         <a href="index.html" class="nav-brand">UrbanTrack</a>
         <div class="nav-links">
             <a href="MainPage.html">Home</a>
+            <a href="UserDashboard.html">Dashboard</a>
             <a href="UserSettings.htm">Settings</a>
             <div id="mainUserInfo" style="display:flex;align-items:center;gap:.5rem;padding:0 .75rem;color:inherit;">
                 <div id="mainUserInitials" style="width:32px;height:32px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:#ffffff;color:#111111;font-weight:700;font-size:.85rem;">JD</div>
@@ -175,7 +176,7 @@
 
             <!-- SUCCESS -->
             <div class="success-state" id="successState">
-                <div class="success-icon-wrap">✅</div>
+                <div class="success-icon-wrap"></div>
                 <h2>Report Submitted!</h2>
                 <p>Your issue is now live and visible to the community.<br>Others can upvote it to boost its priority.</p>
                 <div class="issue-ref" id="issueRef">#UT-0000</div>
@@ -203,7 +204,7 @@
         </div>
 
         <div class="sidebar-card">
-            <p class="sidebar-title">ecent Reports</p>
+            <p class="sidebar-title">Recent Reports</p>
             <div class="feed-item">
                 <div class="feed-dot" style="background:var(--destructive)"></div>
                 <div class="feed-content">
@@ -291,7 +292,9 @@
     function setSeverity(el, sev) {
         document.querySelectorAll('.severity-btn').forEach(b => b.classList.remove('sel-low','sel-med','sel-hig'));
         selectedSeverity = sev;
-        el.classList.add({ low:'sel-low', medium:'sel-med', high:'sel-hig' }[sev]);
+        if (sev === 'low') el.classList.add('sel-low');
+        else if (sev === 'medium') el.classList.add('sel-med');
+        else if (sev === 'high') el.classList.add('sel-hig');
     }
 
     ['issueTitle:titleCount:100','issueDesc:descCount:500'].forEach(s => {
@@ -307,11 +310,11 @@
 
     function goStep(n) {
         if (n > currentStep) {
-            if (currentStep === 1 && !selectedCategory)  { showToast('⚠️ Please select a category.'); return; }
-            if (currentStep === 1 && !selectedSeverity)  { showToast('⚠️ Please select a severity level.'); return; }
-            if (currentStep === 2 && !document.getElementById('issueTitle').value.trim()) { showToast('⚠️ Please add a title.'); return; }
-            if (currentStep === 2 && !document.getElementById('issueDesc').value.trim())  { showToast('⚠️ Please add a description.'); return; }
-            if (currentStep === 3 && !document.getElementById('issueAddress').value.trim()) { showToast('⚠️ Please enter the issue location.'); return; }
+            if (currentStep === 1 && !selectedCategory)  { showToast('Please select a category.'); return; }
+            if (currentStep === 1 && !selectedSeverity)  { showToast('Please select a severity level.'); return; }
+            if (currentStep === 2 && !document.getElementById('issueTitle').value.trim()) { showToast('Please add a title.'); return; }
+            if (currentStep === 2 && !document.getElementById('issueDesc').value.trim())  { showToast('Please add a description.'); return; }
+            if (currentStep === 3 && !document.getElementById('issueAddress').value.trim()) { showToast('Please enter the issue location.'); return; }
         }
         document.getElementById('step-'+currentStep).classList.remove('active');
         document.getElementById('dot-'+currentStep).classList.remove('active');
@@ -346,13 +349,16 @@
     }
 
     function handlePhotos(input) {
-        const files = Array.from(input.files).slice(0, 3 - uploadedPhotos.length);
-        files.forEach(file => {
+        const files = Array.from(input.files);
+        const remainingSlots = 3 - uploadedPhotos.length;
+        const toAdd = files.slice(0, remainingSlots);
+        toAdd.forEach(file => {
             if (file.size > 5*1024*1024) { showToast('⚠️ '+file.name+' exceeds 5MB.'); return; }
             const r = new FileReader();
             r.onload = e => { uploadedPhotos.push(e.target.result); renderPhotos(); };
             r.readAsDataURL(file);
         });
+        input.value = '';
     }
     function renderPhotos() {
         const p = document.getElementById('photoPreview'); p.innerHTML = '';
@@ -367,12 +373,15 @@
     function submitReport() {
         if (!document.getElementById('agreeCheck').checked) { showToast('⚠️ Please confirm the declaration.'); return; }
         const btn = document.getElementById('submitBtn');
-        btn.textContent = '⏳ Submitting…'; btn.disabled = true;
+        const originalText = btn.textContent;
+        btn.textContent = 'Submitting…'; btn.disabled = true;
         setTimeout(() => {
             document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
             document.querySelector('.steps-indicator').style.display = 'none';
             document.getElementById('issueRef').textContent = '#UT-'+Math.floor(1000+Math.random()*9000);
             document.getElementById('successState').classList.add('active');
+            btn.textContent = originalText;
+            btn.disabled = false;
         }, 1400);
     }
 
