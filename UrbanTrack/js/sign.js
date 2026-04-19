@@ -8,7 +8,7 @@ document.getElementById("sign").onclick = function(event){
     let special = /[!@#$%^&*<>?\/,.=+{]/;
     let uppercase = /[A-Z]/;
     let number = /[0-9]/;
-
+// java
     if(Surname.length>2){
 
         if(email.endsWith("@gmail.com")){
