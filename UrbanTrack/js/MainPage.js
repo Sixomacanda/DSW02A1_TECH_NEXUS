@@ -721,32 +721,32 @@ function setSeverity(el, sev) {
 function goStep(n) {
   if (n > currentStep) {
     if (currentStep === 1 && !selectedCategory) {
-      showToast("⚠️ Please select a category.");
+      showToast("Please select a category.");
       return;
     }
     if (currentStep === 1 && !selectedSeverity) {
-      showToast("⚠️ Please select a severity level.");
+      showToast("Please select a severity level.");
       return;
     }
     if (
       currentStep === 2 &&
       !document.getElementById("issueTitle").value.trim()
     ) {
-      showToast("⚠️ Please add a title.");
+      showToast("Please add a title.");
       return;
     }
     if (
       currentStep === 2 &&
       !document.getElementById("issueDesc").value.trim()
     ) {
-      showToast("⚠️ Please add a description.");
+      showToast("Please add a description.");
       return;
     }
     if (
       currentStep === 3 &&
       !document.getElementById("issueAddress").value.trim()
     ) {
-      showToast("⚠️ Please enter the issue location.");
+      showToast("Please enter the issue location.");
       return;
     }
   }
@@ -832,7 +832,7 @@ function removePhoto(i) {
 
 function submitReport() {
   if (!document.getElementById("agreeCheck").checked) {
-    showToast("⚠️ Please confirm the declaration.", true);
+    showToast("Please confirm the declaration.", true);
     return;
   }
   const btn = document.getElementById("submitBtn");
