@@ -17,10 +17,10 @@ const communityIssues = [
 ];
 
 const statusMap = {
-  urgent:{badge:'badge-urgent',label:'🔴 Urgent'},
-  pending:{badge:'badge-pending',label:'🟡 Pending'},
-  'in-progress':{badge:'badge-progress',label:'🔵 In Progress'},
-  resolved:{badge:'badge-resolved',label:'🟢 Resolved'},
+  urgent:{badge:'badge-urgent',label:'Urgent'},
+  pending:{badge:'badge-pending',label:'Pending'},
+  'in-progress':{badge:'badge-progress',label:'In Progress'},
+  resolved:{badge:'badge-resolved',label:'Resolved'},
 };
 
 function badge(status){ const s=statusMap[status]||{badge:'badge-pending',label:status}; return `<span class="badge ${s.badge}">${s.label}</span>`; }
@@ -72,7 +72,7 @@ function toggleUpvote(id, pool) {
   issue.voted = !issue.voted;
   issue.upvotes += issue.voted ? 1 : -1;
   renderMyIssues();
-  showToast(issue.voted ? '👍 Upvoted! This helps prioritise the issue.' : 'Upvote removed.', issue.voted?'success':'');
+  showToast(issue.voted ? ' Upvoted! This helps prioritise the issue.' : 'Upvote removed.', issue.voted?'success':'');
 }
 
 function openModal(id, pool) {
@@ -112,7 +112,7 @@ function initUserDashboard() {
 
   const welcomeElement = document.querySelector('.welcome-title');
   if (welcomeElement) {
-    welcomeElement.textContent = `Welcome back, ${currentUser.name || 'User'} 👋`;
+    welcomeElement.textContent = `Welcome back, ${currentUser.name || 'User'} !`;
   }
 
   const navName = document.querySelector('.user-pill');
