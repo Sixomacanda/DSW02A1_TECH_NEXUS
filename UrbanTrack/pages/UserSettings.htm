@@ -11,14 +11,19 @@
 
 <!-- Header -->
 <header class="header">
-  <nav class="nav-container">
-    <a href="index.html" class="nav-brand">UrbanTrack</a>
-    <div class="nav-right">
-      <a href="MainPage.html" class="nav-link">← Home</a>
-      <div class="user-pill">
+  <nav class="navbar">
+    <div class="logo">Urban Track</div>
+
+    <ul class="nav-links">
+      <li><a href="MainPage.html">← Home</a></li>
+      <li class="user-pill">
         <div class="user-av">JD</div>
         <span id="settingsHeaderName">User</span>
-      </div>
+      </li>
+    </ul>
+
+    <div class="menu-button">
+      <div class="menu-button__burger"></div>
     </div>
   </nav>
 </header>
@@ -447,6 +452,7 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="../js/main.js"></script>
 <script src="../js/userSettings.js"></script>
 </body>
 </html>
