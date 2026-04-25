@@ -71,6 +71,7 @@ if (loginForm) {
 
     if (valid) {
       console.log("Login form valid");
+      window.location.href = "MainPage.html"; // Redirect to MainPage after successful validation
       // loginForm.submit(); // If you want native submit after validation
     }
   });
