@@ -11,17 +11,19 @@
 
 <!-- Header -->
 <header class="header">
-  <nav class="nav-container">
-    <a href="index.html" class="nav-brand">UrbanTrack</a>
-    <div class="nav-right">
-      <div class="nav-links">
-        <a href="MainPage.html">Report Issue</a>
-        <a href="MainPage.html">Home</a>
-      </div>
-      <div class="user-pill">
+  <nav class="navbar">
+    <div class="logo">Urban Track</div>
+
+    <ul class="nav-links">
+      <li><a href="MainPage.html">Report Issue</a></li>
+      <li><a href="MainPage.html">Home</a></li>
+      <li class="user-pill">
         <div class="user-av">JD</div>
-        
-      </div>
+      </li>
+    </ul>
+
+    <div class="menu-button">
+      <div class="menu-button__burger"></div>
     </div>
   </nav>
 </header>
@@ -163,6 +165,7 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="../js/main.js"></script>
 <script src="../js/userDashboard.js"></script>
 </body>
 </html>

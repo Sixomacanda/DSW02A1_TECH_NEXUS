@@ -848,3 +848,19 @@ function submitReport() {
     document.getElementById("successState").classList.add("active");
   }, 1400);
 }
+
+// Menu button toggle functionality
+const menuBtn = document.querySelector(".menu-button");
+const navLinks = document.querySelector(".nav-links");
+let menuOpen = false;
+menuBtn.addEventListener("click", () => {
+  if (!menuOpen) {
+    menuBtn.classList.add("open");
+    navLinks.classList.add("show");
+    menuOpen = true;
+  } else {
+    menuBtn.classList.remove("open");
+    navLinks.classList.remove("show");
+    menuOpen = false;
+  }
+});
