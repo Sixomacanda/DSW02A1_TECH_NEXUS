@@ -463,7 +463,7 @@ function initReportForm(currentUser) {
     const notes = document.getElementById("issueNotes")?.value || "";
 
     if (!title || !description || !address) {
-      showToast("⚠️ Please fill in all required fields.", true);
+      showToast("Please fill in all required fields.", true);
       return;
     }
 
@@ -492,7 +492,7 @@ function initReportForm(currentUser) {
     // Show success and redirect
     const btn = document.getElementById("submitBtn");
     if (btn) {
-      btn.textContent = "⏳ Submitting…";
+      btn.textContent = "Submitting…";
       btn.disabled = true;
     }
 
@@ -804,7 +804,7 @@ function handlePhotos(input) {
   const files = Array.from(input.files).slice(0, 3 - uploadedPhotos.length);
   files.forEach((file) => {
     if (file.size > 5 * 1024 * 1024) {
-      showToast("⚠️ " + file.name + " exceeds 5MB.");
+      showToast(" " + file.name + " exceeds 5MB.");
       return;
     }
     const r = new FileReader();
@@ -836,7 +836,7 @@ function submitReport() {
     return;
   }
   const btn = document.getElementById("submitBtn");
-  btn.textContent = "⏳ Submitting…";
+  btn.textContent = "Submitting…";
   btn.disabled = true;
   setTimeout(() => {
     document
@@ -848,3 +848,19 @@ function submitReport() {
     document.getElementById("successState").classList.add("active");
   }, 1400);
 }
+
+// Menu button toggle functionality
+const menuBtn = document.querySelector(".menu-button");
+const navLinks = document.querySelector(".nav-links");
+let menuOpen = false;
+menuBtn.addEventListener("click", () => {
+  if (!menuOpen) {
+    menuBtn.classList.add("open");
+    navLinks.classList.add("show");
+    menuOpen = true;
+  } else {
+    menuBtn.classList.remove("open");
+    navLinks.classList.remove("show");
+    menuOpen = false;
+  }
+});
