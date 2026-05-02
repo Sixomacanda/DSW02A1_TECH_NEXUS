@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urban Track</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="../Styles/login.css" />
+  </head>
+  <header></header>
+  <body>
+    <nav class="navbar">
+      <div class="logo">Urban Track</div>
+
+      <ul class="nav-links">
+        <li><a href="../../homePage.html">Home</a></li>
+        <li><a href="signUpPage.html">Sign Up</a></li>
+      </ul>
+    </nav>
+
+    <form id="loginForm" novalidate>
+      <div class="right">
+        <div class="right-content">
+          <h1>Welcome Back to Urban Track</h1>
+          <h3>Empowering communities to improve their cities.</h3>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="container">
+        <div class="left">
+          <div class="form-group">
+            <label for="text">Email</label>
+            <input id="email" name="email" placeholder="example@address.com" required />
+            <small class="error"></small>
+          </div>
+
+          <div class="form-group password-group">
+            <label for="password">Password</label>
+            <input
+              id="password" type="password"
+              name="password"
+              placeholder="password"
+              required
+            />
+            <small class="error"></small>
+            <i class="fa-solid fa-eye"></i>
+            <i class="fa-solid fa-eye-slash hide"></i>
+          </div>
+
+          <button type="submit" id="log" name="login" class="btn">Login</button>
+          
+          <p class="forgot-password">
+            <a href="passRecovery.html">Forgot password?</a>
+          </p>
+          <p class="footer-text">
+            Don't have an account? <a href="signUpPage.html">Sign up</a>
+          </p>
+        </div>
+      </div>
+    </form>
+    <script type="module" src="../js/login.js"></script>
+  </body>
+</html>

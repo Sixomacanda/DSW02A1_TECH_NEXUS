@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UrbanTrack — Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="AdminDashboard.css">
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <a href="index.html">UrbanTrack</a>
+    <p>Admin Control Panel</p>
+  </div>
+
+  <div class="sidebar-section">Overview</div>
+  <button class="nav-item active" onclick="showView('overview',this)">
+    <span class="icon">📊</span> Dashboard
+  </button>
+
+  <div class="sidebar-section" id="issuesContainer">Management</div>
+  <button class="nav-item" onclick="showView('issues',this); window.loadIssues('all');">
+    <span class="icon">📋</span> All Issues
+    <span class="nav-badge" id="issuesBadge">0</span>
+  </button>
+  <button class="nav-item" onclick="showView('users',this)">
+    <span class="icon">👥</span> Users
+    <span class="nav-badge warn" id="usersBadge">3</span>
+  </button>
+  <button class="nav-item" onclick="showView('pending',this)">
+    <span class="icon">⏳</span> Pending Approval
+    <span class="nav-badge warn" id="pendingBadge">3</span>
+  </button>
+
+  <div class="sidebar-section">Settings</div>
+  <button class="nav-item" onclick="showView('settings',this)">
+    <span class="icon">⚙️</span> Settings
+  </button>
+
+  <div class="sidebar-footer">
+    <div class="admin-info">
+      <div class="admin-avatar">AD</div>
+      <div>
+        <div class="admin-name">Admin User</div>
+        <div class="admin-role">Super Administrator</div>
+      </div>
+    </div>
+    <button class="logout-btn" onclick="localStorage.removeItem('urbanTrack_currentUser'); location.href='../../homePage.html'">← Logout</button>
+  </div>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div>
+      <div class="topbar-title" id="topbarTitle">Dashboard Overview</div>
+      <div class="topbar-sub" id="topbarSub">Saturday, 18 April 2026</div>
+    </div>
+    <div class="topbar-right">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" placeholder="Search issues, users…" id="globalSearch" oninput="handleSearch(this.value)">
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ===== OVERVIEW VIEW ===== -->
+    <div class="view active" id="view-overview">
+      <div class="stats-row">
+        <div class="stat-card blue">
+          <div class="stat-label">Total Reports</div>
+          <div class="stat-num" id="statTotal">0</div>
+          <div class="stat-trend">↑ 0 this week</div>
+          <div class="mini-chart" id="chartTotal"></div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">Resolved</div>
+          <div class="stat-num" id="statResolved">0</div>
+          <div class="stat-trend">0% resolution rate</div>
+          <div class="mini-chart" id="chartResolved"></div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-label">In Progress</div>
+          <div class="stat-num" id="statProgress">0</div>
+          <div class="stat-trend">Avg. 0 days to resolve</div>
+          <div class="mini-chart" id="chartProgress"></div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-label">Urgent / Open</div>
+          <div class="stat-num" id="statUrgent">0</div>
+          <div class="stat-trend">↑ 0 since yesterday</div>
+          <div class="mini-chart" id="chartUrgent"></div>
+        </div>
+      </div>
+
+      <!-- Recent Issues -->
+      <div class="section-header">
+        <div>
+          <div class="section-title">Recent Issues</div>
+          <div class="section-sub">Latest community reports needing attention</div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="showView('issues',document.querySelector('[onclick*=issues]'))">View All →</button>
+      </div>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table id="overviewTable">
+            <thead><tr>
+              <th>Issue</th><th>Category</th><th>Location</th><th>Upvotes</th><th>Status</th><th>Reported</th>
+            </tr></thead>
+            <tbody id="overviewTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Pending users alert -->
+      <div id="pendingAlert" style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:var(--radius);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+        <div style="display:flex;align-items:center;gap:.75rem;">
+          <span style="font-size:1.4rem;">⚠️</span>
+          <div>
+            <div style="font-weight:700;color:var(--warning);font-size:.95rem;">0 users awaiting approval</div>
+            <div style="font-size:.8rem;color:var(--text-secondary);opacity:.7;margin-top:.1rem;">New registrations need your review before they can submit reports.</div>
+          </div>
+        </div>
+        <button class="btn btn-ghost" style="white-space:nowrap;" onclick="showView('pending',document.querySelector('[onclick*=pending]'))">Review Now →</button>
+      </div>
+    </div>
+
+    <!-- ===== ISSUES VIEW ===== -->
+    <div class="view" id="view-issues">
+      <div class="section-header">
+        <div>
+          <div class="section-title">All Issues</div>
+          <div class="section-sub">Manage and update community reports</div>
+        </div>
+        <div class="filter-tabs" id="issueFilter">
+          <button class="ftab active" onclick="filterIssues('all',this)">All</button>
+          <button class="ftab" onclick="filterIssues('urgent',this)">🔴 Urgent</button>
+          <button class="ftab" onclick="filterIssues('pending',this)">🟡 Pending</button>
+          <button class="ftab" onclick="filterIssues('in-progress',this)">🔵 In Progress</button>
+          <button class="ftab" onclick="filterIssues('resolved',this)">🟢 Resolved</button>
+        </div>
+      </div>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Issue</th><th>Category</th><th>Location</th><th>Reporter</th><th>Upvotes</th><th>Status</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="issuesTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+   
+
+    <!-- ===== USERS VIEW ===== -->
+    <div class="view" id="view-users">
+      <div class="section-header">
+        <div>
+          <div class="section-title">All Users</div>
+          <div class="section-sub">View and manage registered community members</div>
+        </div>
+        <div class="filter-tabs">
+          <button class="ftab active" onclick="filterUsers('all',this)">All</button>
+          <button class="ftab" onclick="filterUsers('approved',this)">✅ Approved</button>
+          <button class="ftab" onclick="filterUsers('pending',this)">⏳ Pending</button>
+          <button class="ftab" onclick="filterUsers('suspended',this)">🚫 Suspended</button>
+        </div>
+      </div>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>User Email</th><th>Role</th><th>Reports</th><th>Joined</th><th>Status</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="usersTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PENDING APPROVAL VIEW ===== -->
+    <div class="view" id="view-pending">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Pending User Approvals</div>
+          <div class="section-sub">New registrations waiting for admin review</div>
+        </div>
+      </div>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>User</th><th>Registered</th><th>Reason for Joining</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="pendingTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SETTINGS VIEW ===== -->
+    <div class="view" id="view-settings">
+      <div class="section-title" style="margin-bottom:1.5rem;">Platform Settings</div>
+      <div class="table-card" style="padding:2rem;">
+        <div style="display:grid;gap:1.25rem;max-width:600px;">
+          <div>
+            <label style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text-secondary);display:block;margin-bottom:.5rem;">Platform Name</label>
+            <input type="text" value="UrbanTrack" style="width:100%;padding:.75rem 1rem;background:rgba(255,255,255,.05);border:1px solid var(--accent-hover);border-radius:9999px;color:#fff;font-family:inherit;font-size:.9rem;outline:none;">
+          </div>
+          <div>
+            <label style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text-secondary);display:block;margin-bottom:.5rem;">Require User Approval</label>
+            <div style="display:flex;align-items:center;gap:.75rem;">
+              <input type="checkbox" id="requireApproval" checked style="accent-color:var(--accent-hover);width:16px;height:16px;">
+              <span style="font-size:.875rem;color:var(--text-secondary);">New users must be approved before submitting reports</span>
+            </div>
+          </div>
+          <div>
+            <label style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text-secondary);display:block;margin-bottom:.5rem;">Auto-resolve after (days)</label>
+            <input type="number" value="30" min="7" style="width:120px;padding:.75rem 1rem;background:rgba(255,255,255,.05);border:1px solid var(--accent-hover);border-radius:9999px;color:#fff;font-family:inherit;font-size:.9rem;outline:none;">
+          </div>
+          <div style="padding-top:.5rem;">
+            <button class="btn btn-primary" onclick="showToast('Settings saved successfully!','success')">Save Settings</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ===== ISSUE DETAIL MODAL ===== -->
+<div class="modal-overlay" id="issueModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('issueModal')">✕</button>
+    <div class="modal-title" id="modalIssueTitle">Issue Title</div>
+    <div class="modal-sub" id="modalIssueSub">Reported by · Location</div>
+    <div class="detail-grid" id="modalIssueFields"></div>
+    <div class="modal-field">
+      <label>Description</label>
+      <p id="modalIssueDesc">—</p>
+    </div>
+    <div class="modal-actions" id="modalIssueActions"></div>
+  </div>
+</div>
+
+<!-- ===== USER DETAIL MODAL ===== -->
+<div class="modal-overlay" id="userModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('userModal')">✕</button>
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;">
+      <div id="modalUserAvatar" class="admin-avatar" style="width:52px;height:52px;font-size:1.1rem;"></div>
+      <div>
+        <div class="modal-title" id="modalUserName" style="margin-bottom:.1rem;"></div>
+        <div class="modal-sub" id="modalUserEmail" style="margin-bottom:0;"></div>
+      </div>
+    </div>
+    <div class="modal-grid" id="modalUserFields"></div>
+    <div class="modal-actions" id="modalUserActions"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
+  authDomain: "urban-track-91e53.firebaseapp.com",
+  projectId: "urban-track-91e53",
+  storageBucket: "urban-track-91e53.firebasestorage.app",
+  messagingSenderId: "519209303536",
+  appId: "1:519209303536:web:2e3037c74ce6298b047135"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.onload = () => window.loadIssues('all');
+
+window.loadIssues = async function(initialFilter = 'all') {
+    try {
+        // Fetch reports from Firestore
+        const reportsSnapshot = await getDocs(collection(db, "reports"));
+        window.issues = [];
+        reportsSnapshot.forEach((docSnap) => {
+            let data = docSnap.data();
+            window.issues.push({
+                id: docSnap.id,
+                title: data.title || 'Untitled Issue',
+                category: data.category || 'Other',
+                location: data.address || 'Unknown',
+                area: data.area || '—',
+                reporter: data.reporterName || data.userEmail || 'Community Member',
+                upvotes: data.upvotes || 0,
+                status: data.status || (data.severity === 'high' ? 'urgent' : 'pending'),
+                date: data.timestamp ? new Date(data.timestamp.seconds * 1000).toISOString() : new Date().toISOString(),
+                desc: data.description || '—'
+            });
+        });
+
+        // Fetch users from Firestore
+        const usersSnapshot = await getDocs(collection(db, "users"));
+        window.users = [];
+        usersSnapshot.forEach((docSnap) => {
+            let data = docSnap.data();
+            window.users.push({
+                id: docSnap.id,
+                name: data.name || data.surname || 'Community Member',
+                email: data.email || '—',
+                role: data.role || 'Member',
+                reports: data.reportsCount || 0,
+                joined: data.createdAt ? new Date(data.createdAt.seconds * 1000).toISOString() : new Date().toISOString(),
+                status: data.status || 'approved',
+                reason: data.reason || 'New registration'
+            });
+        });
+
+        window.issueFilter = initialFilter;
+        window.renderIssues();
+        window.renderOverview();
+        window.renderUsers();
+        window.updateBadges();
+        window.renderPending();
+    } catch (error) {
+        console.error("Error loading issues:", error);
+    }
+};
+
+window.changeIssueStatus = async function(id, status) {
+    try {
+        await updateDoc(doc(db, "reports", id), { status: status });
+        const i = window.issues.find(x => x.id === id);
+        if (i) i.status = status;
+        window.renderIssues(); window.renderOverview(); window.updateBadges();
+        showToast('✅ Status updated in Firebase!', 'success');
+    } catch (error) {
+        console.error("Error updating status:", error);
+        showToast('❌ Failed to update status.', 'danger');
+    }
+};
+
+// ===== NAV =====
+window.showView = function(name, el) {
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  if(el) el.classList.add('active');
+  const titles = {overview:'Dashboard Overview',issues:'All Issues',users:'All Users',pending:'Pending Approvals',settings:'Platform Settings'};
+  document.getElementById('topbarTitle').textContent = titles[name]||name;
+}
+
+window.issues = [];
+
+// ===== RENDER OVERVIEW TABLE =====
+window.renderOverview = function() {
+  const recent = [...window.issues].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,6);
+  document.getElementById('overviewTbody').innerHTML = recent.map(i=>`
+    <tr>
+      <td><div style="font-weight:600;">${i.title}</div><div style="font-size:.72rem;color:var(--text-secondary);opacity:.6;">#UT-${String(i.id).padStart(4,'0')}</div></td>
+      <td><span style="font-size:.78rem;">${i.category}</span></td>
+      <td style="font-size:.82rem;">${i.location}</td>
+      <td><div class="upvote-count">▲ ${i.upvotes}</div></td>
+      <td>${statusBadge(i.status)}</td>
+      <td style="font-size:.78rem;color:var(--text-secondary);opacity:.7;">${fmtDate(i.date)}</td>
+    </tr>`).join('');
+  buildCharts();
+}
+
+// ===== RENDER ISSUES TABLE =====
+window.issueFilter = 'all';
+window.renderIssues = function(filter) {
+  if(filter) window.issueFilter = filter;
+  const filtered = window.issueFilter==='all' ? window.issues : window.issues.filter(i=>i.status===window.issueFilter);
+  document.getElementById('issuesTbody').innerHTML = filtered.length ? filtered.map(i=>`
+    <tr>
+      <td><div style="font-weight:600;font-size:.875rem;">${i.title}</div><div style="font-size:.7rem;color:var(--text-secondary);opacity:.55;">#UT-${String(i.id).padStart(4,'0')} · ${fmtDate(i.date)}</div></td>
+      <td style="font-size:.8rem;">${i.category}</td>
+      <td style="font-size:.82rem;">${i.location}</td>
+      <td style="font-size:.82rem;">${i.reporter}</td>
+      <td><div class="upvote-count">▲ ${i.upvotes}</div></td>
+      <td>
+        <select class="status-select" onchange="window.changeIssueStatus('${i.id}',this.value)">
+          <option value="urgent"     ${i.status==='urgent'?'selected':''}>🔴 Urgent</option>
+          <option value="pending"    ${i.status==='pending'?'selected':''}>🟡 Pending</option>
+          <option value="in-progress"${i.status==='in-progress'?'selected':''}>🔵 In Progress</option>
+          <option value="resolved"   ${i.status==='resolved'?'selected':''}>🟢 Resolved</option>
+        </select>
+      </td>
+      <td>
+        <div class="action-row">
+          <button class="btn-icon btn-view" onclick="window.openIssueModal('${i.id}')" title="View Details">👁</button>
+          <button class="btn-icon btn-resolve" onclick="window.changeIssueStatus('${i.id}','resolved')" title="Mark Resolved">✅</button>
+        </div>
+      </td>
+    </tr>`).join('') : `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">📭</div><p>No issues in this category.</p></div></td></tr>`;
+}
+
+window.filterIssues = function(f, el) {
+  document.querySelectorAll('#view-issues .ftab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  window.renderIssues(f);
+};
+
+// ===== RENDER USERS =====
+let userFilter = 'all';
+window.renderUsers = function(filter) {
+  if(filter) userFilter = filter;
+  const filtered = userFilter==='all' ? window.users || [] : (window.users || []).filter(u=>u.status===userFilter);
+  document.getElementById('usersTbody').innerHTML = filtered.length ? filtered.map(u=>`
+    <tr class="${u.status==='pending'?'user-row-pending':''}">
+      <td>
+        <div class="user-cell">
+          <div class="user-avatar-sm">${initials(u.name)}</div>
+          <div><div class="user-cell-name">${u.name}</div><div class="user-cell-email">${u.email}</div></div>
+        </div>
+      </td>
+      <td style="font-size:.8rem;">${u.role}</td>
+      <td style="font-size:.85rem;font-weight:600;color:var(--accent-hover);">${u.reports}</td>
+      <td style="font-size:.78rem;color:var(--text-secondary);opacity:.7;">${fmtDate(u.joined)}</td>
+      <td>${userStatusBadge(u.status)}</td>
+      <td>
+        <div class="action-row">
+          <button class="btn-icon btn-view" onclick="window.openUserModal('${u.id}')" title="View Profile">👁</button>
+          ${u.status==='pending'?`<button class="btn-icon btn-approve" onclick="window.approveUser('${u.id}')" title="Approve">✅</button><button class="btn-icon btn-reject" onclick="window.suspendUser('${u.id}')" title="Reject">🚫</button>`:''}
+          ${u.status==='approved'?`<button class="btn-icon btn-reject" onclick="window.suspendUser('${u.id}')" title="Suspend">🚫</button>`:''}
+          ${u.status==='suspended'?`<button class="btn-icon btn-approve" onclick="window.approveUser('${u.id}')" title="Reinstate">✅</button>`:''}
+        </div>
+      </td>
+    </tr>`).join('') : `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">👤</div><p>No users in this category.</p></div></td></tr>`;
+}
+
+window.filterUsers = function(f, el) {
+  document.querySelectorAll('#view-users .ftab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  window.renderUsers(f);
+};
+
+window.approveUser = async function(id) {
+  try {
+    await updateDoc(doc(db, "users", id), { status: 'approved' });
+    const u = window.users.find(x => x.id === id);
+    if (u) {
+      u.status = 'approved';
+      window.renderUsers(); window.renderPending(); window.updateBadges();
+      showToast(`${u.name} approved!`, 'success');
+    }
+  } catch (error) {
+    console.error("Error approving user:", error);
+    showToast('❌ Failed to approve user.', 'danger');
+  }
+};
+
+window.suspendUser = async function(id) {
+  try {
+    await updateDoc(doc(db, "users", id), { status: 'suspended' });
+    const u = window.users.find(x => x.id === id);
+    if (u) {
+      u.status = 'suspended';
+      window.renderUsers(); window.renderPending(); window.updateBadges();
+      showToast(`${u.name} has been suspended.`, 'danger');
+    }
+  } catch (error) {
+    console.error("Error suspending user:", error);
+    showToast('❌ Failed to suspend user.', 'danger');
+  }
+};
+
+// ===== RENDER PENDING =====
+window.renderPending = function() {
+  const pending = (window.users || []).filter(u=>u.status==='pending');
+  document.getElementById('pendingTbody').innerHTML = pending.length ? pending.map(u=>`
+    <tr>
+      <td>
+        <div class="user-cell">
+          <div class="user-avatar-sm">${initials(u.name)}</div>
+          <div><div class="user-cell-name">${u.name}</div><div class="user-cell-email">${u.email}</div></div>
+        </div>
+      </td>
+      <td style="font-size:.78rem;color:var(--text-secondary);opacity:.7;">${fmtDate(u.joined)}</td>
+      <td style="font-size:.82rem;color:var(--text-secondary);max-width:280px;">"${u.reason}"</td>
+      <td>
+        <div class="action-row">
+          <button class="btn btn-success" style="padding:.45rem 1rem;font-size:.78rem;" onclick="window.approveUser('${u.id}')">✅ Approve</button>
+          <button class="btn btn-danger" style="padding:.45rem 1rem;font-size:.78rem;" onclick="window.suspendUser('${u.id}')">🚫 Reject</button>
+        </div>
+      </td>
+    </tr>`).join('') : `<tr><td colspan="4"><div class="empty-state"><div class="empty-icon">✅</div><p>No pending approvals. All users reviewed!</p></div></td></tr>`;
+
+  // show/hide overview alert
+  const alert = document.getElementById('pendingAlert');
+  if(alert) alert.style.display = pending.length ? 'flex' : 'none';
+}
+
+// ===== MODALS =====
+window.openIssueModal = function(id) {
+  const i = window.issues.find(x=>x.id===id);
+  if(!i) return;
+  document.getElementById('modalIssueTitle').textContent = i.title;
+  document.getElementById('modalIssueSub').textContent = `Reported by ${i.reporter} · ${i.location} · ${fmtDate(i.date)}`;
+  document.getElementById('modalIssueFields').innerHTML = `
+    <div class="detail-item"><label>Category</label><p>${i.category}</p></div>
+    <div class="detail-item"><label>Status</label><p>${statusBadge(i.status)}</p></div>
+    <div class="detail-item"><label>Upvotes</label><p class="upvote-count">▲ ${i.upvotes}</p></div>
+    <div class="detail-item"><label>Reference</label><p style="font-family:monospace;">#UT-${String(i.id).padStart(4,'0')}</p></div>`;
+  document.getElementById('modalIssueDesc').textContent = i.desc;
+  document.getElementById('modalIssueActions').innerHTML = `
+    <select class="status-select" style="border-radius:.6rem;padding:.6rem 1rem;" onchange="window.changeIssueStatus('${i.id}',this.value);document.getElementById('modalIssueSub').textContent='Status updated — '+this.options[this.selectedIndex].text;showToast('Status updated','success')">
+      <option value="urgent"     ${i.status==='urgent'?'selected':''}>🔴 Urgent</option>
+      <option value="pending"    ${i.status==='pending'?'selected':''}>🟡 Pending</option>
+      <option value="in-progress"${i.status==='in-progress'?'selected':''}>🔵 In Progress</option>
+      <option value="resolved"   ${i.status==='resolved'?'selected':''}>🟢 Resolved</option>
+    </select>
+    <button class="btn btn-success" onclick="window.changeIssueStatus('${i.id}','resolved');window.closeModal('issueModal')">✅ Mark Resolved</button>
+    <button class="btn btn-ghost" onclick="window.closeModal('issueModal')">Close</button>`;
+  document.getElementById('issueModal').classList.add('open');
+}
+
+window.openUserModal = function(id) {
+  const u = window.users.find(x=>x.id===id);
+  if(!u) return;
+  document.getElementById('modalUserAvatar').textContent = initials(u.name);
+  document.getElementById('modalUserName').textContent = u.name;
+  document.getElementById('modalUserEmail').textContent = u.email;
+  document.getElementById('modalUserFields').innerHTML = `
+    <div class="detail-item"><label>Role</label><p>${u.role}</p></div>
+    <div class="detail-item"><label>Status</label><p>${userStatusBadge(u.status)}</p></div>
+    <div class="detail-item"><label>Reports Filed</label><p style="font-weight:700;color:var(--accent-hover);">${u.reports}</p></div>
+    <div class="detail-item"><label>Joined</label><p>${fmtDate(u.joined)}</p></div>
+    <div class="detail-item" style="grid-column:1/-1;"><label>Reason for Joining</label><p style="white-space:normal;">"${u.reason}"</p></div>`;
+  let actions = `<button class="btn btn-ghost" onclick="window.closeModal('userModal')">Close</button>`;
+  if(u.status==='pending') actions = `<button class="btn btn-success" onclick="window.approveUser('${u.id}');window.closeModal('userModal')">✅ Approve User</button><button class="btn btn-danger" onclick="window.suspendUser('${u.id}');window.closeModal('userModal')">🚫 Reject</button>` + actions;
+  if(u.status==='approved') actions = `<button class="btn btn-danger" onclick="window.suspendUser('${u.id}');window.closeModal('userModal')">🚫 Suspend</button>` + actions;
+  if(u.status==='suspended') actions = `<button class="btn btn-success" onclick="window.approveUser('${u.id}');window.closeModal('userModal')">✅ Reinstate</button>` + actions;
+  document.getElementById('modalUserActions').innerHTML = actions;
+  document.getElementById('userModal').classList.add('open');
+}
+
+window.closeModal = function(id) { document.getElementById(id).classList.remove('open'); };
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+
+// ===== BADGES & HELPERS =====
+window.updateBadges = function() {
+  const urgent = window.issues.filter(i=>i.status==='urgent'||i.status==='pending').length;
+  const pendingUsers = (window.users || []).filter(u=>u.status==='pending').length;
+  document.getElementById('issuesBadge').textContent = urgent;
+  document.getElementById('usersBadge').textContent = pendingUsers;
+  document.getElementById('pendingBadge').textContent = pendingUsers;
+  document.getElementById('statTotal').textContent = window.issues.length;
+  document.getElementById('statResolved').textContent = window.issues.filter(i=>i.status==='resolved').length;
+  document.getElementById('statProgress').textContent = window.issues.filter(i=>i.status==='in-progress').length;
+  document.getElementById('statUrgent').textContent = window.issues.filter(i=>i.status==='urgent').length;
+}
+
+function statusBadge(s) {
+  const map = {urgent:'badge-urgent',pending:'badge-pending','in-progress':'badge-progress',resolved:'badge-resolved'};
+  const label = {urgent:'🔴 Urgent',pending:'🟡 Pending','in-progress':'🔵 In Progress',resolved:'🟢 Resolved'};
+  return `<span class="badge ${map[s]||'badge-pending'}">${label[s]||s}</span>`;
+}
+function userStatusBadge(s) {
+  const map = {approved:'badge-approved',pending:'badge-pending-u',suspended:'badge-suspended'};
+  const label = {approved:'✅ Approved',pending:'⏳ Pending',suspended:'🚫 Suspended'};
+  return `<span class="badge ${map[s]||''}">${label[s]||s}</span>`;
+}
+function initials(name) { return name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase(); }
+function fmtDate(d) { return new Date(d).toLocaleDateString('en-ZA',{day:'numeric',month:'short',year:'numeric'}); }
+
+// ===== SEARCH =====
+window.handleSearch = function(q) {
+  if(!q.trim()) return;
+  const lq = q.toLowerCase();
+  const match = window.issues.filter(i=>i.title.toLowerCase().includes(lq)||i.location.toLowerCase().includes(lq)||i.reporter.toLowerCase().includes(lq));
+  document.getElementById('issuesTbody').innerHTML = match.length ? match.map(i=>`
+    <tr>
+      <td><div style="font-weight:600;">${i.title}</div></td>
+      <td>${i.category}</td><td>${i.location}</td><td>${i.reporter}</td>
+      <td><div class="upvote-count">▲ ${i.upvotes}</div></td>
+      <td>${statusBadge(i.status)}</td>
+      <td><button class="btn-icon btn-view" onclick="window.openIssueModal('${i.id}')">👁</button></td>
+    </tr>`).join('') : `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">🔍</div><p>No results for "${q}"</p></div></td></tr>`;
+  showView('issues', document.querySelector('[onclick*=issues]'));
+}
+
+// ===== MINI CHARTS =====
+function buildCharts() {
+  const data = {
+    Total:[18,22,19,25,21,28,34],
+    Resolved:[14,18,15,20,17,22,28],
+    Progress:[4,5,4,6,5,6,7],
+    Urgent:[2,3,2,4,3,5,3]
+  };
+  const max = v=>Math.max(...v);
+  ['Total','Resolved','Progress','Urgent'].forEach(k=>{
+    const el = document.getElementById('chart'+k);
+    if(!el) return;
+    const vals = data[k]; const m = max(vals);
+    el.innerHTML = vals.map(v=>`<div class="mini-bar" style="height:${Math.round((v/m)*100)}%;opacity:${.4+.6*(v/m)};"></div>`).join('');
+  });
+}
+
+// ===== TOAST =====
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show'+(type?' '+type:'');
+  clearTimeout(t._t); t._t = setTimeout(()=>t.className='toast',3000);
+}
+
+// ===== INIT =====
+window.renderOverview();
+window.renderIssues();
+window.renderUsers();
+window.renderPending();
+window.updateBadges();
+</script>
+</body>
+</html>

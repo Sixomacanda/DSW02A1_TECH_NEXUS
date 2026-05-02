@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UrbanTrack — My Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../Styles/userDashboard.css">
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <nav class="nav-container">
+    <a href="index.html" class="nav-brand">UrbanTrack</a>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="MainPage.html">Report Issue</a>
+        <a href="MainPage.html">Home</a>
+      </div>
+      <div class="user-pill">
+        <div class="user-av">JD</div>
+        Jane Doe
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- Page -->
+<div class="page">
+
+  <!-- Welcome -->
+  <div class="welcome fu">
+    <div class="welcome-title">Welcome back, Jane </div>
+    <div class="welcome-sub">Here's an overview of your reports and community activity.</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card sc-blue fu d1">
+      <div class="stat-num">7</div>
+      <div class="stat-label">Reports Filed</div>
+    </div>
+    <div class="stat-card sc-green fu d2">
+      <div class="stat-num">4</div>
+      <div class="stat-label">Resolved</div>
+    </div>
+    <div class="stat-card sc-yellow fu d3">
+      <div class="stat-num">2</div>
+      <div class="stat-label">In Progress</div>
+    </div>
+    <div class="stat-card sc-red fu d4">
+      <div class="stat-num">1</div>
+      <div class="stat-label">Urgent Open</div>
+    </div>
+  </div>
+
+  <!-- Dashboard Grid -->
+  <div class="dashboard-grid">
+
+    <!-- Left: Issues -->
+    <div>
+      <div class="section-header">
+        <div>
+          <div class="section-title">My Reports</div>
+          <div class="section-sub">Track the status of issues you've submitted</div>
+        </div>
+        <div class="filter-tabs">
+          <button class="ftab active" onclick="filterMyIssues('all',this)">All</button>
+          <button class="ftab" onclick="filterMyIssues('urgent',this)">Urgent</button>
+          <button class="ftab" onclick="filterMyIssues('pending',this)">Pending</button>
+          <button class="ftab" onclick="filterMyIssues('in-progress',this)">In Progress</button>
+          <button class="ftab" onclick="filterMyIssues('resolved',this)">Resolved</button>
+        </div>
+      </div>
+      <div class="issues-list" id="myIssuesList"></div>
+    </div>
+
+    <!-- Right: Sidebar -->
+    <div class="sidebar">
+
+      <!-- Report CTA -->
+      <div class="report-cta">
+        <h3>See a problem?</h3>
+        <p>Submit a new report and help your community get it fixed faster.</p>
+        <a href="report-issue.html" class="btn-primary">+ Report New Issue</a>
+      </div>
+
+      <!-- Map -->
+      <div class="sidebar-card">
+        <div class="sidebar-title">Issue Map</div>
+        <div class="map-box">
+          <div class="map-marker mm1"></div>
+          <div class="map-marker mm2"></div>
+          <div class="map-marker mm3"></div>
+          <div class="map-marker mm4"></div>
+          <div class="map-pin">🗺️</div>
+          <p>Live community issue map</p>
+        </div>
+        <div style="display:flex;gap:1rem;margin-top:.85rem;flex-wrap:wrap;">
+          <span style="font-size:.72rem;color:var(--text-secondary);opacity:.7;display:flex;align-items:center;gap:.35rem;"><span style="width:8px;height:8px;border-radius:50%;background:var(--destructive);display:inline-block;"></span>Urgent</span>
+          <span style="font-size:.72rem;color:var(--text-secondary);opacity:.7;display:flex;align-items:center;gap:.35rem;"><span style="width:8px;height:8px;border-radius:50%;background:var(--warning);display:inline-block;"></span>Pending</span>
+          <span style="font-size:.72rem;color:var(--text-secondary);opacity:.7;display:flex;align-items:center;gap:.35rem;"><span style="width:8px;height:8px;border-radius:50%;background:var(--success);display:inline-block;"></span>Resolved</span>
+        </div>
+      </div>
+
+      <!-- Community Activity -->
+      <div class="sidebar-card">
+        <div class="sidebar-title"></div> Community Activity</div>
+        <div>
+          <div class="activity-item">
+            <span class="activity-icon"></span>
+            <div><div class="activity-text"><strong>Blocked drain in Sandton</strong> was marked resolved by admin.</div><div class="activity-time">2 hours ago</div></div>
+          </div>
+          <div class="activity-item">
+            <span class="activity-icon"></span>
+            <div><div class="activity-text">Your report <strong>"Pothole on Main Street"</strong> received 5 new upvotes.</div><div class="activity-time">4 hours ago</div></div>
+          </div>
+          <div class="activity-item">
+            <span class="activity-icon"></span>
+            <div><div class="activity-text"><strong>"Water leak on Harris Road"</strong> moved to In Progress.</div><div class="activity-time">Yesterday</div></div>
+          </div>
+          <div class="activity-item">
+            <span class="activity-icon"></span>
+            <div><div class="activity-text">New report in your area: <strong>"Missing manhole cover"</strong> — 41 upvotes.</div><div class="activity-time">2 days ago</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status Timeline for top issue -->
+      <div class="sidebar-card">
+        <div class="sidebar-title">Report Progress</div>
+        <div style="font-size:.8rem;color:var(--accent-hover);font-weight:600;margin-bottom:.85rem;">Pothole on Main Street</div>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-dot done">✓</div><div class="tl-content"><div class="tl-label">Report Submitted</div><div class="tl-time">16 Apr 2026</div></div></div>
+          <div class="tl-item"><div class="tl-dot done">✓</div><div class="tl-content"><div class="tl-label">Reviewed by Admin</div><div class="tl-time">17 Apr 2026</div></div></div>
+          <div class="tl-item"><div class="tl-dot active">●</div><div class="tl-content"><div class="tl-label" style="color:var(--accent-hover);">Assigned to Team</div><div class="tl-time">In progress</div></div></div>
+          <div class="tl-item"><div class="tl-dot wait"></div><div class="tl-content"><div class="tl-label" style="opacity:.4;">Work Scheduled</div><div class="tl-time" style="opacity:.3;">Pending</div></div></div>
+          <div class="tl-item"><div class="tl-dot wait"></div><div class="tl-content"><div class="tl-label" style="opacity:.4;">Resolved</div><div class="tl-time" style="opacity:.3;">Pending</div></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Issue Detail Modal -->
+<div class="modal-overlay" id="issueModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-sub" id="modalSub"></div>
+    <div class="modal-grid" id="modalFields"></div>
+    <div class="modal-field">
+      <label>Description</label>
+      <p id="modalDesc"></p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../js/userDashboard.js"></script>
+</body>
+</html>
