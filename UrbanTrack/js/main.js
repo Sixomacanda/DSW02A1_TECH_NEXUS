@@ -256,3 +256,135 @@ menuBtn.addEventListener("click", () => {
     menuOpen = false;
   }
 });
+/*function getlocation(){
+    navigator.geolocation.getCurrentPosition(function(position){
+        let la=position.coords.latitude;
+        let lon=position.coords.longitude;
+
+        let userlocation={lat:lat , lon:lon};
+        let map=new google.maps.map(document.getElementById("map"),{
+            zoom:15,
+            center:userlocation
+
+
+
+        });
+        new google.maps.marker({
+            position:userlocation,
+            map:map
+        });
+            
+            
+});
+}*/
+
+/*function getLocation(){
+    navigator.geolocation.getCurrentPosition(function(position){
+        let lat=position.coords.latitude
+        let lon=position.coords.longitude
+        initMap(lat, lon)
+
+        let userlocation={lat:lat, lng:lon};
+
+        let map=new google.maps.Map(document.getElementById("map"),{
+            zoom:15,
+            center:userlocation
+
+        });
+        new google.maps.Marker({
+            position:userlocation,
+            map:map
+        });
+    });
+}
+let directionsService;
+let directionsRenderer;
+
+function initMap(){
+
+    let map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 10,
+        center: { lat: -26.2041, lng: 28.0473 }
+    });
+
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer();
+
+    directionsRenderer.setMap(map);
+}
+function getDirections(){
+
+    let from = document.getElementById("from").value;
+    let to = document.getElementById("to").value;
+
+    let request = {
+        origin: from,
+        destination: to,
+        travelMode: "DRIVING"
+    };
+
+    directionsService.route(request, function(result, status){
+
+        if(status === "OK"){
+            directionsRenderer.setDirections(result);
+        }
+
+    });
+
+}*/
+function getLocation(){
+
+    if(navigator.geolocation){
+
+        navigator.geolocation.getCurrentPosition(function(position){
+
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
+
+            console.log("Latitude: " + lat);
+            console.log("Longitude: " + lon);
+
+            document.getElementById("location").textContent =
+                "Lat: " + lat + " | Lon: " + lon;
+
+        });
+
+    } else {
+        alert("Geolocation not supported");
+    }
+};
+function initMap(){
+
+    let location = { lat: -26.2041, lng: 28.0473 }; 
+
+    let map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 10,
+        center: location
+    });
+
+    new google.maps.Marker({
+        position: location,
+        map: map
+    });
+};
+/*function getLocation(){
+
+    navigator.geolocation.getCurrentPosition(function(position){
+
+        let lat = position.coords.latitude;
+        let lon = position.coords.longitude;
+
+        let userLocation = { lat: lat, lng: lon };
+
+        let map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 15,
+            center: userLocation
+        });
+
+        new google.maps.Marker({
+            position: userLocation,
+            map: map
+        });
+
+    });
+};*/
