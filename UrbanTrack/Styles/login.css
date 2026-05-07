@@ -4,6 +4,7 @@
   box-sizing: border-box;
   font-family: "Segoe UI", sans-serif;
 }
+
 /* jhh */
 body {
   height: 100vh;
@@ -20,13 +21,16 @@ body {
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
 }
+
 .navbar {
   position: fixed;
   top: 0;
@@ -48,6 +52,7 @@ body {
   font-weight: bold;
   color: #38bdf8;
 }
+
 .nav-links {
   list-style: none;
   display: flex;
@@ -71,6 +76,7 @@ body {
   color: #dbeafe;
   outline: none;
 }
+
 .menu-button {
   position: relative;
   display: none;
@@ -128,6 +134,7 @@ body {
   transform: rotate(-50deg);
   transform-origin: center;
 }
+
 form#loginForm {
   display: flex;
   align-items: flex-start;
@@ -171,6 +178,7 @@ form#loginForm {
     opacity: 0;
     transform: translateY(40px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -256,11 +264,13 @@ form#loginForm {
 .hide {
   display: none;
 }
+
 .error {
   color: #ff0000;
   font-size: 14px;
   margin-top: 10px;
 }
+
 .btn {
   width: 100%;
   padding: 12px;
@@ -279,6 +289,7 @@ form#loginForm {
   transform: scale(1.05);
   box-shadow: 0 0 15px #38bdf8;
 }
+
 
 .footer-text {
   text-align: center;
@@ -306,6 +317,7 @@ form#loginForm {
   margin-top: 5px;
   display: block;
 }
+
 .right {
   display: flex;
   align-items: center;
@@ -337,9 +349,11 @@ form#loginForm {
   .divider {
     display: none;
   }
+
   .right {
     display: none;
   }
+
   .navbar {
     padding: 1px 40px;
   }
@@ -397,12 +411,14 @@ form#loginForm {
     visibility: visible;
   }
 }
+
 .forgot-password a {
   font-size: 14px;
   color: #38bdf8;
 
   transition: color 0.2s ease;
 }
+
 .forgot-password a:hover {
   color: #6366f1;
 }
