@@ -1,106 +1,86 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Urban Track</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <link rel="stylesheet" href="../Styles/SignUp.css" />
-  </head>
-  <body>
-    <nav class="navbar">
-      <div class="logo">Urban Track</div>
 
-      <ul class="nav-links">
-        <li><a href="../../homePage.html">Home</a></li>
-        <li><a href="login.html">Login</a></li>
-      </ul>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Urban Track</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="../Styles/SignUp.css" />
+</head>
 
-      <div class="menu-button">
-        <div class="menu-button__burger"></div>
-      </div>
-    </nav>
-    <!-- hb -->
-     <form id="signupForm" novalidate>
-      <div class="left">
-        <div class="left-content">
-          <h1>Create Account</h1><br><br>
-          <h2>Welcome to Urban Track</h2>
-          <h4>Empowering communities to improve their cities.</h4>
-          <p>Join our community today and help make a difference in your city!</p>
-        </div>
-      </div>
-      <div class="divider"></div>
-        <div class="signup-container">
-        
-      
-        <div class="form-group">
-          <label for="surname">Surname</label>
-          <input
-            type="text"
-            name="surname"
-            id="surname"
-            placeholder="Enter your surname"
-            required
-          />
-          <small class="error"></small>
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            placeholder="Enter your email"
-            required
-          />
-          <small class="error"></small>
-        </div>
-        <div class="form-group password-group">
-          <label for="password">Password</label>
-          <div class="input-wrapper">
-            <input
-              type="password"
-              name="password"
-              id="Signup-password"
-              placeholder="Enter your password"
-              required
-            />
-            <i class="fa-solid fa-eye"></i>
-            <i class="fa-solid fa-eye-slash hide"></i>
-          </div>
-          <small class="error"></small>
-        </div>
-        <div class="form-group password-group">
-          <label for="confirm-password">Confirm Password</label>
-          <div class="input-wrapper">
-            <input
-              type="password"
-              name="confirm-password"
-              id="Signup-confirm-password"
-              placeholder="Confirm your password"
-              required
-            />
-            <i class="fa-solid fa-eye"></i>
-            <i class="fa-solid fa-eye-slash hide"></i>
-          </div>
-          <small class="error"></small>
-        </div>
-        <button type="submit" id="sign" class="btn" name="signup">
-          Sign Up
-        </button>
-      </form>
-      <p class="footer-text">
-        Already have an account? <a href="login.html">Log in</a>
-      </p>
+<body>
+  <nav class="navbar">
+    <div class="logo">Urban Track</div>
+
+    <ul class="nav-links">
+      <li><a href="../../homePage.html">Home</a></li>
+      <li><a href="login.html">Login</a></li>
+    </ul>
+
+    <div class="menu-button">
+      <div class="menu-button__burger"></div>
     </div>
-    <script src="../js/main.js"></script>
-    <script src="../js/MainPage.js"></script>
-  </body>
+  </nav>
+  <!-- hb -->
+  <form id="signupForm" novalidate>
+    <div class="left">
+      <div class="left-content">
+        <h1>Create Account</h1><br><br>
+        <h2>Welcome to Urban Track</h2>
+        <h4>Empowering communities to improve their cities.</h4>
+        <p>Join our community today and help make a difference in your city!</p>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="signup-container">
+
+
+      <div class="form-group">
+        <label for="surname">Surname</label>
+        <input type="text" name="surname" id="surname" placeholder="Enter your surname" required />
+        <small class="error"></small>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" placeholder="Enter your email" required />
+        <small class="error"></small>
+      </div>
+      <div class="form-group password-group">
+        <label for="password">Password</label>
+        <div class="input-wrapper">
+          <input type="password" name="password" id="Signup-password" placeholder="Enter your password" required />
+          <i class="fa-solid fa-eye"></i>
+          <i class="fa-solid fa-eye-slash hide"></i>
+        </div>
+        <small class="error"></small>
+      </div>
+      <div class="form-group password-group">
+        <label for="confirm-password">Confirm Password</label>
+        <div class="input-wrapper">
+          <input type="password" name="confirm-password" id="Signup-confirm-password"
+            placeholder="Confirm your password" required />
+          <i class="fa-solid fa-eye"></i>
+          <i class="fa-solid fa-eye-slash hide"></i>
+        </div>
+        <small class="error"></small>
+      </div>
+      <button type="submit" id="sign" class="btn" name="signup">Sign Up</button>
+      <br>
+      </br>
+      <!-- Google login option -->
+      <a id="google-login-btn" href="http://localhost:3000/auth/google" class="btn google-btn">
+        <i class="fa-brands fa-google"></i> Continue with Google
+      </a>
+  </form>
+  <p class="footer-text">
+    Already have an account? <a href="login.html">Log in</a>
+  </p>
+  </div>
+  <script src="../js/main.js"></script>
+  <script src="../js/MainPage.js"></script>
+</body>
+
 </html>

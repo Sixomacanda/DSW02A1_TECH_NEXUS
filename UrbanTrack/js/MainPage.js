@@ -400,10 +400,22 @@ function initLogin() {
         setTimeout(() => {
           window.location.href = "MainPage.html";
         }, 1500);
+        //GOOGlE AUTH HANDLER
+        async function loadGoogleUser() {
+          const res = await fetch("/auth/user");
+          const user = await res.json();
+
+          if (user) {
+            showToast(`Welcome, ${user.displayName}!`);
+            document.querySelector(".welcome-user").textContent = user.displayName;
+          }
+        }
+        window.onload = loadGoogleUser;
       }
     }
   });
 }
+
 
 //  REPORT PAGE / DASHBOARD PROTECTION
 function initReportPage() {
