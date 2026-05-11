@@ -26,8 +26,15 @@ document.getElementById("log").addEventListener("click", function(e){
 
     const user = userCredential.user;
 
-    // store email locally
+    // Store email for simple display scripts
     localStorage.setItem("userEmail", user.email);
+
+    // Store user object for the dashboard logic to display the email at the top
+    localStorage.setItem("urbanTrack_currentUser", JSON.stringify({
+      uid: user.uid,
+      email: user.email,
+      name: user.email // Set name to email so it appears in the welcome message
+    }));
 
     window.location.href = "MainPage.html";
 

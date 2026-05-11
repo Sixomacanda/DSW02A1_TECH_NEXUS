@@ -4,14 +4,15 @@ import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com
 import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 // Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
-  authDomain: "urban-track-91e53.firebaseapp.com",
-  projectId: "urban-track-91e53",
-  storageBucket: "urban-track-91e53.firebasestorage.app",
-  messagingSenderId: "519209303536",
-  appId: "1:519209303536:web:c212eb58eb836e27047135"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
+    authDomain: "urban-track-91e53.firebaseapp.com",
+    databaseURL: "https://urban-track-91e53-default-rtdb.firebaseio.com",
+    projectId: "urban-track-91e53",
+    storageBucket: "urban-track-91e53.firebasestorage.app",
+    messagingSenderId: "519209303536",
+    appId: "1:519209303536:web:2e3037c74ce6298b047135"
+  };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

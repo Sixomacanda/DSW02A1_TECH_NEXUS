@@ -19,8 +19,8 @@
         <a href="MainPage.html">Home</a>
       </div>
       <div class="user-pill">
-        <div class="user-av">JD</div>
-        Jane Doe
+        <div class="user-av"></div>
+        
       </div>
     </div>
   </nav>
@@ -31,26 +31,26 @@
 
   <!-- Welcome -->
   <div class="welcome fu">
-    <div class="welcome-title">Welcome back, Jane </div>
+    <div class="welcome-title" id="useremail"></div> 
     <div class="welcome-sub">Here's an overview of your reports and community activity.</div>
   </div>
 
   <!-- Stats -->
   <div class="stats-row">
     <div class="stat-card sc-blue fu d1">
-      <div class="stat-num">7</div>
-      <div class="stat-label">Reports Filed</div>
+      <div class="stat-num" id="Total_reports">0</div>
+      <div class="stat-label">Total Reports</div>
     </div>
     <div class="stat-card sc-green fu d2">
-      <div class="stat-num">4</div>
+      <div class="stat-num" id="Resolved_reports">0</div>
       <div class="stat-label">Resolved</div>
     </div>
     <div class="stat-card sc-yellow fu d3">
-      <div class="stat-num">2</div>
-      <div class="stat-label">In Progress</div>
+      <div class="stat-num" id="Progress_reports">0</div>
+      <div class="stat-label">Total reports Progress</div>
     </div>
     <div class="stat-card sc-red fu d4">
-      <div class="stat-num">1</div>
+      <div class="stat-num" id="Urgent_reports">0</div>
       <div class="stat-label">Urgent Open</div>
     </div>
   </div>
@@ -106,7 +106,7 @@
 
       <!-- Community Activity -->
       <div class="sidebar-card">
-        <div class="sidebar-title"></div> Community Activity</div>
+        <div class="sidebar-title">Community Activity</div>
         <div>
           <div class="activity-item">
             <span class="activity-icon"></span>
@@ -164,5 +164,89 @@
 <div class="toast" id="toast"></div>
 
 <script src="../js/userDashboard.js"></script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getAuth,
+onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+getFirestore,
+collection,
+query,
+where,
+getDocs,
+doc,
+getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+const firebaseConfig = {
+        apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
+        authDomain: "urban-track-91e53.firebaseapp.com",
+        projectId: "urban-track-91e53",
+        storageBucket: "urban-track-91e53.firebasestorage.app",
+        messagingSenderId: "519209303536",
+        appId: "1:519209303536:web:c212eb58eb836e27047135"
+      };
+
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+
+/* select the Reports Filed element */
+const reportsElement = document.querySelector(".sc-blue .stat-num");
+
+
+/* check logged in user */
+onAuthStateChanged(auth, async (user) => {
+if(user){
+try{
+  // 1. Fetch total reports from the collection for accurate count
+  const q = query(collection(db, "reports"), where("reportedBy", "==", user.uid));
+  const querySnapshot = await getDocs(q);
+  reportsElement.textContent = querySnapshot.size;
+
+  // 2. Calculate status counts for the other dashboard cards
+  let resolved = 0;
+  let progress = 0;
+  let urgent = 0;
+
+  querySnapshot.forEach((doc) => {
+    const report = doc.data();
+    if (report.status === "resolved") resolved++;
+    else if (report.status === "in-progress") progress++;
+    
+    if (report.severity === "high" && report.status !== "resolved") urgent++;
+  });
+
+  // 3. Update the other stat cards
+  document.getElementById("Resolved_reports").textContent = resolved;
+  document.getElementById("Progress_reports").textContent = progress;
+  document.getElementById("Urgent_reports").textContent = urgent;
+
+  // 4. Fallback: Update profile email if the UI element exists
+  const useremail = document.getElementById("useremail");
+  if (useremail) useremail.textContent = user.email;
+}catch(error){
+console.error(error);
+}
+
+}
+
+});
+localStorage.getItem("urbanTrack_currentUser");
+  const currentUser = JSON.parse(localStorage.getItem("urbanTrack_currentUser"));
+  if (currentUser) {
+    const email = currentUser.email;
+    const useremail = document.getElementById("useremail");
+    useremail.textContent = email;
+  }
+</script>
 </body>
 </html>

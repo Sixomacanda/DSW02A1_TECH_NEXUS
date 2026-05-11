@@ -192,14 +192,14 @@
     <!-- ===== SIDEBAR ===== -->
     <div class="sidebar animate-fade-up delay-2">
 
-        <div class="sidebar-card">
+       </div> <div class="sidebar-card">
             <p class="sidebar-title">Community Stats</p>
             <div class="stats-grid">
                 <div class="stat-item"><div class="stat-num">0</div><div class="stat-label">This Month</div></div>
                 <div class="stat-item"><div class="stat-num" style="color:var(--success);">0</div><div class="stat-label">Resolved</div></div>
                 <div class="stat-item"><div class="stat-num" id="progressCount" style="color:var(--warning);">0</div><div class="stat-label">In Progress</div></div>
                 <div class="stat-item"><div class="stat-num" style="color:var(--destructive);">0</div><div class="stat-label">Urgent</div></div>
-            </div>
+            </div> 
         </div>
 
         <div class="sidebar-card">
@@ -258,11 +258,13 @@
 </div>
 
 <div class="toast" id="toast"></div>
-<!-- <script src="../js/MainPage.js"></script> -->
- <script type="module">
+<script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, addDoc, doc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ---------------- FIREBASE ---------------- */
 
 const firebaseConfig = {
   apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
@@ -270,193 +272,327 @@ const firebaseConfig = {
   projectId: "urban-track-91e53",
   storageBucket: "urban-track-91e53.firebasestorage.app",
   messagingSenderId: "519209303536",
-  appId: "1:519209303536:web:2e3037c74ce6298b047135"
+  appId: "1:519209303536:web:c212eb58eb836e27047135"
 };
 
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const db = getFirestore(app);
 
-window.submitReport = async function () {
+/* ---------------- GLOBAL STATE ---------------- */
 
-    if (!document.getElementById('agreeCheck').checked) {
-        alert("Please confirm the declaration.");
-        return;
-    }
+window.currentStep = 1;
+window.selectedCategory = "";
+window.selectedSeverity = "";
+window.uploadedPhotos = [];
 
-    // Retrieve current user data from localStorage
-    const currentUser = JSON.parse(localStorage.getItem('urbanTrack_currentUser') || 'null');
-    const userId = currentUser ? (currentUser.uid || currentUser.id) : null;
-    const userName = currentUser ? (currentUser.name || currentUser.email) : 'Community Member';
+/* ---------------- USER DISPLAY ---------------- */
 
-    const reportData = {
-        category: window.selectedCategory,
-        severity: window.selectedSeverity,
-        title: document.getElementById("issueTitle").value,
-        description: document.getElementById("issueDesc").value,
-        address: document.getElementById("issueAddress").value,
-        area: document.getElementById("issueArea").value,
-        notes: document.getElementById("issueNotes").value,
-        timestamp: new Date(),
-        reportedBy: userId,
-        reporterName: userName
-    };
+function getInitials(name) {
+  if (!name) return "U";
+  const parts = name.trim().split(" ");
+  return parts.slice(0, 2).map(p => p[0].toUpperCase()).join("");
+}
 
-    try {
+window.initMainPageUser = function () {
 
-        await addDoc(collection(db, "reports"), reportData);
+  const currentUser = JSON.parse(localStorage.getItem("urbanTrack_currentUser") || "null");
 
-        // Increment the reportsCount in the user's Firestore document
-        if (userId) {
-            const userRef = doc(db, "users", userId);
-            await updateDoc(userRef, {
-                reportsCount: increment(1)
-            });
-        }
+  if (!currentUser) return;
 
-        showToast("✅ Report Submitted Successfully!");
-        
-        // Update sidebar progress count
-        let progress = document.getElementById("progressCount");
-        if (progress) {
-            let currentValue = parseInt(progress.textContent) || 0;
-            progress.textContent = currentValue + 1;
-        }
+  const nameEl = document.getElementById("mainUserName");
+  const initialsEl = document.getElementById("mainUserInitials");
 
-        // Transition to Success State instead of reloading
-        document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
-        document.querySelector('.steps-indicator').style.display = 'none';
-        document.getElementById('issueRef').textContent = '#UT-' + Math.floor(1000 + Math.random() * 9000);
-        document.getElementById('successState').classList.add('active');
+  const displayName = currentUser.name || currentUser.email || "User";
 
-    } catch (error) {
-        console.error("Error saving report:", error);
-        showToast("❌ Failed to submit report.", true);
-    }
+  if (nameEl) nameEl.textContent = displayName;
+  if (initialsEl) initialsEl.textContent = getInitials(displayName);
 
 };
 
-</script>
+document.addEventListener("DOMContentLoaded", initMainPageUser);
 
-<script>
-    const email = localStorage.getItem("userEmail");
- 
-if(email){
-  document.getElementById("mainUserName").textContent = email;
+/* ---------------- CATEGORY ---------------- */
+
+document.querySelectorAll(".cat-btn").forEach(btn => {
+
+  btn.addEventListener("click", () => {
+
+    document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("selected"));
+
+    btn.classList.add("selected");
+
+    window.selectedCategory = btn.dataset.cat;
+
+  });
+
+});
+
+/* ---------------- SEVERITY ---------------- */
+
+window.setSeverity = function (element, severity) {
+
+  document.querySelectorAll(".severity-btn").forEach(btn => {
+    btn.classList.remove("sel-low", "sel-med", "sel-hig");
+  });
+
+  window.selectedSeverity = severity;
+
+  const classMap = {
+    low: "sel-low",
+    medium: "sel-med",
+    high: "sel-hig"
+  };
+
+  element.classList.add(classMap[severity]);
+
+};
+
+/* ---------------- STEP NAVIGATION ---------------- */
+
+window.goStep = function (step) {
+
+  if (step > window.currentStep) {
+
+    if (window.currentStep === 1 && !window.selectedCategory) {
+      showToast("⚠️ Please select a category");
+      return;
+    }
+
+    if (window.currentStep === 1 && !window.selectedSeverity) {
+      showToast("⚠️ Please select severity");
+      return;
+    }
+
+    if (window.currentStep === 2 && !document.getElementById("issueTitle").value.trim()) {
+      showToast("⚠️ Enter issue title");
+      return;
+    }
+
+    if (window.currentStep === 2 && !document.getElementById("issueDesc").value.trim()) {
+      showToast("⚠️ Enter description");
+      return;
+    }
+
+    if (window.currentStep === 3 && !document.getElementById("issueAddress").value.trim()) {
+      showToast("⚠️ Enter issue location");
+      return;
+    }
+
+  }
+
+  document.getElementById("step-" + window.currentStep).classList.remove("active");
+  document.getElementById("dot-" + window.currentStep).classList.remove("active");
+
+  window.currentStep = step;
+
+  document.getElementById("step-" + step).classList.add("active");
+  document.getElementById("dot-" + step).classList.add("active");
+
+  if (step === 4) buildReview();
+
+};
+
+/* ---------------- REVIEW ---------------- */
+
+function buildReview() {
+
+  const sevColors = {
+    low: "green",
+    medium: "orange",
+    high: "red"
+  };
+
+  const rows = [
+    ["Category", window.selectedCategory],
+    ["Severity", window.selectedSeverity],
+    ["Title", document.getElementById("issueTitle").value],
+    ["Address", document.getElementById("issueAddress").value],
+    ["Area", document.getElementById("issueArea").value || "—"],
+    ["Photos", window.uploadedPhotos.length]
+  ];
+
+  let html = `<div class="review-table">`;
+
+  rows.forEach(r => {
+
+    html += `
+    <div class="review-row">
+    <span class="review-key">${r[0]}</span>
+    <span class="review-val" style="color:${sevColors[window.selectedSeverity] || "#fff"}">
+    ${r[1]}
+    </span>
+    </div>
+    `;
+
+  });
+
+  html += "</div>";
+
+  const desc = document.getElementById("issueDesc").value;
+
+  if (desc) {
+
+    html += `
+    <div style="margin-top:15px">
+    <strong>Description</strong><br>
+    ${desc}
+    </div>
+    `;
+
+  }
+
+  document.getElementById("reviewContent").innerHTML = html;
+
 }
 
-    function getInitials(name) {
-        if (!name) return 'U';
-        const parts = name.trim().split(/\s+/).filter(Boolean);
-        return parts.slice(0,2).map(p => p[0].toUpperCase()).join('') || 'U';
+/* ---------------- PHOTO UPLOAD ---------------- */
+
+window.handlePhotos = function (input) {
+
+  const files = Array.from(input.files);
+
+  files.forEach(file => {
+
+    if (file.size > 5 * 1024 * 1024) {
+      showToast("⚠️ File exceeds 5MB");
+      return;
     }
 
-    function initMainPageUser() {
-        const currentUser = JSON.parse(localStorage.getItem('urbanTrack_currentUser') || 'null');
-        const nameEl = document.getElementById('mainUserName');
-        const initialsEl = document.getElementById('mainUserInitials');
-        if (!currentUser || !nameEl || !initialsEl) return;
-        const displayName = currentUser.name || currentUser.email || 'User';
-        nameEl.textContent = displayName;
-        initialsEl.textContent = getInitials(displayName).slice(0,2);
-    }
+    const reader = new FileReader();
 
-    document.addEventListener('DOMContentLoaded', initMainPageUser);
+    reader.onload = e => {
 
-    window.currentStep = 1; window.selectedCategory = ''; window.selectedSeverity = ''; let uploadedPhotos = [];
+      window.uploadedPhotos.push(e.target.result);
 
-    document.querySelectorAll('.cat-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            window.selectedCategory = btn.dataset.cat;
+      renderPhotos();
+
+    };
+
+    reader.readAsDataURL(file);
+
+  });
+
+};
+
+function renderPhotos() {
+
+  const preview = document.getElementById("photoPreview");
+
+  preview.innerHTML = "";
+
+  window.uploadedPhotos.forEach((src, i) => {
+
+    const div = document.createElement("div");
+
+    div.className = "photo-thumb";
+
+    div.innerHTML = `
+      <img src="${src}">
+      <button onclick="removePhoto(${i})">×</button>
+    `;
+
+    preview.appendChild(div);
+
+  });
+
+}
+
+window.removePhoto = function (index) {
+
+  window.uploadedPhotos.splice(index, 1);
+
+  renderPhotos();
+
+};
+
+/* ---------------- SUBMIT REPORT ---------------- */
+
+window.submitReport = async function () {
+
+  if (!document.getElementById("agreeCheck").checked) {
+
+    alert("Please confirm the declaration.");
+
+    return;
+
+  }
+
+  const currentUser = JSON.parse(localStorage.getItem("urbanTrack_currentUser") || "null");
+
+  // Prioritize the actual Firebase Auth user state over localStorage
+  const userId = auth.currentUser ? auth.currentUser.uid : (currentUser ? currentUser.uid || currentUser.id : null);
+  const userName = currentUser ? (currentUser.name || currentUser.email) : "Community Member";
+
+  const reportData = {
+
+    category: window.selectedCategory,
+    severity: window.selectedSeverity,
+    title: document.getElementById("issueTitle").value,
+    description: document.getElementById("issueDesc").value,
+    address: document.getElementById("issueAddress").value,
+    area: document.getElementById("issueArea").value,
+    notes: document.getElementById("issueNotes").value,
+    photos: window.uploadedPhotos,
+    timestamp: serverTimestamp(), // Use serverTimestamp for better rule validation
+    reportedBy: userId,
+    reporterName: userName,
+    reporterEmail: currentUser ? currentUser.email : "N/A"
+
+  };
+
+  try {
+
+    await addDoc(collection(db, "reports"), reportData);
+
+    // Attempt to update the user's report count in Firestore if the document exists
+    if (userId) {
+      try {
+        const userRef = doc(db, "users", userId);
+        await updateDoc(userRef, {
+          reportsCount: increment(1)
         });
-    });
-    
-
-    function setSeverity(el, sev) {
-        document.querySelectorAll('.severity-btn').forEach(b => b.classList.remove('sel-low','sel-med','sel-hig'));
-        window.selectedSeverity = sev;
-        el.classList.add({ low:'sel-low', medium:'sel-med', high:'sel-hig' }[sev]);
+      } catch (updateError) {
+        console.warn("User profile document not found; skipping report count increment.", updateError);
+      }
     }
 
-    ['issueTitle:titleCount:100','issueDesc:descCount:500'].forEach(s => {
-        const [inp, cnt, max] = s.split(':');
-        const el = document.getElementById(inp), co = document.getElementById(cnt);
-        if (!el || !co) return;
-        el.addEventListener('input', () => {
-            const n = el.value.length;
-            co.textContent = n + ' / ' + max;
-            co.className = 'char-count' + (n >= max ? ' over' : n > max * .85 ? ' warn' : '');
-        });
-    });
+    showToast("✅ Report Submitted");
 
-    
- function goStep(n) {
-        if (n > window.currentStep) {
-            if (window.currentStep === 1 && !window.selectedCategory)  { showToast('⚠️ Please select a category.'); return; }
-            if (window.currentStep === 1 && !window.selectedSeverity)  { showToast('⚠️ Please select a severity level.'); return; }
-            if (window.currentStep === 2 && !document.getElementById('issueTitle').value.trim()) { showToast('⚠️ Please add a title.'); return; }
-            if (window.currentStep === 2 && !document.getElementById('issueDesc').value.trim())  { showToast('⚠️ Please add a description.'); return; }
-            if (window.currentStep === 3 && !document.getElementById('issueAddress').value.trim()) { showToast('⚠️ Please enter the issue location.'); return; }
-        }
-        document.getElementById('step-'+window.currentStep).classList.remove('active');
-        document.getElementById('dot-'+window.currentStep).classList.remove('active');
-        document.getElementById('dot-'+window.currentStep).classList.add('done');
-        window.currentStep = n;
-        for (let i=1; i<n; i++) { document.getElementById('dot-'+i).classList.add('done'); document.getElementById('dot-'+i).classList.remove('active'); }
-        for (let i=n+1; i<=4; i++) { document.getElementById('dot-'+i).classList.remove('done','active'); }
-        document.getElementById('dot-'+n).classList.add('active');
-        document.getElementById('dot-'+n).classList.remove('done');
-        document.getElementById('step-'+n).classList.add('active');
-        if (n === 4) buildReview()};
+    document.getElementById("successState").classList.add("active");
 
-   
+  } catch (error) {
 
-    function buildReview() {
-        const sevColors = { low:'var(--success)', medium:'var(--warning)', high:'var(--destructive)' };
-        const rows = [
-            ['Category', window.selectedCategory, ''],
-            ['Severity', window.selectedSeverity.charAt(0).toUpperCase()+window.selectedSeverity.slice(1), sevColors[window.selectedSeverity]],
-            ['Title',    document.getElementById('issueTitle').value, ''],
-            ['Address',  document.getElementById('issueAddress').value, ''],
-            ['Area',     document.getElementById('issueArea').value || '—', ''],
-            ['Photos',   uploadedPhotos.length > 0 ? uploadedPhotos.length+' attached' : 'None', ''],
-        ];
-        let html = '<div class="review-table">';
-        rows.forEach(([k,v,c]) => {
-            html += `<div class="review-row"><span class="review-key">${k}</span><span class="review-val" style="${c?'color:'+c+';':''}">${v||'—'}</span></div>`;
-        });
-        html += '</div>';
-        const desc = document.getElementById('issueDesc').value;
-        if (desc) html += `<div style="padding:1rem;background:rgba(255,255,255,.04);border:1px solid var(--glass-border);border-radius:var(--radius);font-size:.875rem;color:var(--text-secondary);line-height:1.7;margin-bottom:1rem;">${desc}</div>`;
-        document.getElementById('reviewContent').innerHTML = html;
-    }
+    console.error("Submission Error Details:", error);
+    showToast("❌ Failed: " + (error.code || "Check Console"));
 
-    function handlePhotos(input) {
-        const files = Array.from(input.files).slice(0, 3 - uploadedPhotos.length);
-        files.forEach(file => {
-            if (file.size > 5*1024*1024) { showToast('⚠️ '+file.name+' exceeds 5MB.'); return; }
-            const r = new FileReader();
-            r.onload = e => { uploadedPhotos.push(e.target.result); renderPhotos(); };
-            r.readAsDataURL(file);
-        });
-    }
-    function renderPhotos() {
-        const p = document.getElementById('photoPreview'); p.innerHTML = '';
-        uploadedPhotos.forEach((src,i) => {
-            const t = document.createElement('div'); t.className = 'photo-thumb';
-            t.innerHTML = `<img src="${src}" alt="photo"><button class="photo-remove" onclick="removePhoto(${i})">×</button>`;
-            p.appendChild(t);
-        });
-    }
-    function removePhoto(i) { uploadedPhotos.splice(i,1); renderPhotos(); }
+  }
 
-    function showToast(msg) {
-        const t = document.getElementById('toast');
-        t.textContent = msg; t.classList.add('show');
-        clearTimeout(t._t);
-        t._t = setTimeout(() => t.classList.remove('show'), 3000);
-    }
+};
+
+/* ---------------- TOAST ---------------- */
+
+function showToast(message) {
+
+  const toast = document.getElementById("toast");
+
+  if (!toast) {
+    alert(message);
+    return;
+  }
+
+  toast.textContent = message;
+
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3000);
+
+}
 </script>
 </body>
+
+
+
 </html>
