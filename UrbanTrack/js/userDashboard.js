@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const myIssues = [
   {
     id: 1,
@@ -293,3 +294,5 @@ menuBtn.addEventListener("click", () => {
     menuOpen = false;
   }
 });
+=======
+>>>>>>> a19f211240702f8cfc558d21ac6a241d0f5a4d0c

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const passwordGroups = document.querySelectorAll(".password-group");
 
 passwordGroups.forEach((group) => {
@@ -388,3 +389,5 @@ function initMap(){
 
     });
 };*/
+=======
+>>>>>>> a19f211240702f8cfc558d21ac6a241d0f5a4d0c

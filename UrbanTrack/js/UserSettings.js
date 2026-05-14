@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //  HELPERS
 function getCurrentUser() {
   return JSON.parse(localStorage.getItem("urbanTrack_currentUser") || "null");
@@ -335,3 +336,5 @@ menuBtn.addEventListener("click", () => {
     menuOpen = false;
   }
 });
+=======
+>>>>>>> a19f211240702f8cfc558d21ac6a241d0f5a4d0c
