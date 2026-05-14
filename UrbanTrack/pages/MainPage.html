@@ -97,63 +97,9 @@
               <div class="step-circle">3</div>
               <span class="step-label">Location</span>
             </div>
-<<<<<<< HEAD
-
-            <!-- STEP 3 -->
-            <div class="form-section" id="step-3">
-                <p class="section-heading">Where is the issue?</p>
-                <p class="section-desc">Be specific — a nearby landmark helps workers find it faster.</p>
-                <div class="field-group">
-                    <label>Street Address / Landmark <span class="req">*</span></label>
-                    <input id="issueAddress" type="text" class="field-input" placeholder="e.g., 14 Elm Street, near the Pick n Pay">
-                    <p class="field-hint">Include a street number or nearby landmark if possible.</p>
-                </div>
-                <div class="field-group">
-                    <label>Area / Suburb</label>
-                    <select id="issueArea" class="field-input">
-                        <option value="">Select area…</option>
-                        <option>Sandton CBD</option>
-                        <option>Rosebank</option>
-                        <option>Melville</option>
-                        <option>Soweto</option>
-                        <option>Midrand</option>
-                        <option>Fourways</option>
-                        <option>Randburg</option>
-                        <option>Alexandra</option>
-                        <option>Other</option>
-                    </select>
-                </div>
-                <div class="field-group">
-                    <label>Pin on Map</label>
-                    <div class="map-box">
-                    <button type="button" onclick="showMap()">view map </button>
-                        
-                        <div class="map-marker m1"></div>
-                        <div class="map-marker m2"></div>
-                        <div class="map-marker m3"></div>
-                        <div class="map-pin-icon"></div>
-                        <p>Click to pin exact location</p>
-                        <small>Interactive map integration coming soon</small>
-                        <p id="location"></p>
-                        <div id="map" style="height: 400px; display: none;"></div>
-                        
-                    </div>
-                    
-                    
-                </div>
-                <div class="field-group">
-                    <label>Additional Notes</label>
-                    <input id="issueNotes" type="text" class="field-input" placeholder="e.g., North side of road, past the traffic light">
-                </div>
-                <div class="form-nav">
-                    <button class="btn-ghost" onclick="goStep(2)">← Back</button>
-                    <button class="btn-primary btn-medium" onclick="goStep(4)">Next: Review →</button>
-                </div>
-=======
             <div class="step-dot" id="dot-4">
               <div class="step-circle">4</div>
               <span class="step-label">Review</span>
->>>>>>> 64bb51b7fabe40eab7b2f9ff4c8c5f698c2cd46f
             </div>
           </div>
 
@@ -326,24 +272,25 @@
             <div class="field-group">
               <label>Pin on Map</label>
               <div
-                class="map-box"
                 onclick="showToast('🗺️ Interactive map coming soon!')"
               >
                 <div class="map-marker m1"></div>
                 <div class="map-marker m2"></div>
                 <div class="map-marker m3"></div>
                 <div class="map-pin-icon"></div>
-                <p>Click to pin exact location</p>
-                <small>Interactive map integration coming soon</small>
+                
+                
+                
               </div>
+              <a href="map.html">view my location</a>
             </div>
             <div class="field-group">
-              <label>Additional Notes</label>
+              <label>paste google map link here</label>
               <input
                 id="issueNotes"
                 type="text"
                 class="field-input"
-                placeholder="e.g., North side of road, past the traffic light"
+                placeholder="location link:"
               />
             </div>
             <div class="form-nav">
