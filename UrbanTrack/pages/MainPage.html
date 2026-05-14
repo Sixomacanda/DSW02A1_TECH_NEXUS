@@ -4,48 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UrbanTrack — Report an Issue</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="../Styles/MainPage.css" />
-  </head>
-  <body>
-    <!-- Header -->
-    <header class="header">
-      <nav class="navbar">
-        <div class="logo">Urban Track</div>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../Styles/MainPage.css">
+</head>
+<body>
 
-        <ul class="nav-links">
-          <li><a href="MainPage.html">Home</a></li>
-          <li><a href="UserDashboard.html">Dashboard</a></li>
-          <li><a href="UserSettings.htm">Settings</a></li>
-          <li
-            id="mainUserInfo"
-            style="
-              display: flex;
-              align-items: center;
-              gap: 0.5rem;
-              padding: 0 0.75rem;
-              color: inherit;
-            "
-          >
-            <div
-              id="mainUserInitials"
-              style="
-                width: 32px;
-                height: 32px;
-                border-radius: 999px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: #ffffff;
-                color: #111111;
-                font-weight: 700;
-                font-size: 0.85rem;
-              "
-            >
-              JD
+<!-- Header -->
+<header class="header">
+    <nav class="nav-container">
+        <a href="index.html" class="nav-brand">UrbanTrack</a>
+        <div class="nav-links">
+            <a href="MainPage.html">Home</a>
+            <a href="UserSettings.htm">Settings</a>
+            <div id="mainUserInfo" style="display:flex;align-items:center;gap:.5rem;padding:0 .75rem;color:inherit;">
+                <div id="mainUserInitials" style="width:32px;height:32px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:#ffffff;color:#111111;font-weight:700;font-size:.85rem;"></div>
+                <span id="mainUserName" style="font-size:.95rem;"></span>
             </div>
             <span id="mainUserName" style="font-size: 0.95rem">Jane Doe</span>
           </li>
@@ -103,74 +76,34 @@
             </div>
           </div>
 
-          <!-- STEP 1 -->
-          <div class="form-section active" id="step-1">
-            <p class="section-heading">What type of issue is this?</p>
-            <p class="section-desc">
-              Select the category that best describes the problem.
-            </p>
-            <div class="category-grid">
-              <button class="cat-btn" data-cat="Pothole / Road">
-                <span class="cat-icon"></span>Pothole / Road
-              </button>
-              <button class="cat-btn" data-cat="Streetlight">
-                <span class="cat-icon"></span>Streetlight
-              </button>
-              <button class="cat-btn" data-cat="Blocked Drain">
-                <span class="cat-icon"></span>Blocked Drain
-              </button>
-              <button class="cat-btn" data-cat="Littering / Waste">
-                <span class="cat-icon"></span>Littering / Waste
-              </button>
-              <button class="cat-btn" data-cat="Graffiti / Vandalism">
-                <span class="cat-icon"></span>Graffiti
-              </button>
-              <button class="cat-btn" data-cat="Overgrown Vegetation">
-                <span class="cat-icon"></span>Vegetation
-              </button>
-              <button class="cat-btn" data-cat="Broken Pavement">
-                <span class="cat-icon"></span>Pavement
-              </button>
-              <button class="cat-btn" data-cat="Water Leak">
-                <span class="cat-icon"></span>Water Leak
-              </button>
-              <button class="cat-btn" data-cat="Other">
-                <span class="cat-icon"></span>Other
-              </button>
+            <!-- STEP 1 -->
+            <div class="form-section active" id="step-1">
+                <p class="section-heading">What type of issue is this?</p>
+                <p class="section-desc">Select the category that best describes the problem.</p>
+                <div class="category-grid">
+                    <button class="cat-btn" id="pothole" data-cat="Pothole / Road"><span class="cat-icon"></span>Pothole / Road</button>
+                    <button class="cat-btn" id="streetlight" data-cat="Streetlight"><span class="cat-icon"></span>Streetlight</button>
+                    <button class="cat-btn" id="blockeddrain" data-cat="Blocked Drain"><span class="cat-icon"></span>Blocked Drain</button>
+                    <button class="cat-btn" id="waste" data-cat="Littering / Waste"><span class="cat-icon"></span>Littering / Waste</button>
+                    <button class="cat-btn" id="graffiti" data-cat="Graffiti / Vandalism"><span class="cat-icon"></span>Graffiti</button>
+                    <button class="cat-btn" id="vegetation" data-cat="Overgrown Vegetation"><span class="cat-icon"></span>Vegetation</button>
+                    <button class="cat-btn" id="pavement" data-cat="Broken Pavement"><span class="cat-icon"></span>Pavement</button>
+                    <button class="cat-btn" id="waterleak" data-cat="Water Leak"><span class="cat-icon"></span>Water Leak</button>
+                    <button class="cat-btn" id="other" data-cat="Other"><span class="cat-icon"></span>Other</button>
+                </div>
+                <div class="field-group" style="margin-top:1.5rem;">
+                    <label>Severity <span class="req">*</span></label>
+                    <div class="severity-row">
+                        <button class="severity-btn" id="low" data-sev="low"    onclick="setSeverity(this,'low')">🟢 Low</button>
+                        <button class="severity-btn" id="medium" data-sev="medium" onclick="setSeverity(this,'medium')">🟡 Medium</button>
+                        <button class="severity-btn" id="high" data-sev="high"   onclick="setSeverity(this,'high')">🔴 High / Urgent</button>
+                    </div>
+                </div>
+                <div class="form-nav">
+                    <span></span>
+                    <button class="btn-primary btn-medium" id="next" onclick="goStep(2)">Next: Details →</button>
+                </div>
             </div>
-            <div class="field-group" style="margin-top: 1.5rem">
-              <label>Severity <span class="req">*</span></label>
-              <div class="severity-row">
-                <button
-                  class="severity-btn"
-                  data-sev="low"
-                  onclick="setSeverity(this, 'low')"
-                >
-                  Low
-                </button>
-                <button
-                  class="severity-btn"
-                  data-sev="medium"
-                  onclick="setSeverity(this, 'medium')"
-                >
-                  Medium
-                </button>
-                <button
-                  class="severity-btn"
-                  data-sev="high"
-                  onclick="setSeverity(this, 'high')"
-                >
-                  High / Urgent
-                </button>
-              </div>
-            </div>
-            <div class="form-nav">
-              <span></span>
-              <button class="btn-primary btn-medium" onclick="goStep(2)">
-                Next: Details →
-              </button>
-            </div>
-          </div>
 
           <!-- STEP 2 -->
           <div class="form-section" id="step-2">
@@ -360,87 +293,61 @@
         </div>
       </div>
 
-      <!-- ===== SIDEBAR ===== -->
-      <div class="sidebar animate-fade-up delay-2">
-        <div class="sidebar-card">
-          <p class="sidebar-title">Community Stats</p>
-          <div class="stats-grid">
-            <div class="stat-item">
-              <div class="stat-num">247</div>
-              <div class="stat-label">This Month</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-num" style="color: var(--success)">189</div>
-              <div class="stat-label">Resolved</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-num" style="color: var(--warning)">43</div>
-              <div class="stat-label">In Progress</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-num" style="color: var(--destructive)">15</div>
-              <div class="stat-label">Urgent</div>
-            </div>
-          </div>
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar animate-fade-up delay-2">
+
+       </div> <div class="sidebar-card">
+            <p class="sidebar-title">Community Stats</p>
+            <div class="stats-grid">
+                <div class="stat-item"><div class="stat-num" id="myReportsCount">0</div><div class="stat-label">My Reports</div></div>
+                <div class="stat-item"><div class="stat-num" id="resolvedCount" style="color:var(--success);">0</div><div class="stat-label">Resolved</div></div>
+                <div class="stat-item"><div class="stat-num" id="progressCount" style="color:var(--warning);">0</div><div class="stat-label">In Progress</div></div>
+                <div class="stat-item"><div class="stat-num" id="urgentCount" style="color:var(--destructive);">0</div><div class="stat-label">Urgent</div></div>
+            </div> 
         </div>
 
         <div class="sidebar-card">
-          <p class="sidebar-title">Recent Reports</p>
-          <div class="feed-item">
-            <div class="feed-dot" style="background: var(--destructive)"></div>
-            <div class="feed-content">
-              <div class="feed-title">Broken streetlight near school</div>
-              <div class="feed-meta">
-                Melville · 2h ago
-                <span class="status-badge status-urgent">Urgent</span>
-              </div>
+            <p class="sidebar-title">Recent Reports</p>
+            <div class="feed-item">
+                <div class="feed-dot" style="background:var(--destructive)"></div>
+                <div class="feed-content">
+                    <div class="feed-title">Broken streetlight near school</div>
+                    <div class="feed-meta">Melville · 0 ago <span class="status-badge status-urgent">....</span></div>
+                </div>
+                <div class="feed-votes">▲ </div>
             </div>
-            <div class="feed-votes">▲ 34</div>
-          </div>
-          <div class="feed-item">
-            <div class="feed-dot" style="background: var(--warning)"></div>
-            <div class="feed-content">
-              <div class="feed-title">Pothole on Jan Smuts Ave</div>
-              <div class="feed-meta">
-                Rosebank · 5h ago
-                <span class="status-badge status-pending">Pending</span>
-              </div>
+            <div class="feed-item">
+                <div class="feed-dot" style="background:var(--warning)"></div>
+                <div class="feed-content">
+                    <div class="feed-title">Pothole on Jan Smuts Ave</div>
+                    <div class="feed-meta">Rosebank · 0h ago <span class="status-badge status-pending">.....</span></div>
+                </div>
+                <div class="feed-votes">▲ </div>
             </div>
-            <div class="feed-votes">▲ 21</div>
-          </div>
-          <div class="feed-item">
-            <div class="feed-dot" style="background: var(--success)"></div>
-            <div class="feed-content">
-              <div class="feed-title">Blocked drain — flooding risk</div>
-              <div class="feed-meta">
-                Sandton · 1d ago
-                <span class="status-badge status-resolved">Resolved</span>
-              </div>
+            <div class="feed-item">
+                <div class="feed-dot" style="background:var(--success)"></div>
+                <div class="feed-content">
+                    <div class="feed-title">Blocked drain — flooding risk</div>
+                    <div class="feed-meta">Sandton · 0h ago <span class="status-badge status-resolved">.....</span></div>
+                </div>
+                <div class="feed-votes">▲ 0</div>
             </div>
-            <div class="feed-votes">▲ 18</div>
-          </div>
-          <div class="feed-item">
-            <div class="feed-dot" style="background: var(--warning)"></div>
-            <div class="feed-content">
-              <div class="feed-title">Graffiti on community wall</div>
-              <div class="feed-meta">
-                Soweto · 2d ago
-                <span class="status-badge status-pending">Pending</span>
-              </div>
+            <div class="feed-item">
+                <div class="feed-dot" style="background:var(--warning)"></div>
+                <div class="feed-content">
+                    <div class="feed-title">Graffiti on community wall</div>
+                    <div class="feed-meta">Soweto · 0h ago <span class="status-badge status-pending">Pending</span></div>
+                </div>
+                <div class="feed-votes">▲ 0</div>
             </div>
-            <div class="feed-votes">▲ 9</div>
-          </div>
-          <div class="feed-item">
-            <div class="feed-dot" style="background: var(--destructive)"></div>
-            <div class="feed-content">
-              <div class="feed-title">Water leak on Harris Road</div>
-              <div class="feed-meta">
-                Midrand · 2d ago
-                <span class="status-badge status-urgent">Urgent</span>
-              </div>
+            <div class="feed-item">
+                <div class="feed-dot" style="background:var(--destructive)"></div>
+                <div class="feed-content">
+                    <div class="feed-title">Water leak on Harris Road</div>
+                    <div class="feed-meta">Midrand · 0h ago <span class="status-badge status-urgent">Urgent</span></div>
+                </div>
+                <div class="feed-votes">▲ 0</div>
             </div>
-            <div class="feed-votes">▲ 7</div>
-          </div>
         </div>
 
         <div class="sidebar-card">
@@ -472,226 +379,375 @@
       </div>
     </div>
 
-    <div class="toast" id="toast"></div>
+<div class="toast" id="toast"></div>
+<script type="module">
 
-    <script>
-      function getInitials(name) {
-        if (!name) return "U";
-        const parts = name.trim().split(/\s+/).filter(Boolean);
-        return (
-          parts
-            .slice(0, 2)
-            .map((p) => p[0].toUpperCase())
-            .join("") || "U"
-        );
-      }
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, addDoc, doc, updateDoc, increment, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-      function initMainPageUser() {
-        const currentUser = JSON.parse(
-          localStorage.getItem("urbanTrack_currentUser") || "null",
-        );
-        const nameEl = document.getElementById("mainUserName");
-        const initialsEl = document.getElementById("mainUserInitials");
-        if (!currentUser || !nameEl || !initialsEl) return;
-        const displayName = currentUser.name || currentUser.email || "User";
-        nameEl.textContent = displayName;
-        initialsEl.textContent = getInitials(displayName).slice(0, 2);
-      }
+/* ---------------- FIREBASE ---------------- */
 
-      document.addEventListener("DOMContentLoaded", initMainPageUser);
+const firebaseConfig = {
+  apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
+  authDomain: "urban-track-91e53.firebaseapp.com",
+  projectId: "urban-track-91e53",
+  storageBucket: "urban-track-91e53.firebasestorage.app",
+  messagingSenderId: "519209303536",
+  appId: "1:519209303536:web:c212eb58eb836e27047135"
+};
 
-      let currentStep = 1,
-        selectedCategory = "",
-        selectedSeverity = "",
-        uploadedPhotos = [];
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-      document.querySelectorAll(".cat-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          document
-            .querySelectorAll(".cat-btn")
-            .forEach((b) => b.classList.remove("selected"));
-          btn.classList.add("selected");
-          selectedCategory = btn.dataset.cat;
+/* ---------------- GLOBAL STATE ---------------- */
+
+window.currentStep = 1;
+window.selectedCategory = "";
+window.selectedSeverity = "";
+window.uploadedPhotos = [];
+
+/* ---------------- USER DISPLAY ---------------- */
+
+function getInitials(name) {
+  if (!name) return "U";
+  const parts = name.trim().split(" ");
+  return parts.slice(0, 2).map(p => p[0].toUpperCase()).join("");
+}
+
+window.initMainPageUser = function () {
+
+  const currentUser = JSON.parse(localStorage.getItem("urbanTrack_currentUser") || "null");
+
+  if (!currentUser) return;
+
+  const nameEl = document.getElementById("mainUserName");
+  const initialsEl = document.getElementById("mainUserInitials");
+
+  const displayName = currentUser.name || currentUser.email || "User";
+
+  if (nameEl) nameEl.textContent = displayName;
+  if (initialsEl) initialsEl.textContent = getInitials(displayName);
+
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  initMainPageUser();
+  loadCommunityStats();
+});
+
+async function loadCommunityStats() {
+  const currentUser = JSON.parse(localStorage.getItem("urbanTrack_currentUser") || "null");
+  const userId = auth.currentUser?.uid || (currentUser ? currentUser.uid || currentUser.id : null);
+
+  if (!userId) return;
+
+  try {
+    const reportsQuery = query(collection(db, "reports"), where("reportedBy", "==", userId));
+    const reportSnapshot = await getDocs(reportsQuery);
+
+    let resolved = 0;
+    let progress = 0;
+    let urgent = 0;
+
+    reportSnapshot.forEach((reportDoc) => {
+      const report = reportDoc.data();
+      if (report.status === "resolved") resolved++;
+      if (report.status === "in-progress") progress++;
+      if (report.severity === "high" && report.status !== "resolved") urgent++;
+    });
+
+    document.getElementById("myReportsCount").textContent = reportSnapshot.size;
+    document.getElementById("resolvedCount").textContent = resolved;
+    document.getElementById("progressCount").textContent = progress;
+    document.getElementById("urgentCount").textContent = urgent;
+  } catch (error) {
+    console.error("Failed to load community stats:", error);
+  }
+}
+
+/* ---------------- CATEGORY ---------------- */
+
+document.querySelectorAll(".cat-btn").forEach(btn => {
+
+  btn.addEventListener("click", () => {
+
+    document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("selected"));
+
+    btn.classList.add("selected");
+
+    window.selectedCategory = btn.dataset.cat;
+
+  });
+
+});
+
+/* ---------------- SEVERITY ---------------- */
+
+window.setSeverity = function (element, severity) {
+
+  document.querySelectorAll(".severity-btn").forEach(btn => {
+    btn.classList.remove("sel-low", "sel-med", "sel-hig");
+  });
+
+  window.selectedSeverity = severity;
+
+  const classMap = {
+    low: "sel-low",
+    medium: "sel-med",
+    high: "sel-hig"
+  };
+
+  element.classList.add(classMap[severity]);
+
+};
+
+/* ---------------- STEP NAVIGATION ---------------- */
+
+window.goStep = function (step) {
+
+  if (step > window.currentStep) {
+
+    if (window.currentStep === 1 && !window.selectedCategory) {
+      showToast("⚠️ Please select a category");
+      return;
+    }
+
+    if (window.currentStep === 1 && !window.selectedSeverity) {
+      showToast("⚠️ Please select severity");
+      return;
+    }
+
+    if (window.currentStep === 2 && !document.getElementById("issueTitle").value.trim()) {
+      showToast("⚠️ Enter issue title");
+      return;
+    }
+
+    if (window.currentStep === 2 && !document.getElementById("issueDesc").value.trim()) {
+      showToast("⚠️ Enter description");
+      return;
+    }
+
+    if (window.currentStep === 3 && !document.getElementById("issueAddress").value.trim()) {
+      showToast("⚠️ Enter issue location");
+      return;
+    }
+
+  }
+
+  document.getElementById("step-" + window.currentStep).classList.remove("active");
+  document.getElementById("dot-" + window.currentStep).classList.remove("active");
+
+  window.currentStep = step;
+
+  document.getElementById("step-" + step).classList.add("active");
+  document.getElementById("dot-" + step).classList.add("active");
+
+  if (step === 4) buildReview();
+
+};
+
+/* ---------------- REVIEW ---------------- */
+
+function buildReview() {
+
+  const sevColors = {
+    low: "green",
+    medium: "orange",
+    high: "red"
+  };
+
+  const rows = [
+    ["Category", window.selectedCategory],
+    ["Severity", window.selectedSeverity],
+    ["Title", document.getElementById("issueTitle").value],
+    ["Address", document.getElementById("issueAddress").value],
+    ["Area", document.getElementById("issueArea").value || "—"],
+    ["Photos", window.uploadedPhotos.length]
+  ];
+
+  let html = `<div class="review-table">`;
+
+  rows.forEach(r => {
+
+    html += `
+    <div class="review-row">
+    <span class="review-key">${r[0]}</span>
+    <span class="review-val" style="color:${sevColors[window.selectedSeverity] || "#fff"}">
+    ${r[1]}
+    </span>
+    </div>
+    `;
+
+  });
+
+  html += "</div>";
+
+  const desc = document.getElementById("issueDesc").value;
+
+  if (desc) {
+
+    html += `
+    <div style="margin-top:15px">
+    <strong>Description</strong><br>
+    ${desc}
+    </div>
+    `;
+
+  }
+
+  document.getElementById("reviewContent").innerHTML = html;
+
+}
+
+/* ---------------- PHOTO UPLOAD ---------------- */
+
+window.handlePhotos = function (input) {
+
+  const files = Array.from(input.files);
+
+  files.forEach(file => {
+
+    if (file.size > 5 * 1024 * 1024) {
+      showToast("⚠️ File exceeds 5MB");
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = e => {
+
+      window.uploadedPhotos.push(e.target.result);
+
+      renderPhotos();
+
+    };
+
+    reader.readAsDataURL(file);
+
+  });
+
+};
+
+function renderPhotos() {
+
+  const preview = document.getElementById("photoPreview");
+
+  preview.innerHTML = "";
+
+  window.uploadedPhotos.forEach((src, i) => {
+
+    const div = document.createElement("div");
+
+    div.className = "photo-thumb";
+
+    div.innerHTML = `
+      <img src="${src}">
+      <button onclick="removePhoto(${i})">×</button>
+    `;
+
+    preview.appendChild(div);
+
+  });
+
+}
+
+window.removePhoto = function (index) {
+
+  window.uploadedPhotos.splice(index, 1);
+
+  renderPhotos();
+
+};
+
+/* ---------------- SUBMIT REPORT ---------------- */
+
+window.submitReport = async function () {
+
+  if (!document.getElementById("agreeCheck").checked) {
+
+    alert("Please confirm the declaration.");
+
+    return;
+
+  }
+
+  const currentUser = JSON.parse(localStorage.getItem("urbanTrack_currentUser") || "null");
+
+  // Prioritize the actual Firebase Auth user state over localStorage
+  const userId = auth.currentUser ? auth.currentUser.uid : (currentUser ? currentUser.uid || currentUser.id : null);
+  const userName = currentUser ? (currentUser.name || currentUser.email) : "Community Member";
+
+  const reportData = {
+
+    category: window.selectedCategory,
+    severity: window.selectedSeverity,
+    title: document.getElementById("issueTitle").value,
+    description: document.getElementById("issueDesc").value,
+    address: document.getElementById("issueAddress").value,
+    area: document.getElementById("issueArea").value,
+    notes: document.getElementById("issueNotes").value,
+    photos: window.uploadedPhotos,
+    timestamp: serverTimestamp(), // Use serverTimestamp for better rule validation
+    reportedBy: userId,
+    reporterName: userName,
+    reporterEmail: currentUser ? currentUser.email : "N/A"
+
+  };
+
+  try {
+
+    await addDoc(collection(db, "reports"), reportData);
+
+    // Attempt to update the user's report count in Firestore if the document exists
+    if (userId) {
+      try {
+        const userRef = doc(db, "users", userId);
+        await updateDoc(userRef, {
+          reportsCount: increment(1)
         });
-      });
+      } catch (updateError) {
+        console.warn("User profile document not found; skipping report count increment.", updateError);
+      }
+    }
 
-      function setSeverity(el, sev) {
-        document
-          .querySelectorAll(".severity-btn")
-          .forEach((b) => b.classList.remove("sel-low", "sel-med", "sel-hig"));
-        selectedSeverity = sev;
-        if (sev === "low") el.classList.add("sel-low");
-        else if (sev === "medium") el.classList.add("sel-med");
-        else if (sev === "high") el.classList.add("sel-hig");
-      }
+    showToast("✅ Report Submitted");
 
-      ["issueTitle:titleCount:100", "issueDesc:descCount:500"].forEach((s) => {
-        const [inp, cnt, max] = s.split(":");
-        const el = document.getElementById(inp),
-          co = document.getElementById(cnt);
-        if (!el || !co) return;
-        el.addEventListener("input", () => {
-          const n = el.value.length;
-          co.textContent = n + " / " + max;
-          co.className =
-            "char-count" + (n >= max ? " over" : n > max * 0.85 ? " warn" : "");
-        });
-      });
+    document.getElementById("successState").classList.add("active");
 
-      function goStep(n) {
-        if (n > currentStep) {
-          if (currentStep === 1 && !selectedCategory) {
-            showToast("Please select a category.");
-            return;
-          }
-          if (currentStep === 1 && !selectedSeverity) {
-            showToast("Please select a severity level.");
-            return;
-          }
-          if (
-            currentStep === 2 &&
-            !document.getElementById("issueTitle").value.trim()
-          ) {
-            showToast("Please add a title.");
-            return;
-          }
-          if (
-            currentStep === 2 &&
-            !document.getElementById("issueDesc").value.trim()
-          ) {
-            showToast("Please add a description.");
-            return;
-          }
-          if (
-            currentStep === 3 &&
-            !document.getElementById("issueAddress").value.trim()
-          ) {
-            showToast("Please enter the issue location.");
-            return;
-          }
-        }
-        document
-          .getElementById("step-" + currentStep)
-          .classList.remove("active");
-        document
-          .getElementById("dot-" + currentStep)
-          .classList.remove("active");
-        document.getElementById("dot-" + currentStep).classList.add("done");
-        currentStep = n;
-        for (let i = 1; i < n; i++) {
-          document.getElementById("dot-" + i).classList.add("done");
-          document.getElementById("dot-" + i).classList.remove("active");
-        }
-        for (let i = n + 1; i <= 4; i++) {
-          document
-            .getElementById("dot-" + i)
-            .classList.remove("done", "active");
-        }
-        document.getElementById("dot-" + n).classList.add("active");
-        document.getElementById("dot-" + n).classList.remove("done");
-        document.getElementById("step-" + n).classList.add("active");
-        if (n === 4) buildReview();
-      }
+  } catch (error) {
 
-      function buildReview() {
-        const sevColors = {
-          low: "var(--success)",
-          medium: "var(--warning)",
-          high: "var(--destructive)",
-        };
-        const rows = [
-          ["Category", selectedCategory, ""],
-          [
-            "Severity",
-            selectedSeverity.charAt(0).toUpperCase() +
-              selectedSeverity.slice(1),
-            sevColors[selectedSeverity],
-          ],
-          ["Title", document.getElementById("issueTitle").value, ""],
-          ["Address", document.getElementById("issueAddress").value, ""],
-          ["Area", document.getElementById("issueArea").value || "—", ""],
-          [
-            "Photos",
-            uploadedPhotos.length > 0
-              ? uploadedPhotos.length + " attached"
-              : "None",
-            "",
-          ],
-        ];
-        let html = '<div class="review-table">';
-        rows.forEach(([k, v, c]) => {
-          html += `<div class="review-row"><span class="review-key">${k}</span><span class="review-val" style="${c ? "color:" + c + ";" : ""}">${v || "—"}</span></div>`;
-        });
-        html += "</div>";
-        const desc = document.getElementById("issueDesc").value;
-        if (desc)
-          html += `<div style="padding:1rem;background:rgba(255,255,255,.04);border:1px solid var(--glass-border);border-radius:var(--radius);font-size:.875rem;color:var(--text-secondary);line-height:1.7;margin-bottom:1rem;">${desc}</div>`;
-        document.getElementById("reviewContent").innerHTML = html;
-      }
+    console.error("Submission Error Details:", error);
+    showToast("❌ Failed: " + (error.code || "Check Console"));
 
-      function handlePhotos(input) {
-        const files = Array.from(input.files);
-        const remainingSlots = 3 - uploadedPhotos.length;
-        const toAdd = files.slice(0, remainingSlots);
-        toAdd.forEach((file) => {
-          if (file.size > 5 * 1024 * 1024) {
-            showToast("⚠️ " + file.name + " exceeds 5MB.");
-            return;
-          }
-          const r = new FileReader();
-          r.onload = (e) => {
-            uploadedPhotos.push(e.target.result);
-            renderPhotos();
-          };
-          r.readAsDataURL(file);
-        });
-        input.value = "";
-      }
-      function renderPhotos() {
-        const p = document.getElementById("photoPreview");
-        p.innerHTML = "";
-        uploadedPhotos.forEach((src, i) => {
-          const t = document.createElement("div");
-          t.className = "photo-thumb";
-          t.innerHTML = `<img src="${src}" alt="photo"><button class="photo-remove" onclick="removePhoto(${i})">×</button>`;
-          p.appendChild(t);
-        });
-      }
-      function removePhoto(i) {
-        uploadedPhotos.splice(i, 1);
-        renderPhotos();
-      }
+  }
 
-      function submitReport() {
-        if (!document.getElementById("agreeCheck").checked) {
-          showToast("⚠️ Please confirm the declaration.");
-          return;
-        }
-        const btn = document.getElementById("submitBtn");
-        const originalText = btn.textContent;
-        btn.textContent = "Submitting…";
-        btn.disabled = true;
-        setTimeout(() => {
-          document
-            .querySelectorAll(".form-section")
-            .forEach((s) => s.classList.remove("active"));
-          document.querySelector(".steps-indicator").style.display = "none";
-          document.getElementById("issueRef").textContent =
-            "#UT-" + Math.floor(1000 + Math.random() * 9000);
-          document.getElementById("successState").classList.add("active");
-          btn.textContent = originalText;
-          btn.disabled = false;
-        }, 1400);
-      }
+};
 
-      function showToast(msg) {
-        const t = document.getElementById("toast");
-        t.textContent = msg;
-        t.classList.add("show");
-        clearTimeout(t._t);
-        t._t = setTimeout(() => t.classList.remove("show"), 3000);
-      }
-    </script>
-    <script src="../js/main.js"></script>
-  </body>
+/* ---------------- TOAST ---------------- */
+
+function showToast(message) {
+
+  const toast = document.getElementById("toast");
+
+  if (!toast) {
+    alert(message);
+    return;
+  }
+
+  toast.textContent = message;
+
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3000);
+
+}
+</script>
+</body>
+
+
+
 </html>
