@@ -6,6 +6,7 @@
     <title>UrbanTrack - Report Community Issues in Real-Time</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="UrbanTrack/Styles/homePage.css">
+    <link rel="stylesheet" href="UrbanTrack/Styles/chatBotStyle.css">
 </head>
 <body>
     <header class="header">
@@ -82,75 +83,305 @@
         </div>
     </section>
 
-   <section id="about" class="testimonials">
-    <div class="container">
-        <h2 class="section-title">About UrbanTrack</h2>
-        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
-            <p style="font-size: 1.15rem; color: var(--text-secondary); line-height: 1.9; margin-bottom: 2.5rem;">
-                UrbanTrack is a smart community issue reporting platform that gives residents a simple, central place to report local problems like potholes, broken streetlights, blocked drains and vandalism. Instead of calls going unanswered and emails getting lost, every report is logged, mapped and visible to the whole community. Neighbours can upvote issues they recognise, pushing the most urgent problems to the top so local authorities know exactly where to focus first. Admins manage incoming reports, update statuses in real time, and keep residents informed every step of the way from submission right through to resolution. UrbanTrack brings transparency, accountability and community power together in one place, making it easier for people to be heard and faster for problems to get fixed.
-            </p>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
-                <div class="feature-card" style="padding: 1.5rem;">
-                    <div style="font-size: 2rem; margin-bottom: 0.75rem;"></div>
-                    <h3>Be Heard</h3>
-                    <p style="font-size: 0.875rem;">Every report is logged and tracked — nothing gets lost or ignored.</p>
-                </div>
-                <div class="feature-card" style="padding: 1.5rem;">
-                    <div style="font-size: 2rem; margin-bottom: 0.75rem;"></div>
-                    <h3>Community Power</h3>
-                    <p style="font-size: 0.875rem;">Upvotes from neighbours push urgent issues to the top of the priority list.</p>
-                </div>
-                <div class="feature-card" style="padding: 1.5rem;">
-                    <div style="font-size: 2rem; margin-bottom: 0.75rem;"></div>
-                    <h3>Real Results</h3>
-                    <p style="font-size: 0.875rem;">Authorities update statuses in real time so you always know what's happening.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<footer class="footer">
-    <div class="container">
-        <div class="footer-grid">
-            <div>
-                <h4>Product</h4>
-                <ul>
-                    <li><a href="user-dashboard.html">Dashboard</a></li>
-                    <li><a href="#">FAQ</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4>Company</h4>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4>Legal</h4>
-                <ul>
-                    <li><a href="#">Privacy</a></li>
-                    <li><a href="#">Terms</a></li>
-                    <li><a href="#">Security</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4>UrbanTrack</h4>
-                <p>Making communities better, one report at a time.</p>
-                <p style="margin-top: 0.5rem;">
-                    <a href="UrbanTrack/pages/login.html" style="color: #38bdf8;">Login</a> |
-                    <a href="UrbanTrack/pages/signUpPage.html" style="color: #38bdf8;">Sign Up</a>
+    <section id="about" class="testimonials">
+        <div class="container">
+            <h2 class="section-title">About UrbanTrack</h2>
+            <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <p style="font-size: 1.15rem; color: var(--text-secondary); line-height: 1.9; margin-bottom: 2.5rem;">
+                    UrbanTrack is a smart community issue reporting platform that gives residents a simple, central place to report local problems like potholes, broken streetlights, blocked drains and vandalism. Instead of calls going unanswered and emails getting lost, every report is logged, mapped and visible to the whole community. Neighbours can upvote issues they recognise, pushing the most urgent problems to the top so local authorities know exactly where to focus first. Admins manage incoming reports, update statuses in real time, and keep residents informed every step of the way from submission right through to resolution. UrbanTrack brings transparency, accountability and community power together in one place, making it easier for people to be heard and faster for problems to get fixed.
                 </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                    <div class="feature-card" style="padding: 1.5rem;">
+                        <div style="font-size: 2rem; margin-bottom: 0.75rem;"></div>
+                        <h3>Be Heard</h3>
+                        <p style="font-size: 0.875rem;">Every report is logged and tracked — nothing gets lost or ignored.</p>
+                    </div>
+                    <div class="feature-card" style="padding: 1.5rem;">
+                        <div style="font-size: 2rem; margin-bottom: 0.75rem;"></div>
+                        <h3>Community Power</h3>
+                        <p style="font-size: 0.875rem;">Upvotes from neighbours push urgent issues to the top of the priority list.</p>
+                    </div>
+                    <div class="feature-card" style="padding: 1.5rem;">
+                        <div style="font-size: 2rem; margin-bottom: 0.75rem;"></div>
+                        <h3>Real Results</h3>
+                        <p style="font-size: 0.875rem;">Authorities update statuses in real time so you always know what's happening.</p>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>© 2026 UrbanTrack. All rights reserved.</p>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="user-dashboard.html">Dashboard</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>UrbanTrack</h4>
+                    <p>Making communities better, one report at a time.</p>
+                    <p style="margin-top: 0.5rem;">
+                        <a href="UrbanTrack/pages/login.html" style="color: #38bdf8;">Login</a> |
+                        <a href="UrbanTrack/pages/signUpPage.html" style="color: #38bdf8;">Sign Up</a>
+                    </p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 UrbanTrack. All rights reserved.</p>
+            </div>
         </div>
+    </footer>
+
+    <!-- ============================================================
+         CHATBOT HTML
+    ============================================================ -->
+
+    <!-- Floating trigger button -->
+    <button id="chatTrigger" aria-label="Open UrbanTrack assistant">
+        <svg class="icon-open" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 2H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h3l3 3 3-3h7a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-9 10H7v-2h4v2zm6 0h-4v-2h4v2zm0-4H7V6h10v2z"/>
+        </svg>
+        <svg class="icon-close" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+        <span id="chatBadge">1</span>
+    </button>
+
+    <!-- Chat panel -->
+    <div id="chatPanel" role="dialog" aria-label="UrbanTrack Assistant">
+        <div class="cp-header">
+            <div class="cp-avatar">🏙️</div>
+            <div class="cp-info">
+                <strong>UrbanTrack Assistant</strong>
+                <span><span class="cp-dot"></span> Online · Powered by Gemini</span>
+            </div>
+            <button class="cp-clear" title="Clear chat" onclick="cpClearChat()">🗑️</button>
+        </div>
+
+        <div class="cp-body" id="cpBody">
+            <div class="cp-msg-row bot">
+                <div class="cp-av bot">🏙️</div>
+                <div class="cp-bubble bot">
+                    Hi! I'm your UrbanTrack assistant. I can help you report city issues, check fix timelines, or guide you through the process. What's going on in your area?
+                </div>
+            </div>
+        </div>
+
+        <div class="cp-chips" id="cpChips">
+            <button class="cp-chip" onclick="cpUseSuggestion('How do I report a pothole?')">Pothole</button>
+            <button class="cp-chip" onclick="cpUseSuggestion('Broken streetlight near me')">Streetlight</button>
+            <button class="cp-chip" onclick="cpUseSuggestion('How long does a fix take?')">Fix timeline</button>
+            <button class="cp-chip" onclick="cpUseSuggestion('Track my report status')">Track report</button>
+        </div>
+
+        <div class="cp-footer">
+            <div class="cp-input-wrap">
+                <textarea
+                    id="cpInput"
+                    rows="1"
+                    placeholder="Describe an issue or ask anything…"
+                    onkeydown="cpHandleKey(event)"
+                    oninput="cpAutoResize(this)"
+                ></textarea>
+            </div>
+            <button class="cp-send-btn" id="cpSendBtn" onclick="cpSendMessage()" title="Send">
+                <svg id="cpSendIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+            </button>
+        </div>
+        <div class="cp-tagline">UrbanTrack · Helping cities work better</div>
     </div>
-</footer>
+
+    <!-- ============ END CHATBOT HTML ============ -->
+
+    <!-- Your original scripts — completely unchanged -->
     <script src="UrbanTrack/js/main.js"></script>
     <script src="../js/MainPage.js"></script>
+
+    <!-- ============ CHATBOT SCRIPT — Gemini API ============ -->
+    <script>
+        // ─────────────────────────────────────────────────────────
+        // TESTING: paste your Gemini key here
+        // PRODUCTION: delete the key, set up Node.js (see server.js)
+        // ─────────────────────────────────────────────────────────
+    
+
+        const CP_SYSTEM_PROMPT = `You are the UrbanTrack assistant — a helpful, friendly AI on an urban issue-reporting platform.
+You help residents:
+1. Report city issues (potholes, broken streetlights, illegal dumping, graffiti, broken sidewalks, water leaks, etc.)
+2. Understand what information is needed (location, description, photo tip)
+3. Learn how reporting and resolution works
+4. Get estimated fix timelines: emergency 24 hr, high priority 3–5 days, medium 1–2 weeks, low 4–6 weeks
+5. Feel heard — people report issues because they care about their community
+
+Keep responses concise (2–4 sentences). Warm, civic-minded tone. When someone describes an issue, confirm the type, ask for location if missing, and confirm the report will be logged.`;
+
+        const cpHistory = [];
+
+        // Toggle panel open/close
+        const cpTrigger = document.getElementById("chatTrigger");
+        const cpPanel   = document.getElementById("chatPanel");
+        const cpBadge   = document.getElementById("chatBadge");
+
+        cpTrigger.addEventListener("click", () => {
+            const isOpen = cpPanel.classList.toggle("open");
+            cpTrigger.classList.toggle("open", isOpen);
+            if (isOpen) {
+                cpBadge.style.display = "none";
+                document.getElementById("cpInput").focus();
+            }
+        });
+
+        // Show red badge after 3s to draw attention
+        setTimeout(() => {
+            if (!cpPanel.classList.contains("open")) {
+                cpBadge.style.display = "flex";
+            }
+        }, 3000);
+
+        function cpAutoResize(el) {
+            el.style.height = "auto";
+            el.style.height = Math.min(el.scrollHeight, 80) + "px";
+        }
+
+        function cpHandleKey(e) {
+            if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); cpSendMessage(); }
+        }
+
+        function cpUseSuggestion(text) {
+            document.getElementById("cpInput").value = text;
+            cpSendMessage();
+        }
+
+        function cpClearChat() {
+            cpHistory.length = 0;
+            document.getElementById("cpBody").innerHTML = `
+                <div class="cp-msg-row bot">
+                    <div class="cp-av bot">🏙️</div>
+                    <div class="cp-bubble bot">Chat cleared! How can I help with UrbanTrack today?</div>
+                </div>`;
+            document.getElementById("cpChips").style.display = "flex";
+        }
+
+        function cpAppendMsg(role, text) {
+            const body = document.getElementById("cpBody");
+            const row  = document.createElement("div");
+            row.className = `cp-msg-row ${role}`;
+            const av  = document.createElement("div");
+            av.className = `cp-av ${role}`;
+            av.textContent = role === "bot" ? "🏙️" : "👤";
+            const bbl = document.createElement("div");
+            bbl.className = `cp-bubble ${role}`;
+            bbl.textContent = text;
+            row.appendChild(av);
+            row.appendChild(bbl);
+            body.appendChild(row);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function cpShowTyping() {
+            const body = document.getElementById("cpBody");
+            const row  = document.createElement("div");
+            row.className = "cp-msg-row bot"; row.id = "cpTypingRow";
+            const av  = document.createElement("div");
+            av.className = "cp-av bot"; av.textContent = "🏙️";
+            const bbl = document.createElement("div");
+            bbl.className = "cp-bubble bot";
+            bbl.innerHTML = `<div class="cp-typing"><span></span><span></span><span></span></div>`;
+            row.appendChild(av); row.appendChild(bbl);
+            body.appendChild(row);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function cpRemoveTyping() {
+            const r = document.getElementById("cpTypingRow");
+            if (r) r.remove();
+        }
+
+        function cpSetLoading(on) {
+            const btn  = document.getElementById("cpSendBtn");
+            const icon = document.getElementById("cpSendIcon");
+            btn.disabled = on;
+            btn.classList.toggle("loading", on);
+            icon.innerHTML = on
+                ? `<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.5" stroke-dasharray="40" stroke-dashoffset="15" fill="none"/>`
+                : `<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>`;
+        }
+
+        async function cpSendMessage() {
+            const input = document.getElementById("cpInput");
+            const text  = input.value.trim();
+            if (!text) return;
+
+            // Prompt for Gemini key if not set
+            // if (!GEMINI_API_KEY) {
+            //     const k = prompt("Enter your Gemini API key (AIzaSy...):");
+            //     if (k && k.startsWith("AIza")) { GEMINI_API_KEY = k; }
+            //     else {
+            //         alert("Invalid key. Get yours free at https://aistudio.google.com");
+            //         return;
+            //     }
+            // }
+
+            document.getElementById("cpChips").style.display = "none";
+            input.value = ""; input.style.height = "auto";
+            cpAppendMsg("user", text);
+            cpHistory.push({ role: "user", parts: [{ text }] });
+            cpSetLoading(true);
+            cpShowTyping();
+
+            try {
+                // ── GEMINI API CALL ──────────────────────────────────
+                // For production: change URL to "/api/chat" and remove the key
+               const res = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+        message: text,
+        history: cpHistory
+    })
+});
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error?.message || "API error " + res.status);
+
+                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text
+                    || "Sorry, I couldn't get a response. Please try again.";
+
+                // Save assistant reply in Gemini format
+                cpHistory.push({ role: "model", parts: [{ text: reply }] });
+                cpRemoveTyping();
+                cpAppendMsg("bot", reply);
+
+            } catch (err) {
+                cpRemoveTyping();
+                cpAppendMsg("bot", ` ${err.message}`);
+            } finally {
+                cpSetLoading(false);
+            }
+        }
+    </script>
+    <!-- ============ END CHATBOT SCRIPT ============ -->
 
 </body>
 </html>
