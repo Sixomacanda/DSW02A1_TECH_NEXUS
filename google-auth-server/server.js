@@ -71,7 +71,20 @@ app.get(
     function (req, res) {
         console.log("Google auth successful, user:", req.user ? req.user.displayName : "no user");
         console.log("Google auth successful, redirecting to", FRONTEND_URL);
-        res.redirect(FRONTEND_URL);
+        
+        // Store user data in session and send as query params
+        if (req.user) {
+            const userData = JSON.stringify({
+                name: req.user.displayName,
+                email: req.user.emails[0]?.value,
+                id: req.user.id,
+                picture: req.user.photos[0]?.value,
+                role: 'user'
+            });
+            res.redirect(FRONTEND_URL + "?googleUser=" + encodeURIComponent(userData));
+        } else {
+            res.redirect(FRONTEND_URL);
+        }
     }
 );
 
