@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="UrbanTrack/Styles/homePage.css">
     <link rel="stylesheet" href="UrbanTrack/Styles/chatBotStyle.css">
 </head>
-<body>
+<body></body>
     <header class="header">
         <nav class="nav-container">
             <a href="#" class="nav-brand">UrbanTrack</a>
@@ -16,8 +16,8 @@
                 <a href="#home">Home</a>
                 <a href="#how-it-works">How it works</a>
                 <a href="#about">About</a>
-                <a href="UrbanTrack/pages/login.html">Login</a>
-                <a href="UrbanTrack/pages/signUpPage.html" class="btn-primary btn-small">Sign Up</a>
+                <a href="http://localhost:5501/UrbanTrack/pages/login.html">Login</a>
+                <a href="http://localhost:5501/UrbanTrack/pages/signUpPage.html" class="btn-primary btn-small">Sign Up</a>
             </div>
             <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">☰</button>
         </nav>
@@ -111,103 +111,45 @@
         </div>
     </section>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div>
-                    <h4>Product</h4>
-                    <ul>
-                        <li><a href="user-dashboard.html">Dashboard</a></li>
-                        <li><a href="#">FAQ</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4>Company</h4>
-                    <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4>Legal</h4>
-                    <ul>
-                        <li><a href="#">Privacy</a></li>
-                        <li><a href="#">Terms</a></li>
-                        <li><a href="#">Security</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4>UrbanTrack</h4>
-                    <p>Making communities better, one report at a time.</p>
-                    <p style="margin-top: 0.5rem;">
-                        <a href="UrbanTrack/pages/login.html" style="color: #38bdf8;">Login</a> |
-                        <a href="UrbanTrack/pages/signUpPage.html" style="color: #38bdf8;">Sign Up</a>
-                    </p>
-                </div>
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div>
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="user-dashboard.html">Dashboard</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
             </div>
-            <div class="footer-bottom">
-                <p>© 2026 UrbanTrack. All rights reserved.</p>
+            <div>
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Terms</a></li>
+                    <li><a href="#">Security</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>UrbanTrack</h4>
+                <p>Making communities better, one report at a time.</p>
+                <p style="margin-top: 0.5rem;">
+                    <a href="http://localhost:5501/UrbanTrack/pages/login.html" style="color: #38bdf8;">Login</a> |
+                    <a href="http://localhost:5501/UrbanTrack/pages/signUpPage.html" style="color: #38bdf8;">Sign Up</a>
+                </p>
             </div>
         </div>
-    </footer>
-
-    <!-- chatbot html -->
-    <!-- Floating trigger button -->
-    <button id="chatTrigger" aria-label="Open UrbanTrack assistant">
-        <svg class="icon-open" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 2H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h3l3 3 3-3h7a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-9 10H7v-2h4v2zm6 0h-4v-2h4v2zm0-4H7V6h10v2z"/>
-        </svg>
-        <svg class="icon-close" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-        </svg>
-        <span id="chatBadge">1</span>
-    </button>
-
-    <!-- Chat panel -->
-    <div id="chatPanel" role="dialog" aria-label="UrbanTrack Assistant">
-        <div class="cp-header">
-            <div class="cp-avatar"></div>
-            <div class="cp-info">
-                <strong>UrbanTrack Assistant</strong>
-                <span><span class="cp-dot"></span> Online · Powered by Gemini</span>
-            </div>
-            <button class="cp-clear" title="Clear chat" onclick="cpClearChat()"></button>
+        <div class="footer-bottom">
+            <p>© 2026 UrbanTrack. All rights reserved.</p>
         </div>
-
-        <div class="cp-body" id="cpBody">
-            <div class="cp-msg-row bot">
-                <div class="cp-av bot">🏙️</div>
-                <div class="cp-bubble bot">
-                    Hi! I'm your UrbanTrack assistant. I can help you report city issues, check fix timelines, or guide you through the process. What's going on in your area?
-                </div>
-            </div>
-        </div>
-
-        <div class="cp-chips" id="cpChips">
-            <button class="cp-chip" onclick="cpUseSuggestion('How do I report a pothole?')">Pothole</button>
-            <button class="cp-chip" onclick="cpUseSuggestion('Broken streetlight near me')">Streetlight</button>
-            <button class="cp-chip" onclick="cpUseSuggestion('How long does a fix take?')">Fix timeline</button>
-            <button class="cp-chip" onclick="cpUseSuggestion('Track my report status')">Track report</button>
-        </div>
-
-        <div class="cp-footer">
-            <div class="cp-input-wrap">
-                <textarea
-                    id="cpInput"
-                    rows="1"
-                    placeholder="Describe an issue or ask anything…"
-                    onkeydown="cpHandleKey(event)"
-                    oninput="cpAutoResize(this)"
-                ></textarea>
-            </div>
-            <button class="cp-send-btn" id="cpSendBtn" onclick="cpSendMessage()" title="Send">
-                <svg id="cpSendIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-                </svg>
-            </button>
-        </div>
-        <div class="cp-tagline">UrbanTrack · Helping cities work better</div>
     </div>
+</footer>
     <script src="UrbanTrack/js/main.js"></script>
     <script src="UrbanTrack/js/MainPage.js"></script>
     <script src="UrbanTrack/js/chatbot.js"></script>
