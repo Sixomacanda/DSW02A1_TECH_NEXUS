@@ -113,6 +113,10 @@ function isLoggedIn() {
 }
 
 function logout() {
+  if (isGoogleUser()) {
+    console.warn("Google-authenticated users remain logged in and logout is disabled.");
+    return;
+  }
   localStorage.removeItem(STORAGE_CURRENT_USER);
   window.location.href = "login.html";
 }
@@ -662,11 +666,13 @@ function handleGoogleUserData() {
   if (googleUserData) {
     try {
       const userData = JSON.parse(decodeURIComponent(googleUserData));
-      // Store in localStorage as current user
-      localStorage.setItem(STORAGE_CURRENT_USER, JSON.stringify(userData));
+      userData.isGoogleUser = true;
+      // Store in localStorage as current user using the shared helper
+      setCurrentUser(userData);
       
       // Display user name and avatar if on MainPage
       displayUserInfo(userData);
+      toggleLogoutButton();
       
       // Clean URL by removing the query parameter
       window.history.replaceState({}, document.title, window.location.pathname);
@@ -710,6 +716,8 @@ document.addEventListener("DOMContentLoaded", function () {
       displayUserInfo(currentUser);
     }
   }
+
+  toggleLogoutButton();
 
   // Setup password toggles on all pages
   setupPasswordToggles();
