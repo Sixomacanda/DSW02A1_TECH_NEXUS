@@ -649,10 +649,62 @@ function escapeHtml(str) {
   });
 }
 
+// Handle Google user data from OAuth redirect
+function handleGoogleUserData() {
+  const params = new URLSearchParams(window.location.search);
+  const googleUserData = params.get("googleUser");
+  
+  if (googleUserData) {
+    try {
+      const userData = JSON.parse(decodeURIComponent(googleUserData));
+      // Store in localStorage as current user
+      localStorage.setItem(STORAGE_CURRENT_USER, JSON.stringify(userData));
+      
+      // Display user name and avatar if on MainPage
+      displayUserInfo(userData);
+      
+      // Clean URL by removing the query parameter
+      window.history.replaceState({}, document.title, window.location.pathname);
+      
+      return userData;
+    } catch (error) {
+      console.error("Error parsing Google user data:", error);
+    }
+  }
+  
+  return null;
+}
+
+// Display user name and avatar
+function displayUserInfo(user) {
+  const userNameDisplay = document.getElementById("userNameDisplay");
+  const userAvatar = document.getElementById("userAvatar");
+  
+  if (userNameDisplay && user && user.name) {
+    userNameDisplay.textContent = user.name;
+  }
+  
+  if (userAvatar && user && user.name) {
+    // Show first letter initial
+    userAvatar.textContent = user.name.charAt(0).toUpperCase();
+  }
+}
+
 //  CHECK PAGE TYPE AND INITIALIZE
 document.addEventListener("DOMContentLoaded", function () {
   // Initialize storage
   initializeUserStorage();
+  
+  // Handle Google OAuth user data first
+  const googleUser = handleGoogleUserData();
+  
+  // If no Google user, check localStorage for email user
+  if (!googleUser) {
+    const currentUser = getCurrentUser();
+    if (currentUser) {
+      displayUserInfo(currentUser);
+    }
+  }
 
   // Setup password toggles on all pages
   setupPasswordToggles();
