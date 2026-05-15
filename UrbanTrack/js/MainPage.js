@@ -117,6 +117,11 @@ function logout() {
   window.location.href = "login.html";
 }
 
+// Logout handler for onclick
+function doLogout() {
+  logout();
+}
+
 // TOAST NOTIFICATION
 function showToast(message, isError = false) {
   // Remove existing toast if any
