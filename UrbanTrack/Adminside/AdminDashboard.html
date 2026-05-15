@@ -418,13 +418,13 @@
     <p>Admin Control Panel</p>
   </div>
   <div class="sidebar-section">Overview</div>
-  <button class="nav-item active" onclick="showView('overview')"><span class="icon">📊</span> Dashboard</button>
+  <button class="nav-item active" onclick="showView('overview')"><span class="icon"></span> Dashboard</button>
   <div class="sidebar-section">Management</div>
-  <button class="nav-item" onclick="showView('issues')"><span class="icon">📋</span> All Issues <span class="nav-badge" id="issuesBadge">0</span></button>
-  <button class="nav-item" onclick="showView('users')"><span class="icon">👥</span> Users <span class="nav-badge" id="usersBadge">0</span></button>
-  <button class="nav-item" onclick="showView('pending')"><span class="icon">⏳</span> Pending Approval <span class="nav-badge warn" id="pendingBadge">0</span></button>
+  <button class="nav-item" onclick="showView('issues')"><span class="icon"></span> All Issues <span class="nav-badge" id="issuesBadge">0</span></button>
+  <button class="nav-item" onclick="showView('users')"><span class="icon"></span> Users <span class="nav-badge" id="usersBadge">0</span></button>
+  <button class="nav-item" onclick="showView('pending')"><span class="icon"></span> Pending Approval <span class="nav-badge warn" id="pendingBadge">0</span></button>
   <div class="sidebar-section">Settings</div>
-  <button class="nav-item" onclick="showView('settings')"><span class="icon">⚙️</span> Settings</button>
+  <button class="nav-item" onclick="showView('settings')"><span class="icon"></span> Settings</button>
   <div class="sidebar-footer">
     <div class="admin-info"><div class="admin-avatar">AD</div><div><div class="admin-name">Admin User</div><div class="admin-role">Super Administrator</div></div></div>
     <button class="logout-btn" onclick="localStorage.removeItem('urbanTrack_currentUser'); location.href='../../homePage.html'">← Logout</button>
@@ -522,9 +522,9 @@ const db = getFirestore(app);
 
   function getStatusBadge(status) {
     const map = {
-      pending: { class: 'status-badge', label: '🟡 Pending' },
-      'in-progress': { class: 'status-badge', label: '🔵 In Progress' },
-      resolved: { class: 'status-badge', label: '🟢 Resolved' }
+      pending: { class: 'status-badge', label: 'Pending' },
+      'in-progress': { class: 'status-badge', label: 'In Progress' },
+      resolved: { class: 'status-badge', label: 'Resolved' }
     };
     const s = map[status] || { class: 'status-badge', label: status };
     return `<span class="${s.class}">${s.label}</span>`;
