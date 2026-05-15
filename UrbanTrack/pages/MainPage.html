@@ -4,6 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UrbanTrack — Report an Issue</title>
+<<<<<<< HEAD
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../Styles/MainPage.css" />
+  </head>
+  <body>
+=======
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../Styles/MainPage.css">
 </head>
@@ -19,6 +28,51 @@
             <div id="mainUserInfo" style="display:flex;align-items:center;gap:.5rem;padding:0 .75rem;color:inherit;">
                 <div id="mainUserInitials" style="width:32px;height:32px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:#ffffff;color:#111111;font-weight:700;font-size:.85rem;"></div>
                 <span id="mainUserName" style="font-size:.95rem;"></span>
+            </div>
+            <button class="btn-primary btn-small" onclick="localStorage.removeItem('urbanTrack_currentUser'); location.href='../../homePage.html'" style="border:none;background:inherit;cursor:pointer;">Logout</button>
+        </div>
+    </nav>
+</header>
+
+<!-- Page -->
+<div class="page-wrap">
+
+>>>>>>> 600e84be004ed998ec71d8bab6d5e56780658821
+    <!-- Header -->
+    <header class="header">
+      <nav class="navbar">
+        <div class="logo">Urban Track</div>
+
+        <ul class="nav-links">
+          <li><a href="MainPage.html">Home</a></li>
+          <li><a href="UserDashboard.html">Dashboard</a></li>
+          <li><a href="UserSettings.htm">Settings</a></li>
+          <li
+            id="mainUserInfo"
+            style="
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+              padding: 0 0.75rem;
+              color: inherit;
+            "
+          >
+            <div
+              id="mainUserInitials"
+              style="
+                width: 32px;
+                height: 32px;
+                border-radius: 999px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #ffffff;
+                color: #111111;
+                font-weight: 700;
+                font-size: 0.85rem;
+              "
+            >
+              JD
             </div>
             <span id="mainUserName" style="font-size: 0.95rem">Jane Doe</span>
           </li>
@@ -62,19 +116,11 @@
               <div class="step-circle">1</div>
               <span class="step-label">Category</span>
             </div>
+<<<<<<< HEAD
             <div class="step-dot" id="dot-2">
               <div class="step-circle">2</div>
               <span class="step-label">Details</span>
-            </div>
-            <div class="step-dot" id="dot-3">
-              <div class="step-circle">3</div>
-              <span class="step-label">Location</span>
-            </div>
-            <div class="step-dot" id="dot-4">
-              <div class="step-circle">4</div>
-              <span class="step-label">Review</span>
-            </div>
-          </div>
+=======
 
             <!-- STEP 1 -->
             <div class="form-section active" id="step-1">
@@ -103,7 +149,86 @@
                     <span></span>
                     <button class="btn-primary btn-medium" id="next" onclick="goStep(2)">Next: Details →</button>
                 </div>
+>>>>>>> 600e84be004ed998ec71d8bab6d5e56780658821
             </div>
+            <div class="step-dot" id="dot-3">
+              <div class="step-circle">3</div>
+              <span class="step-label">Location</span>
+            </div>
+            <div class="step-dot" id="dot-4">
+              <div class="step-circle">4</div>
+              <span class="step-label">Review</span>
+            </div>
+          </div>
+
+          <!-- STEP 1 -->
+          <div class="form-section active" id="step-1">
+            <p class="section-heading">What type of issue is this?</p>
+            <p class="section-desc">
+              Select the category that best describes the problem.
+            </p>
+            <div class="category-grid">
+              <button class="cat-btn" data-cat="Pothole / Road">
+                <span class="cat-icon"></span>Pothole / Road
+              </button>
+              <button class="cat-btn" data-cat="Streetlight">
+                <span class="cat-icon"></span>Streetlight
+              </button>
+              <button class="cat-btn" data-cat="Blocked Drain">
+                <span class="cat-icon"></span>Blocked Drain
+              </button>
+              <button class="cat-btn" data-cat="Littering / Waste">
+                <span class="cat-icon"></span>Littering / Waste
+              </button>
+              <button class="cat-btn" data-cat="Graffiti / Vandalism">
+                <span class="cat-icon"></span>Graffiti
+              </button>
+              <button class="cat-btn" data-cat="Overgrown Vegetation">
+                <span class="cat-icon"></span>Vegetation
+              </button>
+              <button class="cat-btn" data-cat="Broken Pavement">
+                <span class="cat-icon"></span>Pavement
+              </button>
+              <button class="cat-btn" data-cat="Water Leak">
+                <span class="cat-icon"></span>Water Leak
+              </button>
+              <button class="cat-btn" data-cat="Other">
+                <span class="cat-icon"></span>Other
+              </button>
+            </div>
+            <div class="field-group" style="margin-top: 1.5rem">
+              <label>Severity <span class="req">*</span></label>
+              <div class="severity-row">
+                <button
+                  class="severity-btn"
+                  data-sev="low"
+                  onclick="setSeverity(this, 'low')"
+                >
+                  Low
+                </button>
+                <button
+                  class="severity-btn"
+                  data-sev="medium"
+                  onclick="setSeverity(this, 'medium')"
+                >
+                  Medium
+                </button>
+                <button
+                  class="severity-btn"
+                  data-sev="high"
+                  onclick="setSeverity(this, 'high')"
+                >
+                  High / Urgent
+                </button>
+              </div>
+            </div>
+            <div class="form-nav">
+              <span></span>
+              <button class="btn-primary btn-medium" onclick="goStep(2)">
+                Next: Details →
+              </button>
+            </div>
+          </div>
 
           <!-- STEP 2 -->
           <div class="form-section" id="step-2">
@@ -251,11 +376,11 @@
             <div class="field-group">
               <label class="check-label">
                 <input type="checkbox" id="notifyCheck" checked />
-                Notify me when this issue is updated or resolved.
+                Notify me when this issue is updated or resolved. 
               </label>
             </div>
             <div class="form-nav">
-              <button class="btn-ghost" onclick="goStep(3)">← Back</button>
+              <button class="btn-ghost" onclick="goStep(3)"> Back</button>
               <button
                 class="btn-primary btn-medium btn-success"
                 id="submitBtn"
@@ -378,6 +503,73 @@
         </div>
       </div>
     </div>
+
+    <div class="toast" id="toast"></div>
+
+       </div> <div class="sidebar-card">
+            <p class="sidebar-title">Community Stats</p>
+            <div class="stats-grid">
+                <div class="stat-item"><div class="stat-num" id="myReportsCount">0</div><div class="stat-label">My Reports</div></div>
+                <div class="stat-item"><div class="stat-num" id="resolvedCount" style="color:var(--success);">0</div><div class="stat-label">Resolved</div></div>
+                <div class="stat-item"><div class="stat-num" id="progressCount" style="color:var(--warning);">0</div><div class="stat-label">In Progress</div></div>
+                <div class="stat-item"><div class="stat-num" id="urgentCount" style="color:var(--destructive);">0</div><div class="stat-label">Urgent</div></div>
+            </div> 
+        </div>
+
+        <div class="sidebar-card">
+            <p class="sidebar-title">Recent Reports</p>
+            <div class="feed-item">
+                <div class="feed-dot" style="background:var(--destructive)"></div>
+                <div class="feed-content">
+                    <div class="feed-title">Broken streetlight near school</div>
+                    <div class="feed-meta">Melville · 0 ago <span class="status-badge status-urgent">....</span></div>
+                </div>
+                <div class="feed-votes">▲ </div>
+            </div>
+            <div class="feed-item">
+                <div class="feed-dot" style="background:var(--warning)"></div>
+                <div class="feed-content">
+                    <div class="feed-title">Pothole on Jan Smuts Ave</div>
+                    <div class="feed-meta">Rosebank · 0h ago <span class="status-badge status-pending">.....</span></div>
+                </div>
+                <div class="feed-votes">▲ </div>
+            </div>
+            <div class="feed-item">
+                <div class="feed-dot" style="background:var(--success)"></div>
+                <div class="feed-content">
+                    <div class="feed-title">Blocked drain — flooding risk</div>
+                    <div class="feed-meta">Sandton · 0h ago <span class="status-badge status-resolved">.....</span></div>
+                </div>
+                <div class="feed-votes">▲ 0</div>
+            </div>
+            <div class="feed-item">
+                <div class="feed-dot" style="background:var(--warning)"></div>
+                <div class="feed-content">
+                    <div class="feed-title">Graffiti on community wall</div>
+                    <div class="feed-meta">Soweto · 0h ago <span class="status-badge status-pending">Pending</span></div>
+                </div>
+                <div class="feed-votes">▲ 0</div>
+            </div>
+            <div class="feed-item">
+                <div class="feed-dot" style="background:var(--destructive)"></div>
+                <div class="feed-content">
+                    <div class="feed-title">Water leak on Harris Road</div>
+                    <div class="feed-meta">Midrand · 0h ago <span class="status-badge status-urgent">Urgent</span></div>
+                </div>
+                <div class="feed-votes">▲ 0</div>
+            </div>
+        </div>
+
+        <div class="sidebar-card">
+            <p class="sidebar-title">Reporting Tips</p>
+            <div class="tip-item"><span class="tip-icon">-</span><span>Adding a photo increases resolution speed by 3×.</span></div>
+            <div class="tip-item"><span class="tip-icon">-</span><span>Include a nearby landmark or street number for accuracy.</span></div>
+            <div class="tip-item"><span class="tip-icon">-</span><span>Share your report so neighbours can upvote and boost priority.</span></div>
+            <div class="tip-item"><span class="tip-icon">-</span><span>Enable notifications to be updated when status changes.</span></div>
+        </div>
+
+    </div>
+</div>
 
 <div class="toast" id="toast"></div>
 <script type="module">
