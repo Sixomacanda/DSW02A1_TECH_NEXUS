@@ -11,19 +11,14 @@
 
 <!-- Header -->
 <header class="header">
-  <nav class="navbar">
-    <div class="logo">Urban Track</div>
-
-    <ul class="nav-links">
-      <li><a href="MainPage.html">← Home</a></li>
-      <li class="user-pill">
-        <div class="user-av">JD</div>
-        <span id="settingsHeaderName">User</span>
-      </li>
-    </ul>
-
-    <div class="menu-button">
-      <div class="menu-button__burger"></div>
+  <nav class="nav-container">
+    <a href="homePage.html"><div class="logo">Urban Track</div></a>
+    <div class="nav-right">
+      <a href="MainPage.html" class="nav-link">← Home</a>
+      <div class="user-pill">
+        <div class="user-av"></div>
+        <span id="settingsHeaderName"></span>
+      </div>
     </div>
   </nav>
 </header>
@@ -57,11 +52,11 @@
         <div class="card-body">
           <!-- Avatar -->
           <div class="avatar-row">
-            <div class="avatar-large" id="avatarDisplay">JD
+            <div class="avatar-large" id="avatarDisplay">
               <div class="avatar-edit-btn" onclick="showToast('Photo upload coming soon','warn')">✏️</div>
             </div>
             <div class="avatar-info">
-              <h3 id="avatarName">Jane Doe</h3>
+              <h3 id="avatarName"></h3>
               <p>Community Member · Rosebank</p>
             </div>
           </div>
@@ -80,7 +75,7 @@
           <div class="form-row single">
             <div class="field">
               <label>Display Name</label>
-              <input type="text" id="displayName" value="Jane D." placeholder="How your name appears on reports">
+              <input type="text" id="displayName"  placeholder="How your name appears on reports">
               <span class="field-hint">This is the name shown on your public reports and upvotes.</span>
             </div>
           </div>
@@ -88,7 +83,7 @@
           <div class="form-row single">
             <div class="field">
               <label>Email Address <span style="color:var(--accent-hover)">*</span></label>
-              <input type="email" id="emailField" value="jane@email.com" placeholder="your@email.com">
+              <input type="email" id="emailField"  placeholder="your@email.com">
             </div>
           </div>
 
@@ -454,5 +449,16 @@
 
 <script src="../js/main.js"></script>
 <script src="../js/userSettings.js"></script>
+<script>const email = localStorage.getItem("userEmail");
+ 
+if(email){
+  document.getElementById("avatarName").textContent = email;
+}
+document.getElementById("displayName").value = email;
+document.getElementById("emailField").value = email;
+document.getElementById("settingsHeaderName").value = email;
+
+
+</script>
 </body>
 </html>
