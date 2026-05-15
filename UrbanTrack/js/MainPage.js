@@ -709,6 +709,13 @@ document.querySelectorAll(".cat-btn").forEach((btn) => {
   });
 });
 
+document.querySelectorAll(".severity-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    setSeverity(btn, btn.dataset.sev);
+    goStep(2);
+  });
+});
+
 function setSeverity(el, sev) {
   document
     .querySelectorAll(".severity-btn")

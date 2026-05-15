@@ -220,3 +220,10 @@ tr:hover td{background:rgba(255,255,255,.03);}
   .stats-row{grid-template-columns:1fr 1fr;}
   .modal-grid{grid-template-columns:1fr;}
 }
+.issue-card {
+    background: #1e1e1e;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+    color: white;
+}

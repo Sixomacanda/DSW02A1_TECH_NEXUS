@@ -1,73 +1,175 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urban Track</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="../Styles/login.css" />
+  </head>
+  <header></header>
+  <body>
+    <nav class="navbar">
+      <div class="logo">Urban Track</div>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Urban Track</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="../Styles/login.css" />
-</head>
-<header></header>
+      <ul class="nav-links">
+        <li><a href="../../homePage.html">Home</a></li>
+        <li><a href="signUpPage.html">Sign Up</a></li>
+      </ul>
 
-<body>
-  <nav class="navbar">
-    <div class="logo">Urban Track</div>
-
-    <ul class="nav-links">
-      <li><a href="../../homePage.html">Home</a></li>
-      <li><a href="signUpPage.html">Sign Up</a></li>
-    </ul>
-
-    <div class="menu-button">
-      <div class="menu-button__burger"></div>
-    </div>
-  </nav>
-  <form id="loginForm" novalidate>
-    <div class="right">
-      <div class="right-content">
-        <h1>Welcome Back to Urban Track</h1>
-        <h3>Empowering communities to improve their cities.</h3>
+      <div class="menu-button">
+        <div class="menu-button__burger"></div>
       </div>
-    </div>
-    <div class="divider"></div>
-    <div class="container">
-      <div class="left">
-        <div class="form-group">
-          <label for="text">Email</label>
-          <input id="text" name="email" placeholder="example@address.com" required />
-          <small class="error"></small>
+    </nav>
+    <form id="loginForm" novalidate>
+      <div class="right">
+        <div class="right-content">
+          <h1>Welcome Back to Urban Track</h1>
+          <h3>Empowering communities to improve their cities.</h3>
         </div>
-
-        <div class="form-group password-group">
-          <label for="password">Password</label>
-          <div class="input-wrapper">
-            <input id="password" name="password" type="password" placeholder="password" required />
-            <i class="fa-solid fa-eye"></i>
-            <i class="fa-solid fa-eye-slash hide"></i>
+      </div>
+      <div class="divider"></div>
+      <div class="container">
+        <div class="left">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input id="email" type="email" name="email" placeholder="example@address.com" required />
+            <small class="error"></small>
           </div>
-          <small class="error"></small>
+
+          <div class="form-group password-group">
+            <label for="password">Password</label>
+            <div class="input-wrapper">
+              <input
+                id="password" type="password"
+                name="password"
+                placeholder="password"
+                required
+              />
+              <i class="fa-solid fa-eye"></i>
+              <i class="fa-solid fa-eye-slash hide"></i>
+            </div>
+            <small class="error"></small>
+          </div>
+
+          <button type="submit" id="log" name="login" class="btn">Login</button>
+          
+          <p class="forgot-password">
+            <a href="passRecovery.html">Forgot password?</a>
+          </p>
+          <p class="footer-text">
+            Don't have an account? <a href="signUpPage.html">Sign up</a>
+          </p>
         </div>
-
-        <button type="submit" id="" name="login" class="btn">Login</button>
-        <!-- Google login option -->
-        <a id="google-login-btn" href="http://localhost:3000/auth/google" class="btn google-btn">
-          <i class="fa-brands fa-google"></i> Continue with Google
-        </a>
-
-        <p class="forgot-password">
-          <a href="passRecovery.html">Forgot password?</a>
-        </p>
-        <p class="footer-text">
-          Don't have an account? <a href="signUpPage.html">Sign up</a>
-        </p>
       </div>
-    </div>
-  </form>
-  <script src="../js/main.js"></script>
-  <script src="../js/MainPage.js"></script>
-</body>
+    </form>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+      const firebaseConfig = {
+        apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
+        authDomain: "urban-track-91e53.firebaseapp.com",
+        projectId: "urban-track-91e53",
+        storageBucket: "urban-track-91e53.firebasestorage.app",
+        messagingSenderId: "519209303536",
+        appId: "1:519209303536:web:c212eb58eb836e27047135"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // Password Visibility Toggle
+      const passwordGroup = document.querySelector(".password-group");
+      const passwordInput = document.getElementById("password");
+      const showBtn = passwordGroup.querySelector(".fa-eye");
+      const hideBtn = passwordGroup.querySelector(".fa-eye-slash");
+
+      showBtn.addEventListener("click", () => {
+        passwordInput.type = "text";
+        showBtn.classList.add("hide");
+        hideBtn.classList.remove("hide");
+      });
+
+      hideBtn.addEventListener("click", () => {
+        passwordInput.type = "password";
+        hideBtn.classList.add("hide");
+        showBtn.classList.remove("hide");
+      });
+
+      const form = document.getElementById("loginForm");
+      const emailInput = document.getElementById("email");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const emailValue = emailInput.value.trim();
+        const passwordValue = passwordInput.value;
+
+        if (!emailValue || !passwordValue) {
+          alert("Please fill in all fields.");
+          return;
+        }
+
+        try {
+          // Special Admin Check
+          if (emailValue === 'admin@urbantrack.com' && passwordValue === 'Admin@1234') {
+            localStorage.setItem('urbanTrack_currentUser', JSON.stringify({
+              email: emailValue,
+              role: 'admin',
+              name: 'Administrator'
+            }));
+            localStorage.setItem('userEmail', emailValue);
+            window.location.href = "../Adminside/AdminDashboard.html";
+            return;
+          }
+
+          const userCredential = await signInWithEmailAndPassword(auth, emailValue, passwordValue);
+          const user = userCredential.user;
+
+          // Fetch user details from Firestore
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          let userData = {
+            uid: user.uid,
+            email: user.email,
+            role: 'user'
+          };
+
+          if (userDoc.exists()) {
+            const data = userDoc.data();
+            userData = {
+              ...userData,
+              ...data,
+              name: data.surname || '', // Map surname to name for display compatibility
+              uid: user.uid // Ensure uid is present for reference
+            };
+          }
+
+          // Save session data for use in dashboards
+          localStorage.setItem('urbanTrack_currentUser', JSON.stringify(userData));
+          localStorage.setItem('userEmail', user.email);
+
+          // Redirect based on user role
+          if (userData.role === 'admin') {
+            window.location.href = "../Adminside/AdminDashboard.html";
+          } else {
+            window.location.href = "MainPage.html";
+          }
+
+        } catch (error) {
+          console.error("Login error:", error);
+          alert("Login failed: " + error.message);
+        }
+      });
+    </script>
+    <!--<script type="module" src="../js/login.js"></script>-->
+  </body>
 </html>
