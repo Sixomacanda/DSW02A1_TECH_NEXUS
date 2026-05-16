@@ -53,22 +53,22 @@
           <!-- Avatar -->
           <div class="avatar-row">
             <div class="avatar-large" id="avatarDisplay">
-              <div class="avatar-edit-btn" onclick="showToast('Photo upload coming soon','warn')">✏️</div>
+              <div class="avatar-edit-btn" onclick="showToast('Photo upload coming soon','warn')"></div>
             </div>
             <div class="avatar-info">
               <h3 id="avatarName"></h3>
-              <p>Community Member · Rosebank</p>
+             
             </div>
           </div>
 
           <div class="form-row">
             <div class="field">
               <label>First Name <span style="color:var(--accent-hover)">*</span></label>
-              <input type="text" id="firstName" value="Jane" placeholder="First name">
+              <input type="text" id="firstName" value="" placeholder="First name">
             </div>
             <div class="field">
               <label>Last Name <span style="color:var(--accent-hover)">*</span></label>
-              <input type="text" id="lastName" value="Doe" placeholder="Last name">
+              <input type="text" id="lastName" value="" placeholder="Last name">
             </div>
           </div>
 
@@ -90,7 +90,7 @@
           <div class="form-row">
             <div class="field">
               <label>Phone Number</label>
-              <input type="tel" id="phoneField" value="+27 82 000 0000" placeholder="+27 82 000 0000">
+              <input type="tel" id="phoneField" value="">
             </div>
             <div class="field">
               <label>Area / Suburb</label>
@@ -344,7 +344,7 @@
       </div>
     </div>
 
-    <!-- ===== DANGER ZONE ===== -->
+<!-- 
     <div class="panel-section" id="section-danger">
 
       <div class="settings-card fu d1">
@@ -359,7 +359,7 @@
               <p>Temporarily hide your profile and reports. You can reactivate at any time by logging back in.</p>
             </div>
             <button class="btn btn-warning" onclick="openModal('deactivateModal')">Deactivate</button>
-          </div>
+          </div> -->
 
           <div class="danger-item">
             <div class="danger-item-info">
@@ -417,19 +417,6 @@
   </div>
 </div>
 
-<!-- Deactivate Modal -->
-<div class="modal-overlay" id="deactivateModal">
-  <div class="modal">
-    <button class="modal-close-x" onclick="closeModal('deactivateModal')">✕</button>
-    <div class="modal-icon"></div>
-    <div class="modal-title">Deactivate Account</div>
-    <div class="modal-body">Your profile and reports will be hidden from the community. You can reactivate by simply logging back in at any time.</div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('deactivateModal')">Cancel</button>
-      <button class="btn btn-warning" onclick="deactivateAccount()">Deactivate</button>
-    </div>
-  </div>
-</div>
 
 <!-- Sign Out All Modal -->
 <div class="modal-overlay" id="signoutAllModal">
