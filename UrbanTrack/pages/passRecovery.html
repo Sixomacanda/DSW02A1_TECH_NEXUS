@@ -16,51 +16,186 @@
       <nav class="navbar">
         <div class="logo">Urban Track</div>
 
-      <ul class="nav-links">
-        <li><a href="../../homePage.html">Home</a></li>
-        <li><a href="login.html">Login</a></li>
-        <li><a href="signUpPage.html">Sign Up</a></li>
-      </ul>
+        <ul class="nav-links">
+          <li><a href="../../homePage.html">Home</a></li>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="signUpPage.html">Sign Up</a></li>
+        </ul>
 
-      <div class="menu-button">
-        <div class="menu-button__burger"></div>
-      </div>
-    </nav>
-    
-    <a class="back" href="login.html"
-      ><i class="fa-solid fa-angle-left"></i>
-    </a>
-    <!-- <h1 class="heading">Password Recovery</h1> -->
-    <form action="/recover" method="POST" novalidate>
-        <h1 class="heading">Password Recovery</h1>
-      <div class="container">
-        <div class="form-group">
-          <p>Enter your email address to receive a password reset link.</p>
-          <br /><br />
-          <label for="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="example@gmail.com"
-            required
-          />
-          <small class="error"></small>
-          <button class="btn" id="resetBtn" type="button" onclick="resetPassword()">
-            Send Reset Link
-          </button>
+        <div class="menu-button">
+          <div class="menu-button__burger"></div>
         </div>
+      </nav>
+    </header>
+
+    <main class="page">
+      <div class="wrapper">
+        <section class="card">
+          <a class="back" href="login.html">Back to login</a>
+
+          <div class="icon-circle">
+            <span></span>
+          </div>
+
+          <h1 class="card-title">Password Recovery</h1>
+          <p class="card-sub">
+            Enter your email address to receive an OTP to reset your password.
+          </p>
+
+          <form action="/recover" method="POST" novalidate class="reset-form">
+            <div class="step step-email active">
+              <div class="field">
+                <label for="email">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="example@gmail.com"
+                  required
+                />
+                <small class="hint err"></small>
+              </div>
+
+              <button
+                class="btn-main"
+                id="resetBtn"
+                type="button"
+                onclick="resetPassword()"
+              >
+                Send OTP
+              </button>
+            </div>
+
+            <div class="step step-otp">
+              <p class="card-sub">
+                Enter the OTP sent to your email to continue.
+              </p>
+
+              <div class="field">
+                <label>OTP Code</label>
+                <div class="otp-row" aria-label="Enter 6-digit code">
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    pattern="\d*"
+                    maxlength="1"
+                    class="otp-box"
+                    aria-label="OTP digit 1"
+                    autocomplete="one-time-code"
+                  />
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    pattern="\d*"
+                    maxlength="1"
+                    class="otp-box"
+                    aria-label="OTP digit 2"
+                    autocomplete="one-time-code"
+                  />
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    pattern="\d*"
+                    maxlength="1"
+                    class="otp-box"
+                    aria-label="OTP digit 3"
+                    autocomplete="one-time-code"
+                  />
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    pattern="\d*"
+                    maxlength="1"
+                    class="otp-box"
+                    aria-label="OTP digit 4"
+                    autocomplete="one-time-code"
+                  />
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    pattern="\d*"
+                    maxlength="1"
+                    class="otp-box"
+                    aria-label="OTP digit 5"
+                    autocomplete="one-time-code"
+                  />
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    pattern="\d*"
+                    maxlength="1"
+                    class="otp-box"
+                    aria-label="OTP digit 6"
+                    autocomplete="one-time-code"
+                  />
+                </div>
+                <small class="hint err"></small>
+              </div>
+
+              <button
+                class="btn-main"
+                id="verifyBtn"
+                type="button"
+                onclick="verifyOtp()"
+              >
+                Verify OTP
+              </button>
+              <button class="btn-ghost" type="button" onclick="showEmailStep()">
+                Edit email
+              </button>
+            </div>
+
+            <div class="step step-password">
+              <p class="card-sub">
+                Enter your new password to complete the reset.
+              </p>
+
+              <div class="field">
+                <label for="password">New Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="New password"
+                  required
+                />
+                <small class="hint err"></small>
+              </div>
+
+              <div class="field">
+                <label for="confirmPassword">Confirm Password</label>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  placeholder="Confirm password"
+                  required
+                />
+                <small class="hint err"></small>
+              </div>
+
+              <button
+                class="btn-main"
+                id="resetPasswordBtn"
+                type="button"
+                onclick="saveNewPassword()"
+              >
+                Reset Password
+              </button>
+              <button class="btn-ghost" type="button" onclick="showOtpStep()">
+                Back to OTP
+              </button>
+            </div>
+          </form>
+        </section>
       </div>
-    </div>
+    </main>
 
     <!-- Toast -->
     <div class="toast" id="toast"></div>
 
     <script src="../js/main.js"></script>
     <script type="module">
-
-
-
       /*document
         .getElementById("resetBtn")
         .addEventListener("click", function (e) {
@@ -79,34 +214,128 @@
             "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U"
           }
         });*/
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+      import {
+        getAuth,
+        sendPasswordResetEmail,
+      } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
-  authDomain: "urban-track-91e53.firebaseapp.com",
-  projectId: "urban-track-91e53",
-  storageBucket: "urban-track-91e53.firebasestorage.app",
-  messagingSenderId: "519209303536",
-  appId: "1:519209303536:web:c212eb58eb836e27047135"
-};
+      const firebaseConfig = {
+        apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
+        authDomain: "urban-track-91e53.firebaseapp.com",
+        projectId: "urban-track-91e53",
+        storageBucket: "urban-track-91e53.firebasestorage.app",
+        messagingSenderId: "519209303536",
+        appId: "1:519209303536:web:c212eb58eb836e27047135",
+      };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
 
-window.resetPassword = function () {
+      function showStep(step) {
+        document.querySelectorAll(".step").forEach((section) => {
+          section.classList.toggle("active", section.classList.contains(step));
+        });
+      }
 
-  const email = document.getElementById("email").value;
+      window.showOtpStep = function () {
+        showStep("step-otp");
+      };
 
-  sendPasswordResetEmail(auth, email)
-    .then(() => {
-      alert("Password reset email sent!");
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
+      window.showEmailStep = function () {
+        showStep("step-email");
+      };
 
-};
+      window.showPasswordStep = function () {
+        showStep("step-password");
+      };
+
+      const otpBoxes = Array.from(document.querySelectorAll(".otp-box"));
+      otpBoxes.forEach((box, index) => {
+        box.addEventListener("input", function () {
+          this.value = this.value.replace(/\D/g, "");
+          if (this.value && index < otpBoxes.length - 1) {
+            otpBoxes[index + 1].focus();
+          }
+        });
+
+        box.addEventListener("keydown", function (event) {
+          if (event.key === "Backspace" && !this.value && index > 0) {
+            otpBoxes[index - 1].focus();
+          }
+        });
+      });
+
+      window.resetPassword = function () {
+        const email = document.getElementById("email").value.trim();
+        const error = document.querySelector(".step-email .hint");
+
+        if (!email) {
+          error.textContent = "Please enter your email address.";
+          return;
+        }
+
+        error.textContent = "";
+
+        sendPasswordResetEmail(auth, email)
+          .then(() => {
+            alert("OTP sent to your email.");
+            showOtpStep();
+          })
+          .catch((error) => {
+            error.textContent = error.message;
+          });
+      };
+
+      window.verifyOtp = function () {
+        const otp = Array.from(document.querySelectorAll(".otp-box"))
+          .map((box) => box.value.trim())
+          .join("");
+        const error = document.querySelector(".step-otp .hint");
+
+        if (otp.length !== 6) {
+          error.textContent = "Please enter the 6-digit code.";
+          return;
+        }
+
+        error.textContent = "";
+        showPasswordStep();
+      };
+
+      window.saveNewPassword = function () {
+        const password = document.getElementById("password").value.trim();
+        const confirmPassword = document
+          .getElementById("confirmPassword")
+          .value.trim();
+        const passwordError = document.querySelector(
+          ".step-password .field:nth-of-type(1) .hint",
+        );
+        const confirmError = document.querySelector(
+          ".step-password .field:nth-of-type(2) .hint",
+        );
+
+        passwordError.textContent = "";
+        confirmError.textContent = "";
+
+        if (!password) {
+          passwordError.textContent = "Please enter a new password.";
+          return;
+        }
+
+        if (password.length < 6) {
+          passwordError.textContent = "Password must be at least 6 characters.";
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          confirmError.textContent = "Passwords do not match.";
+          return;
+        }
+
+        alert(
+          "Password reset successfully. Please log in with your new password.",
+        );
+      };
     </script>
   </body>
 </html>
