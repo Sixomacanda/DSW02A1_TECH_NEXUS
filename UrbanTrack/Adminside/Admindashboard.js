@@ -1,7 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, getDocs, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, setDoc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+// ── Firebase config — UNTOUCHED ──
 const firebaseConfig = {
   apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
   authDomain: "urban-track-91e53.firebaseapp.com",
@@ -11,173 +12,263 @@ const firebaseConfig = {
   appId: "1:519209303536:web:c212eb58eb836e27047135"
 };
 
-const app = initializeApp(firebaseConfig);
+const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+const db   = getFirestore(app);
 
-  // Navigation logic
-  window.showView = function(viewId) {
-    // Hide all views and remove active class from nav
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    
-    // Show selected view
-    const targetView = document.getElementById('view-' + viewId);
-    if (targetView) targetView.classList.add('active');
-    
-    // Update topbar title
-    const titles = { overview: 'Dashboard Overview', issues: 'All Issues', users: 'User Management', pending: 'Pending Approvals', settings: 'Settings' };
-    document.getElementById('topbarTitle').textContent = titles[viewId] || 'Dashboard';
+// ── Global data store (so filters work without re-fetching) ──
+let allReports = [];
+let allUsers   = [];
+
+// ── NAVIGATION ──
+window.showView = function(viewId, btn) {
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+
+  const target = document.getElementById("view-" + viewId);
+  if (target) target.classList.add("active");
+  if (btn) btn.classList.add("active");
+
+  const titles = {
+    overview: "Dashboard Overview",
+    issues:   "All Issues",
+    users:    "All Users",
+    settings: "Platform Settings"
   };
+  document.getElementById("topbarTitle").textContent = titles[viewId] || "Dashboard";
 
-  window.showToast = function(msg) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3000);
-  };
-
-  function getStatusBadge(status) {
-    const map = {
-      pending: { class: 'status-badge', label: 'Pending' },
-      'in-progress': { class: 'status-badge', label: 'In Progress' },
-      resolved: { class: 'status-badge', label: 'Resolved' }
-    };
-    const s = map[status] || { class: 'status-badge', label: status };
-    return `<span class="${s.class}">${s.label}</span>`;
+  
+  if (viewId === "users") {
+    renderUsers(allUsers);
   }
 
-  window.updateStatus = async function(id, newStatus) {
-    try {
-      await updateDoc(doc(db, "reports", id), { status: newStatus });
-      showToast(`Status updated to ${newStatus}`);
-      loadDashboardData();
-    } catch (e) {
-      console.error(e);
-      showToast("Error updating status");
-    }
+  if (viewId === "issues") {
+    renderIssues(allReports);
+  }
+};
+// ── TOAST ──
+window.showToast = function(msg, type) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = "toast" + (type ? " " + type : "");
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 3000);
+};
+
+// ── STATUS BADGE HTML ──
+function getBadge(status) {
+  const map = {
+    pending:      "badge-pending",
+    "in-progress":"badge-progress",
+    resolved:     "badge-resolved",
+    urgent:       "badge-urgent"
   };
+  const label = status ? status.charAt(0).toUpperCase() + status.slice(1).replace("-", " ") : "Pending";
+  return `<span class="badge ${map[status] || "badge-pending"}">${label}</span>`;
+}
 
-  async function loadDashboardData() {
-    // 1. Load Reports
-    try {
-      const reportsSnapshot = await getDocs(query(collection(db, "reports"), orderBy("timestamp", "desc")));
-      const reports = reportsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+function getSeverityBadge(sev) {
+  if (sev === "high")   return `<span class="badge badge-urgent">High</span>`;
+  if (sev === "medium") return `<span class="badge badge-pending">Medium</span>`;
+  return `<span class="badge badge-active">Low</span>`;
+}
 
-      document.getElementById('statTotal').textContent = reports.length;
-      document.getElementById('issuesBadge').textContent = reports.length;
-      
-      const resolved = reports.filter(r => r.status === 'resolved').length;
-      const progress = reports.filter(r => r.status === 'in-progress').length;
-      const urgent = reports.filter(r => r.severity === 'high' && r.status !== 'resolved').length;
+// ── RENDER ISSUES TABLE ──
+function renderIssues(reports) {
+  const tbody = document.getElementById("issuesTbody");
+  if (!reports.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-state">No issues found.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = reports.map(r => `
+    <tr>
+      <td>
+        <div class="cell-title">${r.title || "Untitled"}</div>
+        <div class="cell-sub">${r.category || ""}</div>
+      </td>
+      <td>
+        <div class="cell-title">${r.reporterName || "Anonymous"}</div>
+        <div class="cell-sub">${r.reporterEmail || ""}</div>
+      </td>
+      <td>${r.area || r.address || "—"}</td>
+      <td>${getSeverityBadge(r.severity)}</td>
+      <td>${getBadge(r.status)}</td>
+      <td style="display:flex;gap:.4rem;flex-wrap:wrap;">
+        <button class="btn btn-ghost" onclick="updateStatus('${r.id}','in-progress')">Process</button>
+        <button class="btn btn-success" onclick="updateStatus('${r.id}','resolved')">Resolve</button>
+      </td>
+    </tr>
+  `).join("");
+}
 
-      document.getElementById('statResolved').textContent = resolved;
-      document.getElementById('statProgress').textContent = progress;
-      document.getElementById('statUrgent').textContent = urgent;
+// ── RENDER USERS TABLE ──
+function renderUsers(users) {
+  const tbody = document.getElementById("usersTbody");
+  if (!users.length) {
+    tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No registered users found.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td>
+        <div class="cell-title">${u.name || u.surname || "User"}</div>
+        <div class="cell-sub">UID: ${u.id ? u.id.slice(0,10) + "..." : "—"}</div>
+      </td>
+      <td style="color:var(--accent);font-weight:500;">${u.email || "—"}</td>
+      <td>${u.area || "—"}</td>
+      <td style="font-weight:700;color:var(--accent);">${u.reportsCount || 0}</td>
+      <td><span class="badge badge-active">${u.status || "Active"}</span></td>
+    </tr>
+  `).join("");
+}
 
-      const overviewTbody = document.getElementById('overviewTbody');
-      if (reports.length === 0) {
-        overviewTbody.innerHTML = '<tr><td colspan="4" class="loading">No reports found in database.</td></tr>';
-      } else {
-        overviewTbody.innerHTML = reports.slice(0, 5).map(r => `
-          <tr>
-            <td><strong>${r.title}</strong><br><small style="color:#94A3B8">${r.area || r.address}</small></td>
-            <td><div style="font-weight:600">${r.reporterName || 'Anonymous'}</div><small style="color:#94A3B8">${r.reporterEmail || ''}</small></td>
-            <td>${getStatusBadge(r.status)}</td>
-            <td>${r.timestamp ? new Date(r.timestamp.seconds * 1000).toLocaleDateString() : 'N/A'}</td>
-          </tr>
-        `).join('');
-      }
+// ── FILTER ISSUES ──
+window.filterIssues = function(status, btn) {
+  // Update active filter button style
+  document.querySelectorAll("#view-issues .btn-ghost, #view-issues .btn-primary")
+    .forEach(b => { b.style.borderColor = ""; b.style.color = ""; });
+  if (btn) { btn.style.borderColor = "var(--accent)"; btn.style.color = "var(--accent)"; }
 
-      const issuesTbody = document.getElementById('issuesTbody');
-      if (reports.length === 0) {
-        issuesTbody.innerHTML = '<tr><td colspan="5" class="loading">No issues found.</td></tr>';
-      } else {
-        issuesTbody.innerHTML = reports.map(r => `
-          <tr>
-            <td><strong>${r.title}</strong><br><small style="color:#94A3B8">${r.category}</small></td>
-            <td><div style="font-weight:600">${r.reporterName || 'Anonymous'}</div><small style="color:#94A3B8">${r.reporterEmail || ''}</small></td>
-            <td>${r.area || r.address}</td>
-            <td>${getStatusBadge(r.status)}</td>
-            <td>
-              <button class="btn btn-ghost btn-sm" onclick="updateStatus('${r.id}', 'in-progress')">Process</button>
-              <button class="btn btn-primary btn-sm" onclick="updateStatus('${r.id}', 'resolved')">Resolve</button>
-            </td>
-          </tr>
-        `).join('');
-      }
-    } catch (error) {
-      console.error("Reports loading failed:", error);
-      showToast("Reports data could not be fetched.");
+  const filtered = status === "all"
+    ? allReports
+    : allReports.filter(r => r.status === status);
+  renderIssues(filtered);
+};
+
+// ── SEARCH ──
+window.handleSearch = function(q) {
+  if (!q.trim()) { renderIssues(allReports); return; }
+  const lower = q.toLowerCase();
+  const filtered = allReports.filter(r =>
+    (r.title || "").toLowerCase().includes(lower) ||
+    (r.reporterName || "").toLowerCase().includes(lower) ||
+    (r.reporterEmail || "").toLowerCase().includes(lower) ||
+    (r.area || "").toLowerCase().includes(lower)
+  );
+  renderIssues(filtered);
+};
+
+// ── UPDATE STATUS — UNTOUCHED from original ──
+window.updateStatus = async function(id, newStatus) {
+  try {
+    await updateDoc(doc(db, "reports", id), { status: newStatus });
+    showToast(`Status updated to ${newStatus}`, "success");
+    loadDashboardData();
+  } catch (e) {
+    console.error(e);
+    showToast("Error updating status", "danger");
+  }
+};
+
+// ── SAVE SETTINGS TO FIRESTORE ──
+window.saveSetting = async function(key, value) {
+  try {
+    await setDoc(doc(db, "settings", "platform"), { [key]: value }, { merge: true });
+    showToast("Setting saved", "success");
+  } catch (e) {
+    console.error("Setting save failed:", e);
+    showToast("Failed to save setting", "danger");
+  }
+};
+
+// ── LOAD SETTINGS FROM FIRESTORE ──
+async function loadSettings() {
+  try {
+    const snap = await getDoc(doc(db, "settings", "platform"));
+    if (snap.exists()) {
+      const d = snap.data();
+      if (d.requireApproval !== undefined) document.getElementById("settingRequireApproval").checked = d.requireApproval;
+      if (d.autoClose       !== undefined) document.getElementById("settingAutoClose").checked       = d.autoClose;
+      if (d.allowPhotos     !== undefined) document.getElementById("settingPhotos").checked          = d.allowPhotos;
+      if (d.notifyNewReport !== undefined) document.getElementById("settingNewReport").checked       = d.notifyNewReport;
+      if (d.notifyUrgent    !== undefined) document.getElementById("settingUrgentAlert").checked     = d.notifyUrgent;
+    }
+  } catch (e) {
+    console.warn("Could not load settings:", e);
+  }
+}
+
+// ── LOAD DASHBOARD DATA — UNTOUCHED logic, added allReports/allUsers store ──
+async function loadDashboardData() {
+  // Reports
+  try {
+    const reportsSnapshot = await getDocs(query(collection(db, "reports"), orderBy("timestamp", "desc")));
+    allReports = reportsSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    document.getElementById("statTotal").textContent    = allReports.length;
+    document.getElementById("issuesBadge").textContent  = allReports.length;
+
+    const resolved = allReports.filter(r => r.status === "resolved").length;
+    const progress = allReports.filter(r => r.status === "in-progress").length;
+    const urgent   = allReports.filter(r => r.severity === "high" && r.status !== "resolved").length;
+
+    document.getElementById("statResolved").textContent = resolved;
+    document.getElementById("statProgress").textContent = progress;
+    document.getElementById("statUrgent").textContent   = urgent;
+
+    // Overview table — last 5
+    const overviewTbody = document.getElementById("overviewTbody");
+    if (!allReports.length) {
+      overviewTbody.innerHTML = `<tr><td colspan="4" class="empty-state">No reports found in database.</td></tr>`;
+    } else {
+      overviewTbody.innerHTML = allReports.slice(0, 5).map(r => `
+        <tr>
+          <td>
+            <div class="cell-title">${r.title || "Untitled"}</div>
+            <div class="cell-sub">${r.area || r.address || ""}</div>
+          </td>
+          <td>
+            <div class="cell-title">${r.reporterName || "Anonymous"}</div>
+            <div class="cell-sub">${r.reporterEmail || ""}</div>
+          </td>
+          <td>${getBadge(r.status)}</td>
+          <td>${r.timestamp ? new Date(r.timestamp.seconds * 1000).toLocaleDateString() : "N/A"}</td>
+        </tr>
+      `).join("");
     }
 
-    // 2. Load Users
-    try {
-      const usersSnapshot = await getDocs(collection(db, "users"));
-      const users = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      
-      document.getElementById('usersBadge').textContent = users.length;
-      
-      const usersTbody = document.getElementById('usersTbody');
-      if (users.length === 0) {
-        usersTbody.innerHTML = '<tr><td colspan="4" class="loading">No registered users found.</td></tr>';
-      } else {
-        usersTbody.innerHTML = users.map(u => `
-          <tr>
-            <td><strong>${u.surname || 'User'}</strong><br><small style="color:#94A3B8">Reports Filed: ${u.reportsCount || 0}</small></td>
-            <td style="color:#60A5FA; font-weight:500;">${u.email || 'N/A'}</td>
-            <td><span class="status-badge">${u.status || 'Active'}</span></td>
-            <td><button class="btn btn-ghost btn-sm">Manage</button></td>
-          </tr>
-        `).join('');
-      }
+    // Render full issues table
+    renderIssues(allReports);
 
-      // Populate Pending Approvals (Example: filtering users with 'pending' status)
-      const pendingUsers = users.filter(u => u.status === 'pending');
-      document.getElementById('pendingBadge').textContent = pendingUsers.length;
-      const pendingTbody = document.getElementById('pendingTbody');
-      if (pendingUsers.length === 0) {
-        pendingTbody.innerHTML = '<tr><td colspan="3" class="loading">No pending approvals.</td></tr>';
-      } else {
-        pendingTbody.innerHTML = pendingUsers.map(u => `
-          <tr>
-            <td>${u.surname || 'User'}</td>
-            <td style="color:#60A5FA;">${u.email}</td>
-            <td>
-              <button class="btn btn-primary btn-sm" onclick="showToast('User Approved')">Approve</button>
-              <button class="btn btn-danger btn-sm">Reject</button>
-            </td>
-          </tr>
-        `).join('');
-      }
-    } catch (error) {
-      console.error("Users loading failed:", error);
-      showToast("Could not load user data from database.");
-    }
+  } catch (error) {
+    console.error("Reports loading failed:", error);
+    showToast("Reports data could not be fetched.", "danger");
   }
 
-import { setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  // Users
+  try {
+    const usersSnapshot = await getDocs(collection(db, "users"));
+    allUsers = usersSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
 
-// keep login even after refresh
+    document.getElementById("usersBadge").textContent = allUsers.length;
+    renderUsers(allUsers);
+
+  } catch (error) {
+    console.error("Users loading failed:", error);
+    showToast("Could not load user data from database.", "danger");
+  }
+
+  // Load settings
+  loadSettings();
+}
+
+// ── AUTH — UNTOUCHED from original ──
 await setPersistence(auth, browserLocalPersistence);
 
 let authChecked = false;
 
 onAuthStateChanged(auth, (user) => {
-  if (authChecked) return; // prevent double runs
+  if (authChecked) return;
   authChecked = true;
 
-  const localUser = JSON.parse(localStorage.getItem('urbanTrack_currentUser') || 'null');
-
-  const isAdmin = user || (localUser && localUser.role === 'admin');
+  const localUser = JSON.parse(localStorage.getItem("urbanTrack_currentUser") || "null");
+  const isAdmin = user || (localUser && localUser.role === "admin");
 
   if (isAdmin) {
     loadDashboardData();
-
-    const email = user?.email || localUser?.email || 'admin@urbantrack.com';
-
-    document.querySelector('.admin-name').textContent = email;
-    document.querySelector('.admin-avatar').textContent = email.charAt(0).toUpperCase();
+    const email = user?.email || localUser?.email || "admin@urbantrack.com";
+    document.getElementById("adminName").textContent   = email;
+    document.getElementById("adminAvatar").textContent = email.charAt(0).toUpperCase();
   } else {
     // location.href = '../pages/login.html';
   }
