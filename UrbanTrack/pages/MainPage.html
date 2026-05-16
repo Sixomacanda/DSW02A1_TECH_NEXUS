@@ -195,10 +195,10 @@
        </div> <div class="sidebar-card">
             <p class="sidebar-title">Community Stats</p>
             <div class="stats-grid">
-                <div class="stat-item"><div class="stat-num">0</div><div class="stat-label">This Month</div></div>
-                <div class="stat-item"><div class="stat-num" style="color:var(--success);">0</div><div class="stat-label">Resolved</div></div>
-                <div class="stat-item"><div class="stat-num" id="progressCount" style="color:var(--warning);">0</div><div class="stat-label">In Progress</div></div>
-                <div class="stat-item"><div class="stat-num" style="color:var(--destructive);">0</div><div class="stat-label">Urgent</div></div>
+                <div class="stat-item"><div class="stat-num" id="Total_reports">0</div><div class="stat-label">Total Reports</div></div>
+                <div class="stat-item"><div class="stat-num" id="Resolved_reports" style="color:var(--success);">0</div><div class="stat-label">Resolved</div></div>
+                <div class="stat-item"><div class="stat-num" id="Progress_reports" style="color:var(--warning);">0</div><div class="stat-label">In Progress</div></div>
+                <div class="stat-item"><div class="stat-num" id="Urgent_reports" style="color:var(--destructive);">0</div><div class="stat-label">Urgent Open</div></div>
             </div> 
         </div>
 
@@ -262,7 +262,7 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, addDoc, doc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, addDoc, doc, updateDoc, increment, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* ---------------- FIREBASE ---------------- */
 
@@ -310,7 +310,40 @@ window.initMainPageUser = function () {
 
 };
 
-document.addEventListener("DOMContentLoaded", initMainPageUser);
+document.addEventListener("DOMContentLoaded", () => {
+  initMainPageUser();
+  loadCommunityStats();
+});
+
+async function loadCommunityStats() {
+  const currentUser = JSON.parse(localStorage.getItem("urbanTrack_currentUser") || "null");
+  const userId = auth.currentUser?.uid || (currentUser ? currentUser.uid || currentUser.id : null);
+
+  if (!userId) return;
+
+  try {
+    const reportsQuery = query(collection(db, "reports"), where("reportedBy", "==", userId));
+    const reportSnapshot = await getDocs(reportsQuery);
+
+    let resolved = 0;
+    let progress = 0;
+    let urgent = 0;
+
+    reportSnapshot.forEach((reportDoc) => {
+      const report = reportDoc.data();
+      if (report.status === "resolved") resolved++;
+      if (report.status === "in-progress") progress++;
+      if (report.severity === "high" && report.status !== "resolved") urgent++;
+    });
+
+    document.getElementById("Total_reports").textContent = reportSnapshot.size;
+    document.getElementById("Resolved_reports").textContent = resolved;
+    document.getElementById("Progress_reports").textContent = progress;
+    document.getElementById("Urgent_reports").textContent = urgent;
+  } catch (error) {
+    console.error("Failed to load community stats:", error);
+  }
+}
 
 /* ---------------- CATEGORY ---------------- */
 

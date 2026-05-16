@@ -520,6 +520,14 @@ const db = getFirestore(app);
     setTimeout(() => toast.classList.remove('show'), 3000);
   };
 
+  window.copyEmail = function(email) {
+    navigator.clipboard.writeText(email).then(() => {
+      window.showToast(`📋 Copied: ${email}`);
+    }).catch(() => {
+      window.showToast(`❌ Failed to copy email`);
+    });
+  };
+
   function getStatusBadge(status) {
     const map = {
       pending: { class: 'status-badge', label: '🟡 Pending' },
@@ -599,16 +607,17 @@ const db = getFirestore(app);
       const usersSnapshot = await getDocs(collection(db, "users"));
       const users = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       
+      console.log('Users fetched:', users); // Debug log
       document.getElementById('usersBadge').textContent = users.length;
       
       const usersTbody = document.getElementById('usersTbody');
       if (users.length === 0) {
         usersTbody.innerHTML = '<tr><td colspan="4" class="loading">No registered users found.</td></tr>';
       } else {
-        usersTbody.innerHTML = users.map(u => `
-          <tr>
+        usersTbody.innerHTML = users.map((u, idx) => `
+          <tr data-email="${u.email || ''}">
             <td><strong>${u.surname || 'User'}</strong><br><small style="color:#94A3B8">Reports Filed: ${u.reportsCount || 0}</small></td>
-            <td style="color:#60A5FA; font-weight:500;">${u.email || 'N/A'}</td>
+            <td style="color:#60A5FA; font-weight:500; cursor:pointer;" title="Click to copy email" onclick="window.copyEmail('${u.email}')" class="email-cell"><strong>${u.email || 'No email'}</strong> <span style="font-size:0.75rem; opacity:0.6;">📋</span></td>
             <td><span class="status-badge">${u.status || 'Active'}</span></td>
             <td><button class="btn btn-ghost btn-sm">Manage</button></td>
           </tr>
@@ -625,7 +634,7 @@ const db = getFirestore(app);
         pendingTbody.innerHTML = pendingUsers.map(u => `
           <tr>
             <td>${u.surname || 'User'}</td>
-            <td style="color:#60A5FA;">${u.email}</td>
+            <td style="color:#60A5FA; cursor:pointer;" title="Click to copy email" onclick="window.copyEmail('${u.email}')" class="email-cell"><strong>${u.email || 'No email'}</strong> <span style="font-size:0.75rem; opacity:0.6;">📋</span></td>
             <td>
               <button class="btn btn-primary btn-sm" onclick="showToast('User Approved')">Approve</button>
               <button class="btn btn-danger btn-sm">Reject</button>
