@@ -1,11 +1,21 @@
 require("dotenv").config();
 
+const path = require("path");
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 const app = express();
+
+// Serve frontend pages and assets from the project root
+const FRONTEND_ROOT = path.join(__dirname, "..", "..");
+app.use("/UrbanTrack", express.static(path.join(FRONTEND_ROOT, "UrbanTrack")));
+app.use(express.static(path.join(FRONTEND_ROOT, "UrbanTrack", "Styles")));
+app.get(["/", "/homePage.html"], function (req, res) {
+    res.sendFile(path.join(FRONTEND_ROOT, "homePage.html"));
+});
+app.use(express.static(path.join(__dirname, "public")));
 
 // Session setup
 app.use(
@@ -15,8 +25,6 @@ app.use(
         saveUninitialized: false,
     })
 );
-app.use(express.static("public"));
-
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -27,7 +35,7 @@ passport.use(
         {
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: "http://localhost:3000/auth/google/callback",
+            callbackURL: process.env.GOOGLE_CALLBACK_URL || "http://localhost:3000/auth/google/callback",
         },
         function (accessToken, refreshToken, profile, done) {
             return done(null, profile);
@@ -45,20 +53,23 @@ passport.deserializeUser(function (user, done) {
 });
 
 
+const PORT = process.env.PORT || 3000;
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000/UrbanTrack/pages/MainPage.html";
+const FRONTEND_LOGIN_URL = process.env.FRONTEND_LOGIN_URL || "http://localhost:3000/UrbanTrack/pages/login.html";
+
 // Start Google login
 app.get(
     "/auth/google",
     function (req, res, next) {
-        console.log("Google auth initiated from:", req.headers.referer);
+        const originUrl = req.headers.referer || FRONTEND_LOGIN_URL;
+        req.session.returnTo = originUrl;
+        console.log("Google auth initiated from:", originUrl);
         next();
     },
     passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
 // Callback after Google login
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5501/UrbanTrack/pages/MainPage.html";
-const FRONTEND_LOGIN_URL = process.env.FRONTEND_LOGIN_URL || "http://localhost:5501/UrbanTrack/pages/login.html";
-
 app.get(
     "/auth/google/callback",
     function (req, res, next) {
@@ -69,10 +80,12 @@ app.get(
         failureRedirect: FRONTEND_LOGIN_URL,
     }),
     function (req, res) {
+        const redirectUrl = req.session.returnTo || FRONTEND_URL;
+        delete req.session.returnTo;
+
         console.log("Google auth successful, user:", req.user ? req.user.displayName : "no user");
-        console.log("Google auth successful, redirecting to", FRONTEND_URL);
-        
-        // Store user data in session and send as query params
+        console.log("Google auth successful, redirecting to", redirectUrl);
+
         if (req.user) {
             const userData = JSON.stringify({
                 name: req.user.displayName,
@@ -81,9 +94,9 @@ app.get(
                 picture: req.user.photos[0]?.value,
                 role: 'user'
             });
-            res.redirect(FRONTEND_URL + "?googleUser=" + encodeURIComponent(userData));
+            res.redirect(redirectUrl + "?googleUser=" + encodeURIComponent(userData));
         } else {
-            res.redirect(FRONTEND_URL);
+            res.redirect(redirectUrl);
         }
     }
 );
@@ -99,8 +112,6 @@ app.get("/auth/user", function (req, res) {
     res.json(req.user || null);
 });
 
-
-// Start server
-app.listen(3000, function () {
-    console.log("Server running on http://localhost:3000");
+app.listen(PORT, function () {
+    console.log(`Server running on http://localhost:${PORT}`);
 });
