@@ -639,23 +639,32 @@ const db = getFirestore(app);
     }
   }
 
-  onAuthStateChanged(auth, (user) => {
-    const localUser = JSON.parse(localStorage.getItem('urbanTrack_currentUser') || 'null');
-    // Allow access if Firebase user exists OR if local storage identifies the hardcoded admin
-    if (user || (localUser && localUser.role === 'admin')) {
-      loadDashboardData();
+import { setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-      // Update Admin Sidebar Info with email
-      const adminNameEl = document.querySelector('.admin-name');
-      const adminAvatarEl = document.querySelector('.admin-avatar');
-      const adminEmail = user ? user.email : (localUser ? localUser.email : 'admin@urbantrack.com');
-      
-      if (adminNameEl) adminNameEl.textContent = adminEmail;
-      if (adminAvatarEl) adminAvatarEl.textContent = adminEmail.charAt(0).toUpperCase();
-    } else {
-      location.href = '../pages/login.html';
-    }
-  });
+// keep login even after refresh
+await setPersistence(auth, browserLocalPersistence);
+
+let authChecked = false;
+
+onAuthStateChanged(auth, (user) => {
+  if (authChecked) return; // prevent double runs
+  authChecked = true;
+
+  const localUser = JSON.parse(localStorage.getItem('urbanTrack_currentUser') || 'null');
+
+  const isAdmin = user || (localUser && localUser.role === 'admin');
+
+  if (isAdmin) {
+    loadDashboardData();
+
+    const email = user?.email || localUser?.email || 'admin@urbantrack.com';
+
+    document.querySelector('.admin-name').textContent = email;
+    document.querySelector('.admin-avatar').textContent = email.charAt(0).toUpperCase();
+  } else {
+    // location.href = '../pages/login.html';
+  }
+});
 </script>
 </body>
 </html>
