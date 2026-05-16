@@ -238,3 +238,37 @@
             .hero-form { flex-direction: column; }
             .section-title { font-size: 1.75rem; }
         }
+
+
+.hero-slider-horizontal {
+    width: 100%;
+    max-width: 1000px;
+    margin: 20px auto;
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.hero-slider-horizontal .track {
+    display: flex;
+    width: max-content;
+    animation: scrollLeft 20s linear infinite;
+}
+
+.hero-slider-horizontal img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    margin-right: 12px;
+    border-radius: 12px;
+}
+
+/* smooth infinite scroll */
+@keyframes scrollLeft {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
