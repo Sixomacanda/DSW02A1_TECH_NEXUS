@@ -644,7 +644,7 @@
       console.warn("Could not load Firestore profile:", e);
       populateUI(user.displayName, user.email, "");
     }
-  });
+  
 
   // ── LocalStorage fallback (while Firebase loads) ──
   const stored = JSON.parse(localStorage.getItem("urbanTrack_currentUser") || "null");
