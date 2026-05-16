@@ -522,7 +522,7 @@
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeDeleteModal()">Cancel</button>
-      <button class="btn btn-danger" id="deleteConfirmBtn" disabled onclick="deleteAccount()">Delete Forever</button>
+      <button class="btn btn-danger" id="deleteConfirmBtn" disabled onclick="deleteAccount()">Delete Permanently</button>
     </div>
   </div>
 </div>
@@ -578,6 +578,7 @@
     document.getElementById("displayName").value = _origName;
     document.getElementById("areaField").value   = _origArea;
   }
+
 </script>
 
 <!-- ══ FIREBASE MODULE ══ -->
@@ -747,8 +748,8 @@
     btn.textContent = "Delete Forever";
   }
 };
-
 </script>
 
+<script src="../js/UserSettings.js"></script>
 </body>
 </html>
