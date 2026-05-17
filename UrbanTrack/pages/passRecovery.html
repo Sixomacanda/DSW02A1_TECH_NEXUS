@@ -8,6 +8,13 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link rel="stylesheet" href="../Styles/passRecovery.css" />
   </head>
   <body>
@@ -34,7 +41,7 @@
           <a class="back" href="login.html">Back to login</a>
 
           <div class="icon-circle">
-            <span></span>
+            <span><i class="fas fa-key"></i></span>
           </div>
 
           <h1 class="card-title">Password Recovery</h1>
@@ -150,27 +157,35 @@
                 Enter your new password to complete the reset.
               </p>
 
-              <div class="field">
+              <div class="field password-group">
                 <label for="password">New Password</label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="New password"
-                  required
-                />
+                <div class="input-wrapper">
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your new password"
+                    required
+                  />
+                  <i class="fa-solid fa-eye"></i>
+                  <i class="fa-solid fa-eye-slash hide"></i>
+                </div>
                 <small class="hint err"></small>
               </div>
 
-              <div class="field">
+              <div class="field password-group">
                 <label for="confirmPassword">Confirm Password</label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  placeholder="Confirm password"
-                  required
-                />
+                <div class="input-wrapper">
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    placeholder="Confirm password"
+                    required
+                  />
+                  <i class="fa-solid fa-eye"></i>
+                  <i class="fa-solid fa-eye-slash hide"></i>
+                </div>
                 <small class="hint err"></small>
               </div>
 
@@ -237,7 +252,6 @@
           section.classList.toggle("active", section.classList.contains(step));
         });
       }
-      
 
       window.showOtpStep = function () {
         showStep("step-otp");
@@ -249,7 +263,92 @@
 
       window.showPasswordStep = function () {
         showStep("step-password");
+        setupPasswordToggles();
+        validateNewPasswordFields();
       };
+
+      const newPasswordInput = document.getElementById("password");
+      const confirmPasswordInput = document.getElementById("confirmPassword");
+      const passwordError = document.querySelector(
+        ".step-password .field:nth-of-type(1) .hint",
+      );
+      const confirmError = document.querySelector(
+        ".step-password .field:nth-of-type(2) .hint",
+      );
+
+      function setRecoveryError(input, hint, message) {
+        if (hint) hint.textContent = message;
+        if (input) input.classList.add("err-border");
+      }
+
+      function clearRecoveryError(input, hint) {
+        if (hint) hint.textContent = "";
+        if (input) input.classList.remove("err-border");
+      }
+
+      function validateNewPasswordFields(showEmptyErrors = false) {
+        let valid = true;
+        const password = newPasswordInput.value.trim();
+        const confirmPassword = confirmPasswordInput.value.trim();
+        const passwordPattern =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
+
+        clearRecoveryError(newPasswordInput, passwordError);
+        clearRecoveryError(confirmPasswordInput, confirmError);
+
+        if (!password) {
+          valid = false;
+          if (showEmptyErrors) {
+            setRecoveryError(
+              newPasswordInput,
+              passwordError,
+              "Please enter a new password.",
+            );
+          }
+        } else if (password.length < 6) {
+          valid = false;
+          setRecoveryError(
+            newPasswordInput,
+            passwordError,
+            "Password must be at least 6 characters.",
+          );
+        } else if (!passwordPattern.test(password)) {
+          valid = false;
+          setRecoveryError(
+            newPasswordInput,
+            passwordError,
+            "Password must include uppercase, lowercase, number, and special character.",
+          );
+        }
+
+        if (!confirmPassword) {
+          valid = false;
+          if (showEmptyErrors) {
+            setRecoveryError(
+              confirmPasswordInput,
+              confirmError,
+              "Confirm the password.",
+            );
+          }
+        } else if (confirmPassword !== password) {
+          valid = false;
+          setRecoveryError(
+            confirmPasswordInput,
+            confirmError,
+            "Passwords do not match.",
+          );
+        }
+
+        return valid;
+      }
+
+      newPasswordInput.addEventListener("input", () => {
+        validateNewPasswordFields();
+      });
+
+      confirmPasswordInput.addEventListener("input", () => {
+        validateNewPasswordFields();
+      });
 
       const otpBoxes = Array.from(document.querySelectorAll(".otp-box"));
       otpBoxes.forEach((box, index) => {
@@ -304,32 +403,7 @@
       };
 
       window.saveNewPassword = function () {
-        const password = document.getElementById("password").value.trim();
-        const confirmPassword = document
-          .getElementById("confirmPassword")
-          .value.trim();
-        const passwordError = document.querySelector(
-          ".step-password .field:nth-of-type(1) .hint",
-        );
-        const confirmError = document.querySelector(
-          ".step-password .field:nth-of-type(2) .hint",
-        );
-
-        passwordError.textContent = "";
-        confirmError.textContent = "";
-
-        if (!password) {
-          passwordError.textContent = "Please enter a new password.";
-          return;
-        }
-
-        if (password.length < 6) {
-          passwordError.textContent = "Password must be at least 6 characters.";
-          return;
-        }
-
-        if (password !== confirmPassword) {
-          confirmError.textContent = "Passwords do not match.";
+        if (!validateNewPasswordFields(true)) {
           return;
         }
 
@@ -337,6 +411,34 @@
           "Password reset successfully. Please log in with your new password.",
         );
       };
+      function setupPasswordToggles() {
+        const passwordGroups = document.querySelectorAll(".password-group");
+        if (!passwordGroups.length) return;
+
+        passwordGroups.forEach((group) => {
+          if (group.dataset.toggleSetup) return;
+
+          const input = group.querySelector("input");
+          const show = group.querySelector(".fa-eye");
+          const hide = group.querySelector(".fa-eye-slash");
+
+          if (!input || !show || !hide) return;
+
+          show.addEventListener("click", () => {
+            input.type = "text";
+            hide.classList.remove("hide");
+            show.classList.add("hide");
+          });
+
+          hide.addEventListener("click", () => {
+            input.type = "password";
+            hide.classList.add("hide");
+            show.classList.remove("hide");
+          });
+
+          group.dataset.toggleSetup = "true";
+        });
+      }
     </script>
   </body>
 </html>
