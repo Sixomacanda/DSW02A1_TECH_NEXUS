@@ -27,7 +27,7 @@
         <div class="menu-button__burger"></div>
       </div>
     </nav>
-    <form id="loginForm" novalidate>
+    <form id="loginForm" data-auth-handled="true" novalidate>
       <div class="right">
         <div class="right-content">
           <h1>Welcome Back to Urban Track</h1>
@@ -132,15 +132,32 @@
 
       const form = document.getElementById("loginForm");
       const emailInput = document.getElementById("email");
+      const loginError = passwordGroup.querySelector(".error");
+
+      function showLoginError() {
+        emailInput.classList.add("input-error");
+        passwordInput.classList.add("input-error");
+        loginError.textContent = "Incorrect credentials.";
+      }
+
+      function clearLoginError() {
+        emailInput.classList.remove("input-error");
+        passwordInput.classList.remove("input-error");
+        loginError.textContent = "";
+      }
+
+      emailInput.addEventListener("input", clearLoginError);
+      passwordInput.addEventListener("input", clearLoginError);
 
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
+        clearLoginError();
 
         const emailValue = emailInput.value.trim();
         const passwordValue = passwordInput.value;
 
         if (!emailValue || !passwordValue) {
-          alert("Please fill in all fields.");
+          showLoginError();
           return;
         }
 
@@ -203,7 +220,7 @@
           }
         } catch (error) {
           console.error("Login error:", error);
-          alert("Login failed: " + error.message);
+          showLoginError();
         }
       });
       function initLogin() {

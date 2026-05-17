@@ -374,27 +374,40 @@ body {
 }
 
 /* Password wrapper */
-.pw-wrap {
+.password-group {
   position: relative;
 }
-.pw-wrap input {
+.password-group .input-wrapper {
+  position: relative;
+}
+.password-group input {
   padding-right: 50px;
 }
-.pw-eye {
+.password-group .fa-eye,
+.password-group .fa-eye-slash {
   position: absolute;
   right: 15px;
   top: 50%;
   transform: translateY(-50%);
-  background: none;
-  border: none;
   cursor: pointer;
   font-size: 18px;
-  color: #0ea5e9;
-  transition: opacity 0.2s;
+  z-index: 10;
+  pointer-events: auto;
 }
-.pw-eye:hover {
+.password-group .fa-eye {
+  color: #0ea5e9;
+}
+.password-group .fa-eye-slash {
+  color: #6366f1;
+}
+.password-group .fa-eye:hover,
+.password-group .fa-eye-slash:hover {
   opacity: 1;
   color: #38bdf8;
+}
+
+.hide {
+  display: none;
 }
 
 /* Strength bar */
