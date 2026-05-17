@@ -5,657 +5,272 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UrbanTrack — Admin Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  body {
-    font-family: 'Inter', sans-serif;
-    background: #0B1120;
-    color: #F1F5F9;
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-  }
-
-  .sidebar {
-    width: 280px;
-    background: rgba(15, 23, 42, 0.95);
-    border-right: 1px solid rgba(71, 85, 105, 0.4);
-    display: flex;
-    flex-direction: column;
-    padding: 1.75rem 1rem 1.5rem 1rem;
-    overflow-y: auto;
-  }
-
-  .sidebar-brand a {
-    font-size: 1.6rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #60A5FA, #A78BFA);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-decoration: none;
-  }
-
-  .sidebar-brand p {
-    font-size: 0.7rem;
-    color: #94A3B8;
-    margin-top: 4px;
-  }
-
-  .sidebar-section {
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #5B6E8C;
-    margin: 1.5rem 0 0.75rem 0.75rem;
-  }
-
-  .nav-item {
-    background: transparent;
-    border: none;
-    color: #CBD5E1;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 0.7rem 1rem;
-    margin: 4px 0;
-    width: 100%;
-    border-radius: 14px;
-    font-weight: 500;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: inherit;
-    text-align: left;
-  }
-
-  .nav-item .icon {
-    font-size: 1.2rem;
-    width: 24px;
-  }
-
-  .nav-item.active {
-    background: rgba(96, 165, 250, 0.2);
-    color: #60A5FA;
-  }
-
-  .nav-item:hover:not(.active) {
-    background: rgba(51, 65, 85, 0.6);
-    color: #F1F5F9;
-  }
-
-  .nav-badge {
-    margin-left: auto;
-    background: #EF4444;
-    color: white;
-    font-size: 0.7rem;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 40px;
-  }
-
-  .nav-badge.warn {
-    background: #F59E0B;
-  }
-
-  .sidebar-footer {
-    margin-top: auto;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(71, 85, 105, 0.4);
-  }
-
-  .admin-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 1rem;
-  }
-
-  .admin-avatar {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(145deg, #3B82F6, #1E40AF);
-    border-radius: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-  }
-
-  .admin-name {
-    font-weight: 600;
-    font-size: 0.85rem;
-  }
-
-  .admin-role {
-    font-size: 0.7rem;
-    color: #94A3B8;
-  }
-
-  .logout-btn {
-    background: rgba(239, 68, 68, 0.15);
-    border: 1px solid rgba(239,68,68,0.4);
-    width: 100%;
-    padding: 0.6rem;
-    border-radius: 40px;
-    color: #F87171;
-    font-weight: 500;
-    cursor: pointer;
-  }
-
-  .main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    background: radial-gradient(circle at 10% 20%, rgba(30, 41, 59, 0.5), #0B1120);
-  }
-
-  .topbar {
-    padding: 1.25rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(71, 85, 105, 0.3);
-  }
-
-  .topbar-title {
-    font-size: 1.6rem;
-    font-weight: 700;
-  }
-
-  .topbar-sub {
-    font-size: 0.8rem;
-    color: #94A3B8;
-    margin-top: 4px;
-  }
-
-  .search-box {
-    display: flex;
-    align-items: center;
-    background: rgba(30, 41, 59, 0.6);
-    border-radius: 40px;
-    padding: 0.4rem 1rem;
-    gap: 8px;
-    border: 1px solid #334155;
-  }
-
-  .search-box input {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: white;
-    font-size: 0.85rem;
-    width: 220px;
-  }
-
-  .content {
-    padding: 1.75rem 2rem 2rem;
-    overflow-y: auto;
-  }
-
-  .view {
-    display: none;
-    animation: fade 0.25s ease;
-  }
-
-  .view.active {
-    display: block;
-  }
-
-  @keyframes fade {
-    from { opacity: 0; transform: translateY(6px);}
-    to { opacity: 1; transform: translateY(0);}
-  }
-
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .stat-card {
-    background: rgba(21, 31, 52, 0.7);
-    backdrop-filter: blur(4px);
-    border-radius: 1.5rem;
-    padding: 1.25rem 1.5rem;
-    border: 1px solid rgba(71, 85, 105, 0.5);
-  }
-
-  .stat-label {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    font-weight: 600;
-    color: #94A3B8;
-  }
-
-  .stat-num {
-    font-size: 2.2rem;
-    font-weight: 800;
-    margin: 0.5rem 0;
-  }
-
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    margin: 2rem 0 1rem 0;
-  }
-
-  .section-title {
-    font-size: 1.35rem;
-    font-weight: 700;
-  }
-
-  .section-sub {
-    font-size: 0.8rem;
-    color: #94A3B8;
-  }
-
-  .table-card {
-    background: rgba(15, 23, 42, 0.6);
-    border-radius: 1.25rem;
-    border: 1px solid #1E293B;
-    overflow-x: auto;
-    margin-bottom: 1.5rem;
-  }
-
-  .table-wrap {
-    overflow-x: auto;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.85rem;
-  }
-
-  th {
-    text-align: left;
-    padding: 1rem 1rem;
-    color: #A0B2D1;
-    font-weight: 600;
-    border-bottom: 1px solid #1E293B;
-  }
-
-  td {
-    padding: 0.9rem 1rem;
-    border-bottom: 1px solid #1E293B;
-  }
-
-  .status-badge {
-    background: #334155;
-    padding: 4px 12px;
-    border-radius: 30px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    display: inline-block;
-  }
-
-  .btn {
-    padding: 0.4rem 1rem;
-    border-radius: 40px;
-    font-weight: 500;
-    font-size: 0.75rem;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-  }
-
-  .btn-primary {
-    background: #3B82F6;
-    color: white;
-  }
-
-  .btn-sm {
-    padding: 0.25rem 0.9rem;
-    font-size: 0.7rem;
-  }
-
-  .btn-danger {
-    background: #EF4444;
-    color: white;
-  }
-
-  .btn-ghost {
-    background: transparent;
-    border: 1px solid #475569;
-    color: #CBD5E1;
-  }
-
-  .filter-tabs {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-
-  .ftab {
-    background: rgba(30, 41, 59, 0.6);
-    border: none;
-    padding: 0.35rem 1rem;
-    border-radius: 30px;
-    color: #CBD5E1;
-    font-size: 0.75rem;
-    cursor: pointer;
-  }
-
-  .ftab.active {
-    background: #3B82F6;
-    color: white;
-  }
-
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.8);
-    backdrop-filter: blur(6px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
-
-  .modal {
-    background: #0F172A;
-    border-radius: 1.5rem;
-    max-width: 500px;
-    width: 90%;
-    padding: 1.5rem;
-    border: 1px solid #334155;
-  }
-
-  .modal-close {
-    float: right;
-    background: none;
-    border: none;
-    color: #94A3B8;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-
-  .toast {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    background: #1E293B;
-    padding: 0.7rem 1.5rem;
-    border-radius: 40px;
-    font-size: 0.85rem;
-    border-left: 4px solid #3B82F6;
-    transform: translateX(150%);
-    transition: transform 0.2s ease;
-    z-index: 1100;
-  }
-
-  .toast.show {
-    transform: translateX(0);
-  }
-
-  .loading {
-    text-align: center;
-    padding: 2rem;
-    color: #94A3B8;
-  }
-
-  button {
-    cursor: pointer;
-  }
-</style>
+<link rel="stylesheet" href="AdminDashboard.css">
 </head>
 <body>
 
+<!-- ── SIDEBAR ── -->
 <aside class="sidebar">
   <div class="sidebar-brand">
-    <a href="#">UrbanTrack</a>
+    <a href="../../homePage.html">UrbanTrack</a>
     <p>Admin Control Panel</p>
   </div>
-  <div class="sidebar-section">Overview</div>
-  <button class="nav-item active" onclick="showView('overview')"><span class="icon">📊</span> Dashboard</button>
-  <div class="sidebar-section">Management</div>
-  <button class="nav-item" onclick="showView('issues')"><span class="icon">📋</span> All Issues <span class="nav-badge" id="issuesBadge">0</span></button>
-  <button class="nav-item" onclick="showView('users')"><span class="icon">👥</span> Users <span class="nav-badge" id="usersBadge">0</span></button>
-  <button class="nav-item" onclick="showView('pending')"><span class="icon">⏳</span> Pending Approval <span class="nav-badge warn" id="pendingBadge">0</span></button>
-  <div class="sidebar-section">Settings</div>
-  <button class="nav-item" onclick="showView('settings')"><span class="icon">⚙️</span> Settings</button>
+
+  <div class="sidebar-label">Overview</div>
+  <button class="nav-item active" onclick="showView('overview', this)">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    </span>
+    Dashboard
+  </button>
+
+  <div class="sidebar-label">Management</div>
+  <button class="nav-item" onclick="showView('issues', this)">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    </span>
+    All Issues
+    <span class="nav-badge blue" id="issuesBadge">0</span>
+  </button>
+  <button class="nav-item" onclick="showView('users', this)">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </span>
+    Users
+    <span class="nav-badge blue" id="usersBadge">0</span>
+  </button>
+
+  <div class="sidebar-label">System</div>
+  <button class="nav-item" onclick="showView('settings', this)">
+    <span class="nav-icon">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </span>
+    Settings
+  </button>
+
   <div class="sidebar-footer">
-    <div class="admin-info"><div class="admin-avatar">AD</div><div><div class="admin-name">Admin User</div><div class="admin-role">Super Administrator</div></div></div>
-    <button class="logout-btn" onclick="localStorage.removeItem('urbanTrack_currentUser'); location.href='../../homePage.html'">← Logout</button>
+    <div class="admin-info">
+      <div class="admin-avatar" id="adminAvatar">A</div>
+      <div>
+        <div class="admin-name" id="adminName">Admin</div>
+        <div class="admin-role">Super Administrator</div>
+      </div>
+    </div>
+    <button class="logout-btn" onclick="localStorage.removeItem('urbanTrack_currentUser'); location.href='../../homePage.html'">Logout</button>
   </div>
 </aside>
 
+<!-- ── MAIN ── -->
 <div class="main">
   <div class="topbar">
-    <div><div class="topbar-title" id="topbarTitle">Dashboard Overview</div><div class="topbar-sub" id="topbarSub"></div></div>
-    <div class="search-box"><span>🔍</span><input type="text" placeholder="Search..." id="globalSearch"></div>
+    <div>
+      <div class="topbar-title" id="topbarTitle">Dashboard Overview</div>
+      <div class="topbar-sub" id="topbarSub">Real-time community issue data</div>
+    </div>
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search issues, users..." id="globalSearch" oninput="handleSearch(this.value)">
+    </div>
   </div>
+
   <div class="content">
-    <!-- OVERVIEW -->
+
+    <!-- ══ OVERVIEW ══ -->
     <div class="view active" id="view-overview">
       <div class="stats-row">
-        <div class="stat-card"><div class="stat-label">Total Reports</div><div class="stat-num" id="statTotal">0</div></div>
-        <div class="stat-card"><div class="stat-label">Resolved</div><div class="stat-num" id="statResolved">0</div></div>
-        <div class="stat-card"><div class="stat-label">In Progress</div><div class="stat-num" id="statProgress">0</div></div>
-        <div class="stat-card"><div class="stat-label">Urgent</div><div class="stat-num" id="statUrgent">0</div></div>
+        <div class="stat-card sc-blue">
+          <div class="stat-label">Total Reports</div>
+          <div class="stat-num" id="statTotal">0</div>
+        </div>
+        <div class="stat-card sc-green">
+          <div class="stat-label">Resolved</div>
+          <div class="stat-num" id="statResolved">0</div>
+        </div>
+        <div class="stat-card sc-yellow">
+          <div class="stat-label">In Progress</div>
+          <div class="stat-num" id="statProgress">0</div>
+        </div>
+        <div class="stat-card sc-red">
+          <div class="stat-label">Urgent</div>
+          <div class="stat-num" id="statUrgent">0</div>
+        </div>
       </div>
-      <div class="section-header"><div><div class="section-title">Recent Issues</div></div><button class="btn btn-primary btn-sm" onclick="showView('issues')">View All →</button></div>
-      <div class="table-card"><div class="table-wrap"><table><thead><tr><th>Issue</th><th>Reporter</th><th>Status</th><th>Reported</th></tr></thead><tbody id="overviewTbody"></tbody></table></div></div>
+
+      <div class="section-header">
+        <div>
+          <div class="section-title">Recent Issues</div>
+          <div class="section-sub">Last 5 reports submitted</div>
+        </div>
+        <button class="btn btn-primary" onclick="showView('issues', null)">View All</button>
+      </div>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Issue</th>
+                <th>Reporter</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="overviewTbody">
+              <tr><td colspan="4" class="empty-state">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
-    <!-- ISSUES -->
+    <!-- ══ ALL ISSUES ══ -->
     <div class="view" id="view-issues">
-      <div class="section-header"><div><div class="section-title">All Issues</div></div></div>
-      <div class="table-card"><div class="table-wrap"><table><thead><tr><th>Title</th><th>Reporter</th><th>Location</th><th>Status</th><th>Actions</th></tr></thead><tbody id="issuesTbody"></tbody></table></div></div>
-    </div>
-
-    <!-- USERS -->
-    <div class="view" id="view-users">
-      <div class="section-header"><div><div class="section-title">All Users</div></div></div>
-      <div class="table-card"><div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Status</th><th>Actions</th></tr></thead><tbody id="usersTbody"></tbody></table></div></div>
-    </div>
-
-    <!-- PENDING -->
-    <div class="view" id="view-pending">
-      <div class="section-header"><div><div class="section-title">Pending Approvals</div></div></div>
-      <div class="table-card"><div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Actions</th></tr></thead><tbody id="pendingTbody"></tbody></table></div></div>
-    </div>
-
-    <!-- SETTINGS -->
-    <div class="view" id="view-settings">
-      <div class="section-title">Platform Settings</div>
-      <div class="table-card" style="padding:2rem;">
-        <div><input type="checkbox" id="requireApproval"> <label>Require user approval</label></div>
-        <button class="btn btn-primary" style="margin-top:1rem;" onclick="showToast('Settings saved')">Save</button>
+      <div class="section-header">
+        <div>
+          <div class="section-title">All Issues</div>
+          <div class="section-sub">Manage and update the status of every report</div>
+        </div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+          <button class="btn btn-ghost" onclick="filterIssues('all', this)" style="border-color:var(--accent);color:var(--accent);">All</button>
+          <button class="btn btn-ghost" onclick="filterIssues('pending', this)">Pending</button>
+          <button class="btn btn-ghost" onclick="filterIssues('in-progress', this)">In Progress</button>
+          <button class="btn btn-ghost" onclick="filterIssues('resolved', this)">Resolved</button>
+        </div>
+      </div>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Reporter</th>
+                <th>Location</th>
+                <th>Severity</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="issuesTbody">
+              <tr><td colspan="6" class="empty-state">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+
+    <!-- ══ ALL USERS ══ -->
+    <div class="view" id="view-users">
+      <div class="section-header">
+        <div>
+          <div class="section-title">All Users</div>
+          <div class="section-sub">Everyone registered on UrbanTrack</div>
+        </div>
+      </div>
+      <div class="table-card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th>Area</th>
+                <th>Reports Filed</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="usersTbody">
+              <tr><td colspan="5" class="empty-state">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SETTINGS ══ -->
+    <div class="view" id="view-settings">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Platform Settings</div>
+          <div class="section-sub">Configure how UrbanTrack behaves</div>
+        </div>
+      </div>
+
+      <!-- Report Settings -->
+      <div class="settings-card">
+        <div class="settings-card-header">
+          <div class="settings-card-title">Report Management</div>
+          <div class="settings-card-sub">Control how reports are submitted and handled</div>
+        </div>
+        <div class="settings-card-body">
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <h4>Require User Approval</h4>
+              <p>New users must be approved by an admin before they can submit reports</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="settingRequireApproval" onchange="saveSetting('requireApproval', this.checked)">
+              <div class="toggle-slider"></div>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <h4>Auto-close Resolved Reports</h4>
+              <p>Automatically archive reports that have been resolved for 30 days</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="settingAutoClose" onchange="saveSetting('autoClose', this.checked)" checked>
+              <div class="toggle-slider"></div>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <h4>Allow Photo Uploads</h4>
+              <p>Users can attach photos when submitting a report</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="settingPhotos" onchange="saveSetting('allowPhotos', this.checked)" checked>
+              <div class="toggle-slider"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notification Settings -->
+      <div class="settings-card">
+        <div class="settings-card-header">
+          <div class="settings-card-title">Notifications</div>
+          <div class="settings-card-sub">What triggers an admin notification</div>
+        </div>
+        <div class="settings-card-body">
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <h4>New Report Alert</h4>
+              <p>Notify admin when a new report is submitted</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="settingNewReport" onchange="saveSetting('notifyNewReport', this.checked)" checked>
+              <div class="toggle-slider"></div>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <h4>Urgent Issue Alert</h4>
+              <p>Immediate notification when a high-severity issue is submitted</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="settingUrgentAlert" onchange="saveSetting('notifyUrgent', this.checked)" checked>
+              <div class="toggle-slider"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /view-settings -->
+
+  </div><!-- /content -->
+</div><!-- /main -->
 
 <div class="toast" id="toast"></div>
-<script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, getDocs, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
-  authDomain: "urban-track-91e53.firebaseapp.com",
-  projectId: "urban-track-91e53",
-  storageBucket: "urban-track-91e53.firebasestorage.app",
-  messagingSenderId: "519209303536",
-  appId: "1:519209303536:web:c212eb58eb836e27047135"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-  // Navigation logic
-  window.showView = function(viewId) {
-    // Hide all views and remove active class from nav
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    
-    // Show selected view
-    const targetView = document.getElementById('view-' + viewId);
-    if (targetView) targetView.classList.add('active');
-    
-    // Update topbar title
-    const titles = { overview: 'Dashboard Overview', issues: 'All Issues', users: 'User Management', pending: 'Pending Approvals', settings: 'Settings' };
-    document.getElementById('topbarTitle').textContent = titles[viewId] || 'Dashboard';
-  };
-
-  window.showToast = function(msg) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3000);
-  };
-
-  function getStatusBadge(status) {
-    const map = {
-      pending: { class: 'status-badge', label: '🟡 Pending' },
-      'in-progress': { class: 'status-badge', label: '🔵 In Progress' },
-      resolved: { class: 'status-badge', label: '🟢 Resolved' }
-    };
-    const s = map[status] || { class: 'status-badge', label: status };
-    return `<span class="${s.class}">${s.label}</span>`;
-  }
-
-  window.updateStatus = async function(id, newStatus) {
-    try {
-      await updateDoc(doc(db, "reports", id), { status: newStatus });
-      showToast(`Status updated to ${newStatus}`);
-      loadDashboardData();
-    } catch (e) {
-      console.error(e);
-      showToast("Error updating status");
-    }
-  };
-
-  async function loadDashboardData() {
-    // 1. Load Reports
-    try {
-      const reportsSnapshot = await getDocs(query(collection(db, "reports"), orderBy("timestamp", "desc")));
-      const reports = reportsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-      document.getElementById('statTotal').textContent = reports.length;
-      document.getElementById('issuesBadge').textContent = reports.length;
-      
-      const resolved = reports.filter(r => r.status === 'resolved').length;
-      const progress = reports.filter(r => r.status === 'in-progress').length;
-      const urgent = reports.filter(r => r.severity === 'high' && r.status !== 'resolved').length;
-
-      document.getElementById('statResolved').textContent = resolved;
-      document.getElementById('statProgress').textContent = progress;
-      document.getElementById('statUrgent').textContent = urgent;
-
-      const overviewTbody = document.getElementById('overviewTbody');
-      if (reports.length === 0) {
-        overviewTbody.innerHTML = '<tr><td colspan="4" class="loading">No reports found in database.</td></tr>';
-      } else {
-        overviewTbody.innerHTML = reports.slice(0, 5).map(r => `
-          <tr>
-            <td><strong>${r.title}</strong><br><small style="color:#94A3B8">${r.area || r.address}</small></td>
-            <td><div style="font-weight:600">${r.reporterName || 'Anonymous'}</div><small style="color:#94A3B8">${r.reporterEmail || ''}</small></td>
-            <td>${getStatusBadge(r.status)}</td>
-            <td>${r.timestamp ? new Date(r.timestamp.seconds * 1000).toLocaleDateString() : 'N/A'}</td>
-          </tr>
-        `).join('');
-      }
-
-      const issuesTbody = document.getElementById('issuesTbody');
-      if (reports.length === 0) {
-        issuesTbody.innerHTML = '<tr><td colspan="5" class="loading">No issues found.</td></tr>';
-      } else {
-        issuesTbody.innerHTML = reports.map(r => `
-          <tr>
-            <td><strong>${r.title}</strong><br><small style="color:#94A3B8">${r.category}</small></td>
-            <td><div style="font-weight:600">${r.reporterName || 'Anonymous'}</div><small style="color:#94A3B8">${r.reporterEmail || ''}</small></td>
-            <td>${r.area || r.address}</td>
-            <td>${getStatusBadge(r.status)}</td>
-            <td>
-              <button class="btn btn-ghost btn-sm" onclick="updateStatus('${r.id}', 'in-progress')">Process</button>
-              <button class="btn btn-primary btn-sm" onclick="updateStatus('${r.id}', 'resolved')">Resolve</button>
-            </td>
-          </tr>
-        `).join('');
-      }
-    } catch (error) {
-      console.error("Reports loading failed:", error);
-      showToast("Reports data could not be fetched.");
-    }
-
-    // 2. Load Users
-    try {
-      const usersSnapshot = await getDocs(collection(db, "users"));
-      const users = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      
-      document.getElementById('usersBadge').textContent = users.length;
-      
-      const usersTbody = document.getElementById('usersTbody');
-      if (users.length === 0) {
-        usersTbody.innerHTML = '<tr><td colspan="4" class="loading">No registered users found.</td></tr>';
-      } else {
-        usersTbody.innerHTML = users.map(u => `
-          <tr>
-            <td><strong>${u.surname || 'User'}</strong><br><small style="color:#94A3B8">Reports Filed: ${u.reportsCount || 0}</small></td>
-            <td style="color:#60A5FA; font-weight:500;">${u.email || 'N/A'}</td>
-            <td><span class="status-badge">${u.status || 'Active'}</span></td>
-            <td><button class="btn btn-ghost btn-sm">Manage</button></td>
-          </tr>
-        `).join('');
-      }
-
-      // Populate Pending Approvals (Example: filtering users with 'pending' status)
-      const pendingUsers = users.filter(u => u.status === 'pending');
-      document.getElementById('pendingBadge').textContent = pendingUsers.length;
-      const pendingTbody = document.getElementById('pendingTbody');
-      if (pendingUsers.length === 0) {
-        pendingTbody.innerHTML = '<tr><td colspan="3" class="loading">No pending approvals.</td></tr>';
-      } else {
-        pendingTbody.innerHTML = pendingUsers.map(u => `
-          <tr>
-            <td>${u.surname || 'User'}</td>
-            <td style="color:#60A5FA;">${u.email}</td>
-            <td>
-              <button class="btn btn-primary btn-sm" onclick="showToast('User Approved')">Approve</button>
-              <button class="btn btn-danger btn-sm">Reject</button>
-            </td>
-          </tr>
-        `).join('');
-      }
-    } catch (error) {
-      console.error("Users loading failed:", error);
-      showToast("Could not load user data from database.");
-    }
-  }
-
-  onAuthStateChanged(auth, (user) => {
-    const localUser = JSON.parse(localStorage.getItem('urbanTrack_currentUser') || 'null');
-    // Allow access if Firebase user exists OR if local storage identifies the hardcoded admin
-    if (user || (localUser && localUser.role === 'admin')) {
-      loadDashboardData();
-
-      // Update Admin Sidebar Info with email
-      const adminNameEl = document.querySelector('.admin-name');
-      const adminAvatarEl = document.querySelector('.admin-avatar');
-      const adminEmail = user ? user.email : (localUser ? localUser.email : 'admin@urbantrack.com');
-      
-      if (adminNameEl) adminNameEl.textContent = adminEmail;
-      if (adminAvatarEl) adminAvatarEl.textContent = adminEmail.charAt(0).toUpperCase();
-    } else {
-      location.href = '../pages/login.html';
-    }
-  });
-</script>
+<script type="module" src="Admindashboard.js"></script>
 </body>
 </html>

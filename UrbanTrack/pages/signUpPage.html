@@ -11,8 +11,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link rel="stylesheet" href="../Styles/SignUp.css" /> 
-    
+    <link rel="stylesheet" href="../Styles/SignUp.css" />
   </head>
   <body>
     <nav class="navbar">
@@ -28,19 +27,20 @@
       </div>
     </nav>
     <!-- hb -->
-     <form id="signupForm" novalidate>
+    <form id="signupForm" novalidate>
       <div class="left">
         <div class="left-content">
-          <h1>Create Account</h1><br><br>
+          <h1>Create Account</h1>
+          <br /><br />
           <h2>Welcome to Urban Track</h2>
           <h4>Empowering communities to improve their cities.</h4>
-          <p>Join our community today and help make a difference in your city!</p>
+          <p>
+            Join our community today and help make a difference in your city!
+          </p>
         </div>
       </div>
       <div class="divider"></div>
-        <div class="signup-container">
-        
-      
+      <div class="signup-container">
         <div class="form-group">
           <label for="surname">Surname</label>
           <input
@@ -96,53 +96,69 @@
         <button type="submit" id="signing" class="btn" name="signup">
           Sign Up
         </button>
+
+        <!-- Google signup option -->
+        <a
+          id="google-login-btn"
+          href="http://localhost:3000/auth/google"
+          class="btn google-btn"
+        >
+          <i class="fa-brands fa-google"></i> Continue with Google
+        </a>
+
         <p class="footer-text">
           Already have an account? <a href="login.html">Log in</a>
         </p>
       </div>
-     </form>
-
+    </form>
+    <script src="../js/main.js"></script>
     <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-import { getAuth, createUserWithEmailAndPassword } 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-import { getFirestore, doc, setDoc } 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
-  authDomain: "urban-track-91e53.firebaseapp.com",
-  projectId: "urban-track-91e53",
-  storageBucket: "urban-track-91e53.firebasestorage.app",
-  messagingSenderId: "519209303536",
-  appId: "1:519209303536:web:c212eb58eb836e27047135"
-};
+      const firebaseConfig = {
+        apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
+        authDomain: "urban-track-91e53.firebaseapp.com",
+        projectId: "urban-track-91e53",
+        storageBucket: "urban-track-91e53.firebasestorage.app",
+        messagingSenderId: "519209303536",
+        appId: "1:519209303536:web:c212eb58eb836e27047135",
+      };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
 
-const form = document.getElementById("signupForm");
-const surname = document.getElementById("surname");
-const email = document.getElementById("email");
-const password = document.getElementById("Signup-password");
-const confirmPassword = document.getElementById("Signup-confirm-password");
+      const form = document.getElementById("signupForm");
+      const surname = document.getElementById("surname");
+      const email = document.getElementById("email");
+      const password = document.getElementById("Signup-password");
+      const confirmPassword = document.getElementById(
+        "Signup-confirm-password",
+      );
 
-form.addEventListener("submit", async (e) => {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-e.preventDefault();
+        /* EMAIL VALIDATION */
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/* EMAIL VALIDATION */
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email.value)) {
+          alert("Please enter a valid email address");
+          return;
+        }
 
-if(!emailPattern.test(email.value)){
-alert("Please enter a valid email address");
-return;
-}
-
-/* PASSWORD VALIDATION
+        /* PASSWORD VALIDATION
 Minimum 8 characters
 1 uppercase
 1 lowercase
@@ -150,49 +166,59 @@ Minimum 8 characters
 1 special character
 */
 
-const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+        const passwordPattern =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
-if(!passwordPattern.test(password.value)){
-alert("Password must contain:\n- Minimum 8 characters\n- One uppercase letter\n- One lowercase letter\n- One digit\n- One special character");
-return;
-}
+        if (!passwordPattern.test(password.value)) {
+          alert(
+            "Password must contain:\n- Minimum 8 characters\n- One uppercase letter\n- One lowercase letter\n- One digit\n- One special character",
+          );
+          return;
+        }
 
-/* CONFIRM PASSWORD CHECK */
+        /* CONFIRM PASSWORD CHECK */
 
-if(password.value !== confirmPassword.value){
-alert("Passwords do not match");
-return;
-}
+        if (password.value !== confirmPassword.value) {
+          alert("Passwords do not match");
+          return;
+        }
 
-try{
+        try {
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            email.value,
+            password.value,
+          );
 
-const userCredential = await createUserWithEmailAndPassword(
-auth,
-email.value,
-password.value
-);
+          const user = userCredential.user;
 
-const user = userCredential.user;
+          await setDoc(doc(db, "users", user.uid), {
+            surname: surname.value,
+            email: email.value,
+            reportsCount: 0,
+          });
 
-await setDoc(doc(db,"users",user.uid),{
+          alert("Account created successfully");
 
-surname: surname.value,
-email: email.value,
-reportsCount: 0
-
-});
-
-alert("Account created successfully");
-
-window.location.href = "login.html";
-
-}catch(error){
-
-alert(error.message);
-
-}
-
-});
+          window.location.href = "login.html";
+        } catch (error) {
+          alert(error.message);
+        }
+        const menuBtn = document.querySelector(".menu-button");
+        const navLinks = document.querySelector(".nav-links");
+        let menuOpen = false;
+        menuBtn.addEventListener("click", () => {
+          if (!menuOpen) {
+            menuBtn.classList.add("open");
+            navLinks.classList.add("show");
+            menuOpen = true;
+          } else {
+            menuBtn.classList.remove("open");
+            navLinks.classList.remove("show");
+            menuOpen = false;
+          }
+        });
+      });
     </script>
   </body>
 </html>
