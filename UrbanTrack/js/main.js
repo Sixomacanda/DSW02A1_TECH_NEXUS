@@ -1,22 +1,35 @@
-const passwordGroups = document.querySelectorAll(".password-group");
+function setupPasswordToggles() {
+  const passwordGroups = document.querySelectorAll(".password-group");
+  if (!passwordGroups.length) return;
 
-passwordGroups.forEach((group) => {
-  const input = group.querySelector("input");
-  const show = group.querySelector(".fa-eye");
-  const hide = group.querySelector(".fa-eye-slash");
+  passwordGroups.forEach((group) => {
+    // Skip if already set up
+    if (group.dataset.toggleSetup) return;
 
-  show.addEventListener("click", () => {
-    input.type = "text";
-    hide.classList.remove("hide");
-    show.classList.add("hide");
+    const input = group.querySelector("input");
+    const show = group.querySelector(".fa-eye");
+    const hide = group.querySelector(".fa-eye-slash");
+
+    if (!input || !show || !hide) return;
+
+    show.addEventListener("click", () => {
+      input.type = "text";
+      hide.classList.remove("hide");
+      show.classList.add("hide");
+    });
+
+    hide.addEventListener("click", () => {
+      input.type = "password";
+      hide.classList.add("hide");
+      show.classList.remove("hide");
+    });
+
+    // Mark as set up
+    group.dataset.toggleSetup = "true";
   });
+}
 
-  hide.addEventListener("click", () => {
-    input.type = "password";
-    hide.classList.add("hide");
-    show.classList.remove("hide");
-  });
-});
+setupPasswordToggles();
 
 function validateEmail(value) {
   return /\S+@\S+\.\S+/.test(value);
@@ -41,8 +54,8 @@ function clearError(input) {
 }
 
 const loginForm = document.getElementById("loginForm");
-if (loginForm) {
-  const loginEmail = document.getElementById("text");
+if (loginForm && !loginForm.dataset.authHandled) {
+  const loginEmail = document.getElementById("email");
   const loginPassword = document.getElementById("password");
 
   loginForm.addEventListener("submit", (e) => {
@@ -50,17 +63,17 @@ if (loginForm) {
     let valid = true;
 
     if (!loginEmail.value.trim()) {
-      setError(loginEmail, "Email is required.");
+      setError(loginEmail, "Incorrect credentials.");
       valid = false;
     } else if (!validateEmail(loginEmail.value.trim())) {
-      setError(loginEmail, "Please enter a valid email address.");
+      setError(loginEmail, "Incorrect credentials.");
       valid = false;
     } else {
       clearError(loginEmail);
     }
 
     if (!loginPassword.value.trim()) {
-      setError(loginPassword, "Password is required.");
+      setError(loginPassword, "Incorrect credentials.");
       valid = false;
       // } else if (loginPassword.value.length < 6) {
       //   setError(loginPassword, "Password must be at least 6 characters.");
@@ -245,14 +258,10 @@ if (signupForm) {
 const menuBtn = document.querySelector(".menu-button");
 const navLinks = document.querySelector(".nav-links");
 let menuOpen = false;
-menuBtn.addEventListener("click", () => {
-  if (!menuOpen) {
-    menuBtn.classList.add("open");
-    navLinks.classList.add("show");
-    menuOpen = true;
-  } else {
-    menuBtn.classList.remove("open");
-    navLinks.classList.remove("show");
-    menuOpen = false;
-  }
-});
+if (menuBtn && navLinks) {
+  menuBtn.addEventListener("click", () => {
+    menuBtn.classList.toggle("open");
+    navLinks.classList.toggle("show");
+    menuOpen = !menuOpen;
+  });
+}
