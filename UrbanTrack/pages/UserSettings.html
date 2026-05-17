@@ -1,755 +1,467 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UrbanTrack — Account Settings</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    /* ── TOKENS ── */
-    :root {
-      --bg-base:      #0f172a;
-      --accent:       #0ea5e9;
-      --accent-hover: #38bdf8;
-      --indigo:       #6366f1;
-      --text:         #ffffff;
-      --text-muted:   #dbeafe;
-      --glass:        rgba(255,255,255,0.07);
-      --glass-border: rgba(255,255,255,0.1);
-      --success:      #10b981;
-      --warning:      #f59e0b;
-      --danger:       #ef4444;
-      --radius:       1.1rem;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UrbanTrack — Account Settings</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../Styles/userSettings.css" />
+  </head>
+  <body>
+    <!-- ── HEADER ── -->
+    <!-- <header class="header"> -->
+      <nav class="navbar">
+        <div class="logo">Urban Track</div>
 
-    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        <ul class="nav-links">
+          <li><a href="../../homePage.html">Home</a></li>
+          <li><a href="MainPage.html">Report Issue</a></li>
+          <li><a href="UserDashboard.html">Dashboard</a></li>
+          <li><a href="#" onclick="doLogout()">Logout</a></li>
+        </ul>
 
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #0ea5e9 100%);
-      background-attachment: fixed;
-      color: var(--text);
-      font-size: 15px;
-      min-height: 100vh;
-    }
+        <div class="menu-button">
+          <div class="menu-button__burger"></div>
+        </div>
+      </nav>
+    <!-- </header> -->
 
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); }
-    ::-webkit-scrollbar-thumb { background: rgba(56,189,248,0.4); border-radius: 10px; }
+    <!-- ── PAGE ── -->
+    <div class="page">
+      <!-- Left nav -->
+      <div class="settings-nav fu">
+        <div class="snav-label">Account</div>
+        <button class="snav-item active" onclick="showSection('profile', this)">
+          Profile
+        </button>
+        <div class="snav-divider"></div>
+        <div class="snav-label">Danger</div>
+        <button
+          class="snav-item danger-nav"
+          onclick="showSection('danger', this)"
+        >
+          Delete Account
+        </button>
+      </div>
 
-    @keyframes fadeUp {
-      from { opacity:0; transform:translateY(20px); }
-      to   { opacity:1; transform:translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity:0; } to { opacity:1; }
-    }
-    @keyframes blink {
-      0%,100% { opacity:1; } 50% { opacity:.2; }
-    }
+      <!-- Right panel -->
+      <div class="settings-panel">
+        <!-- ══ PROFILE ══ -->
+        <div class="panel-section active" id="section-profile">
+          <div class="settings-card fu d1">
+            <div class="card-header">
+              <div class="card-title">Profile Information</div>
+              <div class="card-sub">
+                Your name and area are shown on reports you submit
+              </div>
+            </div>
+            <div class="card-body">
+              <!-- Avatar + name -->
+              <div class="avatar-row">
+                <div class="avatar-large" id="avatarDisplay">U</div>
+                <div class="avatar-info">
+                  <h3 id="avatarName">Loading...</h3>
+                  <p id="avatarEmail">Loading...</p>
+                </div>
+              </div>
 
-    .fu { animation: fadeUp .5s ease both; opacity:0; }
-    .d1 { animation-delay:.08s; }
-    .d2 { animation-delay:.16s; }
+              <!-- Display name -->
+              <div class="form-row single">
+                <div class="field">
+                  <label>Display Name</label>
+                  <input
+                    type="text"
+                    id="displayName"
+                    placeholder="How your name appears on reports"
+                  />
+                </div>
+              </div>
 
-    /* ── HEADER ── */
-    .header {
-      position: sticky; top:0; z-index:50;
-      background: rgba(15,23,42,0.7);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .navbar {
-      max-width: 1100px; margin:0 auto;
-      padding: .8rem 1.5rem;
-      display: flex; align-items: center; gap: 1.5rem;
-    }
-    .logo {
-      font-size: 1.5rem; font-weight: 800;
-      color: var(--accent-hover); text-decoration: none;
-      letter-spacing: -.5px; flex-shrink: 0;
-    }
-    .nav-links {
-      display: flex; gap: 2rem; align-items: center;
-      list-style: none; margin: 0 auto;
-    }
-    .nav-links li a {
-      color: var(--text-muted); text-decoration: none;
-      font-size: .875rem; font-weight: 500;
-      opacity: .75; transition: all .15s;
-      padding-bottom: 2px;
-      border-bottom: 2px solid transparent;
-    }
-    .nav-links li a:hover { color: var(--text); opacity:1; }
-    .nav-links li a.active { color: var(--accent-hover); opacity:1; border-bottom-color: var(--accent-hover); }
+              <!-- Email — read-only, managed by Firebase Auth -->
+              <div class="form-row single">
+                <div class="field">
+                  <label>Email Address</label>
+                  <input
+                    type="email"
+                    id="emailField"
+                    placeholder="your@email.com"
+                    readonly
+                    style="opacity: 0.6; cursor: not-allowed"
+                  />
+                </div>
+              </div>
 
-    .nav-actions { display:flex; align-items:center; gap:.75rem; flex-shrink:0; }
+              <!-- Area -->
+              <div class="form-row single">
+                <div class="field">
+                  <label>Area / Suburb</label>
+                  <select id="areaField">
+                    <option value="">Select your area...</option>
+                    <option>Rosebank</option>
+                    <option>Sandton CBD</option>
+                    <option>Melville</option>
+                    <option>Soweto</option>
+                    <option>Midrand</option>
+                    <option>Fourways</option>
+                    <option>Randburg</option>
+                    <option>Alexandra</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+              </div>
 
-    .user-chip { display:flex; align-items:center; gap:.5rem; }
-    .user-av {
-      width: 30px; height: 30px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--indigo));
-      display: flex; align-items: center; justify-content: center;
-      font-size: .72rem; font-weight: 700; color: #fff; flex-shrink: 0;
-    }
-    .user-name-text {
-      font-size: .8rem; color: var(--text-muted); opacity: .8;
-      max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .nav-divider { width:1px; height:18px; background: rgba(255,255,255,.1); }
+              <div class="save-row">
+                <button
+                  class="btn btn-primary"
+                  id="saveBtn"
+                  onclick="saveProfile()"
+                >
+                  Save Changes
+                </button>
+                <button class="btn btn-ghost" onclick="discardProfile()">
+                  Discard
+                </button>
+                <span class="saved-msg" id="profileSavedMsg"
+                  >Profile updated</span
+                >
+                <span class="error-msg" id="profileErrorMsg"
+                  >Failed to save</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
 
-    .btn-logout {
-      padding: .38rem 1rem; border-radius: .5rem;
-      border: 1px solid rgba(239,68,68,.3);
-      background: transparent; color: rgba(252,165,165,.8);
-      font-size: .78rem; font-weight: 600;
-      cursor: pointer; font-family: inherit; transition: all .15s;
-    }
-    .btn-logout:hover { background: rgba(239,68,68,.12); color: #fca5a5; }
+        <!-- ══ DELETE ACCOUNT ══ -->
+        <div class="panel-section" id="section-danger">
+          <div class="settings-card danger-card fu d1">
+            <div class="card-header">
+              <div class="card-title">Delete Account Permanently</div>
+              <div class="card-sub">
+                This action is irreversible — all your data will be erased
+              </div>
+            </div>
+            <div class="card-body">
+              <ul class="danger-list">
+                <li>
+                  Your profile and all personal information will be removed
+                </li>
+                <li>
+                  All reports and comments you have submitted will be deleted
+                </li>
+                <li>Your upvotes will be removed from all community issues</li>
+                <li>This cannot be undone — there is no recovery option</li>
+              </ul>
+              <button class="btn btn-danger" onclick="openDeleteModal()">
+                Delete My Account Permanently
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /settings-panel -->
+    </div>
+    <!-- /page -->
 
-    .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
-    .hamburger span { width:20px; height:1.5px; background: var(--text-muted); border-radius:2px; transition: all .3s; }
+    <!-- ══ DELETE MODAL ══ -->
+    <div class="modal-overlay" id="deleteModal">
+      <div class="modal">
+        <button class="modal-close" onclick="closeDeleteModal()">x</button>
+        <div class="modal-title">Delete Account Permanently</div>
+        <div class="modal-body">
+          This will immediately and permanently delete your account and all
+          associated data.
+          <strong style="color: var(--danger)">This cannot be undone.</strong>
+        </div>
+        <div class="modal-field">
+          <label>Type DELETE to confirm</label>
+          <input
+            type="text"
+            id="deleteConfirmInput"
+            placeholder="Type DELETE here"
+            oninput="checkDeleteConfirm()"
+          />
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-ghost" onclick="closeDeleteModal()">
+            Cancel
+          </button>
+          <button
+            class="btn btn-danger"
+            id="deleteConfirmBtn"
+            disabled
+            onclick="deleteAccount()"
+          >
+            Delete Permanently
+          </button>
+        </div>
+      </div>
+    </div>
 
-    /* ── PAGE ── */
-    .page {
-      max-width: 1100px; margin:0 auto;
-      padding: 2.5rem 1.5rem 5rem;
-      display: grid;
-      grid-template-columns: 200px 1fr;
-      gap: 2rem;
-      align-items: start;
-    }
+    <div class="toast" id="toast"></div>
 
-    /* ── LEFT NAV ── */
-    .settings-nav {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: var(--radius);
-      padding: .85rem;
-      position: sticky;
-      top: 5rem;
-    }
-    .snav-label {
-      font-size: .6rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: .1em;
-      color: var(--text-muted); opacity: .4;
-      padding: .3rem .65rem .5rem;
-    }
-    .snav-item {
-      display: flex; align-items: center; gap: .6rem;
-      padding: .6rem .75rem;
-      border-radius: .65rem;
-      cursor: pointer; font-size: .855rem; font-weight: 500;
-      color: var(--text-muted); border: none; background: none;
-      width: 100%; text-align: left;
-      transition: all .15s; font-family: inherit;
-    }
-    .snav-item:hover { background: rgba(56,189,248,.07); color: var(--accent-hover); }
-    .snav-item.active {
-      background: rgba(56,189,248,.12);
-      color: var(--accent-hover);
-      border: 1px solid rgba(56,189,248,.18);
-    }
-    .snav-divider { height:1px; background: rgba(255,255,255,.07); margin: .5rem .4rem; }
-    .snav-item.danger-nav { color: rgba(239,68,68,.75); }
-    .snav-item.danger-nav:hover,
-    .snav-item.danger-nav.active { background: rgba(239,68,68,.1); color: var(--danger); border-color: rgba(239,68,68,.2); }
-
-    /* ── RIGHT PANEL ── */
-    .panel-section { display:none; }
-    .panel-section.active { display:block; animation: fadeUp .3s ease; }
-
-    /* ── CARD ── */
-    .settings-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: var(--radius);
-      overflow: hidden;
-      margin-bottom: 1.25rem;
-    }
-    .card-header {
-      padding: 1.2rem 1.6rem;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .card-title { font-size: .95rem; font-weight: 700; color: var(--accent-hover); }
-    .card-sub   { font-size: .76rem; color: var(--text-muted); opacity: .6; margin-top: .15rem; }
-    .card-body  { padding: 1.6rem; }
-
-    .danger-card {
-      border-color: rgba(239,68,68,.2);
-    }
-    .danger-card .card-header {
-      border-bottom-color: rgba(239,68,68,.12);
-      background: rgba(239,68,68,.03);
-    }
-    .danger-card .card-title { color: var(--danger); }
-
-    /* ── AVATAR ROW ── */
-    .avatar-row {
-      display: flex; align-items: center; gap: 1.25rem;
-      margin-bottom: 1.5rem; padding-bottom: 1.5rem;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-    .avatar-large {
-      width: 72px; height: 72px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent-hover), var(--indigo));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.6rem; font-weight: 700; flex-shrink: 0;
-      color: #fff;
-    }
-    .avatar-info h3 { font-size: 1rem; font-weight: 700; margin-bottom: .15rem; }
-    .avatar-info p  { font-size: .78rem; color: var(--text-muted); opacity: .6; }
-
-    /* ── FIELDS ── */
-    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; margin-bottom:1.1rem; }
-    .form-row.single { grid-template-columns:1fr; }
-    .field { display:flex; flex-direction:column; gap:.4rem; }
-    .field label {
-      font-size: .68rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: .08em;
-      color: var(--text-muted); opacity: .65;
-    }
-    .field input,
-    .field select {
-      padding: .72rem 1.1rem;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--accent-hover);
-      border-radius: 9999px;
-      color: var(--text); font-family: inherit; font-size: .9rem;
-      transition: all .2s; outline: none;
-    }
-    .field select {
-      appearance: none; cursor: pointer;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2338bdf8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 1.1rem center;
-      background-color: rgba(255,255,255,0.05);
-      padding-right: 2.5rem;
-    }
-    .field select option { background: #1e3a8a; }
-    .field input::placeholder { color: rgba(255,255,255,.2); }
-    .field input:focus,
-    .field select:focus {
-      background: rgba(56,189,248,.05);
-      box-shadow: 0 0 0 3px rgba(56,189,248,.15);
-    }
-
-    /* ── SAVE ROW ── */
-    .save-row {
-      display: flex; align-items: center; gap: .9rem;
-      padding-top: 1.1rem; border-top: 1px solid rgba(255,255,255,.06);
-      margin-top: .25rem;
-    }
-    .btn {
-      display: inline-flex; align-items: center; gap: .4rem;
-      padding: .65rem 1.5rem; border-radius: 9999px;
-      border: none; cursor: pointer; font-family: inherit;
-      font-size: .855rem; font-weight: 600; transition: all .2s;
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent-hover), var(--indigo));
-      color: #fff;
-    }
-    .btn-primary:hover { transform: scale(1.03); box-shadow: 0 4px 16px rgba(56,189,248,.4); }
-    .btn-primary:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
-
-    .btn-ghost {
-      background: none; border: 1px solid rgba(255,255,255,.12);
-      color: var(--text-muted);
-    }
-    .btn-ghost:hover { border-color: var(--accent-hover); color: var(--accent-hover); }
-
-    .btn-danger {
-      background: linear-gradient(135deg, var(--danger), #b91c1c);
-      color: #fff;
-    }
-    .btn-danger:hover { transform: scale(1.03); box-shadow: 0 4px 16px rgba(239,68,68,.4); }
-    .btn-danger:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
-
-    .saved-msg {
-      font-size: .78rem; color: var(--success); font-weight: 600;
-      opacity: 0; transition: opacity .3s;
-    }
-    .saved-msg.show { opacity: 1; }
-    .error-msg {
-      font-size: .78rem; color: var(--danger); font-weight: 600;
-      opacity: 0; transition: opacity .3s;
-    }
-    .error-msg.show { opacity: 1; }
-
-    /* ── DANGER LIST ── */
-    .danger-list { display:flex; flex-direction:column; gap:.5rem; margin-bottom:1.5rem; }
-    .danger-list li {
-      font-size: .84rem; color: var(--text-muted); opacity: .75;
-      display: flex; align-items: center; gap: .55rem; list-style: none;
-    }
-    .danger-list li::before {
-      content: 'x';
-      font-size: .65rem; font-weight: 800;
-      color: var(--danger); flex-shrink: 0;
-      background: rgba(239,68,68,.12);
-      width: 16px; height: 16px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    /* ── MODAL ── */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,.7); backdrop-filter: blur(5px);
-      z-index: 500; align-items: center; justify-content: center;
-    }
-    .modal-overlay.open { display:flex; animation: fadeIn .2s ease; }
-    .modal {
-      background: rgba(15,23,42,.98);
-      border: 1px solid rgba(239,68,68,.25);
-      border-radius: var(--radius);
-      padding: 2rem; width: 90%; max-width: 420px;
-      position: relative; animation: fadeUp .3s ease;
-    }
-    .modal-close {
-      position: absolute; top:.9rem; right:.9rem;
-      background: none; border: none; color: var(--text-muted);
-      opacity: .5; font-size: 1rem; cursor: pointer; transition: opacity .2s;
-    }
-    .modal-close:hover { opacity: 1; }
-    .modal-title {
-      font-size: 1.05rem; font-weight: 700;
-      color: var(--danger); margin-bottom: .3rem; text-align: center;
-    }
-    .modal-body {
-      font-size: .84rem; color: var(--text-muted); opacity: .8;
-      text-align: center; line-height: 1.7; margin-bottom: 1.4rem;
-    }
-    .modal-field { margin-bottom: 1rem; }
-    .modal-field label {
-      display: block; font-size: .7rem; font-weight: 600;
-      color: var(--text-muted); opacity: .65; margin-bottom: .4rem;
-      text-transform: uppercase; letter-spacing: .07em;
-    }
-    .modal-field input {
-      width: 100%; padding: .7rem 1rem;
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(239,68,68,.35);
-      border-radius: .75rem; color: var(--text);
-      font-family: inherit; font-size: .875rem; outline: none;
-    }
-    .modal-field input:focus { box-shadow: 0 0 0 3px rgba(239,68,68,.15); }
-    .modal-actions { display:flex; gap:.7rem; margin-top:1.25rem; }
-    .modal-actions .btn { flex:1; justify-content:center; }
-
-    /* ── TOAST ── */
-    .toast {
-      position: fixed; bottom: 2rem; right: 2rem;
-      background: linear-gradient(135deg, var(--accent-hover), var(--indigo));
-      color: #fff; padding: .7rem 1.4rem; border-radius: 9999px;
-      font-size: .82rem; font-weight: 600;
-      box-shadow: 0 6px 20px rgba(0,0,0,.4); z-index: 9999;
-      transform: translateY(80px); opacity: 0;
-      transition: all .4s cubic-bezier(.34,1.56,.64,1);
-    }
-    .toast.show { transform: translateY(0); opacity: 1; }
-    .toast.success { background: linear-gradient(135deg, var(--success), #059669); }
-    .toast.danger  { background: linear-gradient(135deg, var(--danger), #b91c1c); }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 768px) {
-      .page { grid-template-columns: 1fr; }
-      .settings-nav {
-        position: static; display:flex; flex-wrap:wrap; gap:.35rem; padding:.7rem;
+    <!-- ══ SCRIPTS ══ -->
+    <script src="../js/main.js"></script>
+    <script>
+      function doLogout() {
+        localStorage.removeItem("urbanTrack_currentUser");
+        location.href = "../../homePage.html";
       }
-      .snav-label, .snav-divider { display: none; }
-      .snav-item { width:auto; flex:1; justify-content:center; min-width:80px; font-size:.8rem; }
-      .form-row { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 520px) {
-      .navbar { padding: .7rem 1rem; }
-      .nav-links { display: none; }
-      .nav-links.show {
-        display: flex; flex-direction: column;
-        position: fixed; top:58px; left:1rem; right:1rem;
-        background: rgba(15,23,42,.95);
-        backdrop-filter: blur(15px);
-        border: 1px solid var(--glass-border);
-        border-radius: 1rem; padding: 1rem; gap: .75rem; z-index: 200;
+
+      function getInitials(name) {
+        if (!name) return "U";
+        return name
+          .trim()
+          .split(" ")
+          .slice(0, 2)
+          .map((p) => p[0].toUpperCase())
+          .join("");
       }
-      .hamburger { display: flex; }
-      .user-name-text { display: none; }
-      .page { padding: 1.5rem 1rem 4rem; }
-      .card-body { padding: 1.25rem; }
-    }
-  </style>
-</head>
-<body>
 
-<!-- ── HEADER ── -->
-<header class="header">
-  <nav class="navbar">
-    <a href="../../homePage.html" class="logo">UrbanTrack</a>
+      function showSection(id, btn) {
+        document
+          .querySelectorAll(".panel-section")
+          .forEach((s) => s.classList.remove("active"));
+        document
+          .querySelectorAll(".snav-item")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById("section-" + id).classList.add("active");
+        btn.classList.add("active");
+      }
 
-    <ul class="nav-links" id="navLinks">
-      <li><a href="MainPage.html">Home</a></li>
-      <li><a href="UserDashboard.html">Dashboard</a></li>
-      <li><a href="UserSettings.html" class="active">Settings</a></li>
-    </ul>
+      function showToast(msg, type) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "toast" + (type ? " " + type : "");
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 3000);
+      }
 
-    <div class="nav-actions">
-      <div class="user-chip">
-        <div class="user-av" id="userAvatar">U</div>
-        <span class="user-name-text" id="headerUserName">Loading...</span>
-      </div>
-      <div class="nav-divider"></div>
-      <button class="btn-logout" onclick="doLogout()">Logout</button>
-      <div class="hamburger" onclick="toggleNav()">
-        <span></span><span></span><span></span>
-      </div>
-    </div>
-  </nav>
-</header>
+      function openDeleteModal() {
+        document.getElementById("deleteConfirmInput").value = "";
+        document.getElementById("deleteConfirmBtn").disabled = true;
+        document.getElementById("deleteModal").classList.add("open");
+      }
+      function closeDeleteModal() {
+        document.getElementById("deleteModal").classList.remove("open");
+      }
+      function checkDeleteConfirm() {
+        const val = document.getElementById("deleteConfirmInput").value;
+        document.getElementById("deleteConfirmBtn").disabled = val !== "DELETE";
+      }
 
-<!-- ── PAGE ── -->
-<div class="page">
+      // Stored original values for discard
+      let _origName = "",
+        _origArea = "";
 
-  <!-- Left nav -->
-  <div class="settings-nav fu">
-    <div class="snav-label">Account</div>
-    <button class="snav-item active" onclick="showSection('profile', this)">Profile</button>
-    <div class="snav-divider"></div>
-    <div class="snav-label">Danger</div>
-    <button class="snav-item danger-nav" onclick="showSection('danger', this)">Delete Account</button>
-  </div>
+      function discardProfile() {
+        document.getElementById("displayName").value = _origName;
+        document.getElementById("areaField").value = _origArea;
+      }
+    </script>
 
-  <!-- Right panel -->
-  <div class="settings-panel">
+    <!-- ══ FIREBASE MODULE ══ -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+        deleteUser,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+        setDoc,
+        updateDoc,
+        deleteDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    <!-- ══ PROFILE ══ -->
-    <div class="panel-section active" id="section-profile">
-      <div class="settings-card fu d1">
-        <div class="card-header">
-          <div class="card-title">Profile Information</div>
-          <div class="card-sub">Your name and area are shown on reports you submit</div>
-        </div>
-        <div class="card-body">
+      // ── Firebase config (unchanged) ──
+      const firebaseConfig = {
+        apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
+        authDomain: "urban-track-91e53.firebaseapp.com",
+        projectId: "urban-track-91e53",
+        storageBucket: "urban-track-91e53.firebasestorage.app",
+        messagingSenderId: "519209303536",
+        appId: "1:519209303536:web:c212eb58eb836e27047135",
+      };
 
-          <!-- Avatar + name -->
-          <div class="avatar-row">
-            <div class="avatar-large" id="avatarDisplay">U</div>
-            <div class="avatar-info">
-              <h3 id="avatarName">Loading...</h3>
-              <p id="avatarEmail">Loading...</p>
-            </div>
-          </div>
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
 
-          <!-- Display name -->
-          <div class="form-row single">
-            <div class="field">
-              <label>Display Name</label>
-              <input type="text" id="displayName" placeholder="How your name appears on reports" />
-            </div>
-          </div>
+      let currentUser = null;
 
-          <!-- Email — read-only, managed by Firebase Auth -->
-          <div class="form-row single">
-            <div class="field">
-              <label>Email Address</label>
-              <input type="email" id="emailField" placeholder="your@email.com" readonly
-                style="opacity:.6;cursor:not-allowed;" />
-            </div>
-          </div>
+      // ── Helper: populate UI ──
+      function populateUI(name, email, area) {
+        const initials = getInitials(name || email);
 
-          <!-- Area -->
-          <div class="form-row single">
-            <div class="field">
-              <label>Area / Suburb</label>
-              <select id="areaField">
-                <option value="">Select your area...</option>
-                <option>Rosebank</option>
-                <option>Sandton CBD</option>
-                <option>Melville</option>
-                <option>Soweto</option>
-                <option>Midrand</option>
-                <option>Fourways</option>
-                <option>Randburg</option>
-                <option>Alexandra</option>
-                <option>Other</option>
-              </select>
-            </div>
-          </div>
+        document.getElementById("avatarDisplay").textContent = initials;
+        document.getElementById("userAvatar").textContent = initials;
+        document.getElementById("avatarName").textContent =
+          name || email || "User";
+        document.getElementById("avatarEmail").textContent = email || "";
+        document.getElementById("headerUserName").textContent =
+          name || email || "User";
+        document.getElementById("displayName").value = name || "";
+        document.getElementById("emailField").value = email || "";
 
-          <div class="save-row">
-            <button class="btn btn-primary" id="saveBtn" onclick="saveProfile()">Save Changes</button>
-            <button class="btn btn-ghost" onclick="discardProfile()">Discard</button>
-            <span class="saved-msg" id="profileSavedMsg">Profile updated</span>
-            <span class="error-msg" id="profileErrorMsg">Failed to save</span>
-          </div>
+        // Pre-select area
+        const sel = document.getElementById("areaField");
+        for (let i = 0; i < sel.options.length; i++) {
+          if (sel.options[i].value === area) {
+            sel.selectedIndex = i;
+            break;
+          }
+        }
 
-        </div>
-      </div>
-    </div>
+        // Store originals for discard
+        window._origName = name || "";
+        window._origArea = area || "";
+      }
 
-    <!-- ══ DELETE ACCOUNT ══ -->
-    <div class="panel-section" id="section-danger">
-      <div class="settings-card danger-card fu d1">
-        <div class="card-header">
-          <div class="card-title">Delete Account Permanently</div>
-          <div class="card-sub">This action is irreversible — all your data will be erased</div>
-        </div>
-        <div class="card-body">
-          <ul class="danger-list">
-            <li>Your profile and all personal information will be removed</li>
-            <li>All reports and comments you have submitted will be deleted</li>
-            <li>Your upvotes will be removed from all community issues</li>
-            <li>This cannot be undone — there is no recovery option</li>
-          </ul>
-          <button class="btn btn-danger" onclick="openDeleteModal()">Delete My Account Permanently</button>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /settings-panel -->
-</div><!-- /page -->
-
-<!-- ══ DELETE MODAL ══ -->
-<div class="modal-overlay" id="deleteModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeDeleteModal()">x</button>
-    <div class="modal-title">Delete Account Permanently</div>
-    <div class="modal-body">
-      This will immediately and permanently delete your account and all associated data.
-      <strong style="color:var(--danger);">This cannot be undone.</strong>
-    </div>
-    <div class="modal-field">
-      <label>Type DELETE to confirm</label>
-      <input type="text" id="deleteConfirmInput" placeholder="Type DELETE here" oninput="checkDeleteConfirm()" />
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeDeleteModal()">Cancel</button>
-      <button class="btn btn-danger" id="deleteConfirmBtn" disabled onclick="deleteAccount()">Delete Permanently</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<!-- ══ SCRIPTS ══ -->
-<script>
-  function toggleNav() { document.getElementById("navLinks").classList.toggle("show"); }
-
-  function doLogout() {
-    localStorage.removeItem("urbanTrack_currentUser");
-    location.href = "../../homePage.html";
-  }
-
-  function getInitials(name) {
-    if (!name) return "U";
-    return name.trim().split(" ").slice(0,2).map(p => p[0].toUpperCase()).join("");
-  }
-
-  function showSection(id, btn) {
-    document.querySelectorAll(".panel-section").forEach(s => s.classList.remove("active"));
-    document.querySelectorAll(".snav-item").forEach(b => b.classList.remove("active"));
-    document.getElementById("section-" + id).classList.add("active");
-    btn.classList.add("active");
-  }
-
-  function showToast(msg, type) {
-    const t = document.getElementById("toast");
-    t.textContent = msg;
-    t.className = "toast" + (type ? " " + type : "");
-    t.classList.add("show");
-    setTimeout(() => t.classList.remove("show"), 3000);
-  }
-
-  function openDeleteModal() {
-    document.getElementById("deleteConfirmInput").value = "";
-    document.getElementById("deleteConfirmBtn").disabled = true;
-    document.getElementById("deleteModal").classList.add("open");
-  }
-  function closeDeleteModal() {
-    document.getElementById("deleteModal").classList.remove("open");
-  }
-  function checkDeleteConfirm() {
-    const val = document.getElementById("deleteConfirmInput").value;
-    document.getElementById("deleteConfirmBtn").disabled = (val !== "DELETE");
-  }
-
-  // Stored original values for discard
-  let _origName = "", _origArea = "";
-
-  function discardProfile() {
-    document.getElementById("displayName").value = _origName;
-    document.getElementById("areaField").value   = _origArea;
-  }
-
-</script>
-
-<!-- ══ FIREBASE MODULE ══ -->
-<script type="module">
-  import { initializeApp }  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import {
-    getAuth, onAuthStateChanged, deleteUser
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import {
-    getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-  // ── Firebase config (unchanged) ──
-  const firebaseConfig = {
-    apiKey:            "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
-    authDomain:        "urban-track-91e53.firebaseapp.com",
-    projectId:         "urban-track-91e53",
-    storageBucket:     "urban-track-91e53.firebasestorage.app",
-    messagingSenderId: "519209303536",
-    appId:             "1:519209303536:web:c212eb58eb836e27047135"
-  };
-
-  const app  = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db   = getFirestore(app);
-
-  let currentUser = null;
-
-  // ── Helper: populate UI ──
-  function populateUI(name, email, area) {
-    const initials = getInitials(name || email);
-
-    document.getElementById("avatarDisplay").textContent   = initials;
-    document.getElementById("userAvatar").textContent      = initials;
-    document.getElementById("avatarName").textContent      = name  || email || "User";
-    document.getElementById("avatarEmail").textContent     = email || "";
-    document.getElementById("headerUserName").textContent  = name  || email || "User";
-    document.getElementById("displayName").value           = name  || "";
-    document.getElementById("emailField").value            = email || "";
-
-    // Pre-select area
-    const sel = document.getElementById("areaField");
-    for (let i = 0; i < sel.options.length; i++) {
-      if (sel.options[i].value === area) { sel.selectedIndex = i; break; }
-    }
-
-    // Store originals for discard
-    window._origName = name  || "";
-    window._origArea = area  || "";
-  }
-
- 
-
-    // Try loading extra profile data from Firestore users/{uid}
-    try {
-      const snap = await getDoc(doc(db, "users", user.uid));
-      if (snap.exists()) {
-        const data = snap.data();
-        populateUI(data.name || user.displayName, user.email, data.area || "");
-      } else {
+      // Try loading extra profile data from Firestore users/{uid}
+      try {
+        const snap = await getDoc(doc(db, "users", user.uid));
+        if (snap.exists()) {
+          const data = snap.data();
+          populateUI(
+            data.name || user.displayName,
+            user.email,
+            data.area || "",
+          );
+        } else {
+          populateUI(user.displayName, user.email, "");
+        }
+      } catch (e) {
+        console.warn("Could not load Firestore profile:", e);
         populateUI(user.displayName, user.email, "");
       }
-    } catch (e) {
-      console.warn("Could not load Firestore profile:", e);
-      populateUI(user.displayName, user.email, "");
-    }
-  
 
-  // ── LocalStorage fallback (while Firebase loads) ──
-  const stored = JSON.parse(localStorage.getItem("urbanTrack_currentUser") || "null");
-  if (stored) {
-    populateUI(stored.name || stored.email, stored.email, stored.area || "");
-  }
+      // ── LocalStorage fallback (while Firebase loads) ──
+      const stored = JSON.parse(
+        localStorage.getItem("urbanTrack_currentUser") || "null",
+      );
+      if (stored) {
+        populateUI(
+          stored.name || stored.email,
+          stored.email,
+          stored.area || "",
+        );
+      }
 
-  // ── Save Profile → writes to Firestore users/{uid} ──
-  window.saveProfile = async function() {
-    if (!currentUser) { showToast("Not signed in", "danger"); return; }
+      // ── Save Profile → writes to Firestore users/{uid} ──
+      window.saveProfile = async function () {
+        if (!currentUser) {
+          showToast("Not signed in", "danger");
+          return;
+        }
 
-    const name = document.getElementById("displayName").value.trim();
-    const area = document.getElementById("areaField").value;
+        const name = document.getElementById("displayName").value.trim();
+        const area = document.getElementById("areaField").value;
 
-    if (!name) {
-      document.getElementById("displayName").focus();
-      showToast("Display name cannot be empty", "danger");
-      return;
-    }
+        if (!name) {
+          document.getElementById("displayName").focus();
+          showToast("Display name cannot be empty", "danger");
+          return;
+        }
 
-    const btn = document.getElementById("saveBtn");
-    btn.disabled = true;
-    btn.textContent = "Saving...";
+        const btn = document.getElementById("saveBtn");
+        btn.disabled = true;
+        btn.textContent = "Saving...";
 
-    try {
-      // Write / merge into users/{uid}
-      await setDoc(doc(db, "users", currentUser.uid), {
-        name,
-        area,
-        email: currentUser.email,
-        updatedAt: new Date().toISOString()
-      }, { merge: true });
+        try {
+          // Write / merge into users/{uid}
+          await setDoc(
+            doc(db, "users", currentUser.uid),
+            {
+              name,
+              area,
+              email: currentUser.email,
+              updatedAt: new Date().toISOString(),
+            },
+            { merge: true },
+          );
 
-      // Also update localStorage so other pages see the new name
-      const stored = JSON.parse(localStorage.getItem("urbanTrack_currentUser") || "{}");
-      localStorage.setItem("urbanTrack_currentUser", JSON.stringify({ ...stored, name, area }));
+          // Also update localStorage so other pages see the new name
+          const stored = JSON.parse(
+            localStorage.getItem("urbanTrack_currentUser") || "{}",
+          );
+          localStorage.setItem(
+            "urbanTrack_currentUser",
+            JSON.stringify({ ...stored, name, area }),
+          );
 
-      // Update stored originals
-      window._origName = name;
-      window._origArea = area;
+          // Update stored originals
+          window._origName = name;
+          window._origArea = area;
 
-      // Refresh avatar/name in header + card
-      document.getElementById("avatarDisplay").textContent  = getInitials(name);
-      document.getElementById("userAvatar").textContent     = getInitials(name);
-      document.getElementById("avatarName").textContent     = name;
-      document.getElementById("headerUserName").textContent = name;
+          // Refresh avatar/name in header + card
+          document.getElementById("avatarDisplay").textContent =
+            getInitials(name);
+          document.getElementById("userAvatar").textContent = getInitials(name);
+          document.getElementById("avatarName").textContent = name;
+          document.getElementById("headerUserName").textContent = name;
 
-      const msg = document.getElementById("profileSavedMsg");
-      msg.classList.add("show");
-      setTimeout(() => msg.classList.remove("show"), 3000);
-      showToast("Profile saved", "success");
+          const msg = document.getElementById("profileSavedMsg");
+          msg.classList.add("show");
+          setTimeout(() => msg.classList.remove("show"), 3000);
+          showToast("Profile saved", "success");
+        } catch (e) {
+          console.error("Save failed:", e);
+          const err = document.getElementById("profileErrorMsg");
+          err.classList.add("show");
+          setTimeout(() => err.classList.remove("show"), 3000);
+          showToast("Save failed: " + (e.code || "check console"), "danger");
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Save Changes";
+        }
+      };
 
-    } catch (e) {
-      console.error("Save failed:", e);
-      const err = document.getElementById("profileErrorMsg");
-      err.classList.add("show");
-      setTimeout(() => err.classList.remove("show"), 3000);
-      showToast("Save failed: " + (e.code || "check console"), "danger");
-    } finally {
-      btn.disabled = false;
-      btn.textContent = "Save Changes";
-    }
-  };
+      // ── Delete Account ──
+      window.deleteAccount = async function () {
+        if (!currentUser) {
+          alert("Not logged in");
+          return;
+        }
 
-  // ── Delete Account ──
- window.deleteAccount = async function() {
-  if (!currentUser) {
-    alert("Not logged in");
-    return;
-  }
+        const btn = document.getElementById("deleteConfirmBtn");
+        btn.disabled = true;
+        btn.textContent = "Deleting...";
 
-  const btn = document.getElementById("deleteConfirmBtn");
-  btn.disabled = true;
-  btn.textContent = "Deleting...";
+        try {
+          //Delete Firestore data
+          await deleteDoc(doc(db, "users", currentUser.uid));
 
-  try {
-    //Delete Firestore data
-    await deleteDoc(doc(db, "users", currentUser.uid));
+          //Delete Auth account
+          await deleteUser(currentUser);
 
-    //Delete Auth account
-    await deleteUser(currentUser);
+          //Clear local storage
+          localStorage.removeItem("urbanTrack_currentUser");
 
-    //Clear local storage
-    localStorage.removeItem("urbanTrack_currentUser");
+          alert("Account deleted");
 
-    alert("Account deleted");
+          window.location.href = "../../homePage.html";
+        } catch (e) {
+          console.error(e);
 
-    window.location.href = "../../homePage.html";
+          if (e.code === "auth/requires-recent-login") {
+            alert("Please log in again and try deleting.");
+          } else {
+            alert("Delete failed");
+          }
 
-  } catch (e) {
-    console.error(e);
+          btn.disabled = false;
+          btn.textContent = "Delete Forever";
+        }
+      };
+    </script>
 
-    if (e.code === "auth/requires-recent-login") {
-      alert("Please log in again and try deleting.");
-    } else {
-      alert("Delete failed");
-    }
-
-    btn.disabled = false;
-    btn.textContent = "Delete Forever";
-  }
-};
-</script>
-
-<script src="../js/UserSettings.js"></script>
-</body>
+    <script src="../js/UserSettings.js"></script>
+  </body>
 </html>
