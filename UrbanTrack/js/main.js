@@ -245,14 +245,10 @@ if (signupForm) {
 const menuBtn = document.querySelector(".menu-button");
 const navLinks = document.querySelector(".nav-links");
 let menuOpen = false;
-menuBtn.addEventListener("click", () => {
-  if (!menuOpen) {
-    menuBtn.classList.add("open");
-    navLinks.classList.add("show");
-    menuOpen = true;
-  } else {
-    menuBtn.classList.remove("open");
-    navLinks.classList.remove("show");
-    menuOpen = false;
-  }
-});
+if (menuBtn && navLinks) {
+  menuBtn.addEventListener("click", () => {
+    menuBtn.classList.toggle("open");
+    navLinks.classList.toggle("show");
+    menuOpen = !menuOpen;
+  });
+}
