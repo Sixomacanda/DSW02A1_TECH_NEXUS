@@ -106,6 +106,16 @@ function checkOtp() {
 }
 
 function verifyOtp() {
+  var otp = Array.from(document.querySelectorAll(".otp-box"))
+    .map(function (box) {
+      return box.value.trim();
+    })
+    .join("");
+
+  if (otp.length !== 6) {
+    return;
+  }
+
   var btn = document.getElementById("verifyBtn");
   var sp = document.getElementById("sp2");
   var txt = document.getElementById("verifyTxt");
