@@ -9,31 +9,22 @@
 <body>
 
 <!-- ═══════════ HEADER ═══════════ -->
-<header class="header">
-  <nav class="navbar">
+<!-- <header class="header"> -->
+    <nav class="navbar">
+      <div class="logo">Urban Track</div>
 
-    <a href="../../homePage.html" class="logo">UrbanTrack</a>
+      <ul class="nav-links">
+        <li><a href="../../homePage.html">Home</a></li>
+        <li><a href="MainPage.html">Report Issue</a></li>
+        <li><a href="UserSettings.html">Settings</a></li>
+        <li><a href="#" onclick="doLogout()">Logout</a></li>
+      </ul>
 
-    <ul class="nav-links" id="navLinks">
-      <li><a href="MainPage.html">Home</a></li>
-      <li><a href="UserDashboard.html" class="active">Dashboard</a></li>
-    </ul>
-
-    <div class="nav-actions">
-      <div class="user-chip">
-        <div class="user-av" id="userAvatar">U</div>
-        <span class="user-email-text" id="useremail"></span>
+      <div class="menu-button">
+        <div class="menu-button__burger"></div>
       </div>
-      <div class="nav-divider"></div>
-  
-      <button class="btn-logout" onclick="doLogout()">Logout</button>
-      <div class="hamburger" onclick="toggleNav()">
-        <span></span><span></span><span></span>
-      </div>
-    </div>
-
-  </nav>
-</header>
+    </nav>
+<!-- </header> -->
 
 <!-- ═══════════ PAGE ═══════════ -->
 <div class="page">
