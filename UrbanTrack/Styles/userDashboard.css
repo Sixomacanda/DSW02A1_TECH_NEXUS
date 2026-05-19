@@ -923,11 +923,8 @@ body {
 
 /* The google translate API */
 
-
-
-
 /* Hide the "Powered by Google" text and logo */
-.goog-logo-link {
+/* .goog-logo-link {
     display: none !important;
 }
 
@@ -937,7 +934,7 @@ body {
 }
 
 .goog-te-gadget select {
-    color: white; /* match your navbar text color */
+    color: white; 
     background: transparent;
     border: 1px solid white;
     border-radius: 4px;
@@ -945,4 +942,39 @@ body {
     padding: 2px 4px;
 }
 .goog-te-banner-frame { display: none !important; }
-body { top: 0 !important; }
+body { top: 0 !important; } */
+
+
+.goog-te-banner-frame {
+            display: none !important;
+        }
+
+        body {
+            top: 0px !important;
+            position: static !important;
+        }
+
+        .goog-logo-link,
+        .goog-te-gadget span {
+            display: none !important;
+        }
+
+        .goog-te-gadget {
+            color: transparent !important;
+        }
+
+        /* Style the dropdown to match your theme */
+        .goog-te-combo {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid var(--accent-hover) !important;
+            border-radius: 6px !important;
+            color: white !important;
+            padding: 6px 12px !important;
+            font-size: 14px !important;
+            cursor: pointer !important;
+        }
+
+        .goog-te-combo option {
+            background: #1e3a8a !important;
+            color: white !important;
+        }
