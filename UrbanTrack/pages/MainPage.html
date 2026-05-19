@@ -17,6 +17,11 @@
         <div class="logo">Urban Track</div>
 
         <ul class="nav-links">
+         
+
+          <!-- Google api -->
+        <li><div id="google_translate_element"></div></li>
+
           <li><a href="MainPage.html">Home</a></li>
           <li><a href="UserDashboard.html">Dashboard</a></li>
           <li><a href="UserSettings.htm">Settings</a></li>
@@ -97,8 +102,7 @@
               <div class="step-circle">3</div>
               <span class="step-label">Location</span>
             </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 
             <!-- STEP 3 -->
             <div class="form-section" id="step-3">
@@ -150,16 +154,15 @@
                     <button class="btn-ghost" onclick="goStep(2)">← Back</button>
                     <button class="btn-primary btn-medium" onclick="goStep(4)">Next: Review →</button>
                 </div>
-=======
+
             <div class="step-dot" id="dot-4">
               <div class="step-circle">4</div>
               <span class="step-label">Review</span>
->>>>>>> 64bb51b7fabe40eab7b2f9ff4c8c5f698c2cd46f
-=======
+
             <div class="step-dot" id="dot-4">
               <div class="step-circle">4</div>
               <span class="step-label">Review</span>
->>>>>>> 7b9f121b79e4dc28dea3d3276c5ebfd3ae152787
+
             </div>
           </div>
 
@@ -752,6 +755,66 @@
         t._t = setTimeout(() => t.classList.remove("show"), 3000);
       }
     </script>
+
+          <!-- Google api -->
+ <script>
+       
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+
+// Hide Google Translate banner whenever it appears
+function hideGoogleTranslateBanner() {
+    // Remove the top offset Google adds to body
+    document.body.style.top = '0px';
+    
+    // Hide the banner frame
+    const banner = document.querySelector('.goog-te-banner-frame');
+    if (banner) {
+        banner.style.display = 'none';
+    }
+
+    // Also target the iframe by id
+    const bannerById = document.getElementById(':1.container');
+    if (bannerById) {
+        bannerById.style.display = 'none';
+    }
+}
+
+// Run on page load
+hideGoogleTranslateBanner();
+
+// Watch for DOM changes (when Google injects the banner after language select)
+const observer = new MutationObserver(function(mutations) {
+    hideGoogleTranslateBanner();
+});
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['style']
+});
+
+
+</script>
+<script type="text/javascript">
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+</script>
+
+<script type="text/javascript"
+src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+<!-- The End of google api -->
+
     <script src="../js/main.js"></script>
   </body>
 </html>

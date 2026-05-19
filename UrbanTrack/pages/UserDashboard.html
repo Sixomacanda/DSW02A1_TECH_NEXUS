@@ -16,6 +16,8 @@
     <div class="logo">Urban Track</div>
 
     <ul class="nav-links">
+       <!-- Google api -->
+        <li><div id="google_translate_element"></div></li>
       <li><a href="MainPage.html">Report Issue</a></li>
       <li><a href="MainPage.html">Home</a></li>
       <li class="user-pill">
@@ -168,8 +170,72 @@
 
 <div class="toast" id="toast"></div>
 
+
+    <!-- Google api -->
+ <script>
+       
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+
+// Hide Google Translate banner whenever it appears
+function hideGoogleTranslateBanner() {
+    // Remove the top offset Google adds to body
+    document.body.style.top = '0px';
+    
+    // Hide the banner frame
+    const banner = document.querySelector('.goog-te-banner-frame');
+    if (banner) {
+        banner.style.display = 'none';
+    }
+
+    // Also target the iframe by id
+    const bannerById = document.getElementById(':1.container');
+    if (bannerById) {
+        bannerById.style.display = 'none';
+    }
+}
+
+// Run on page load
+hideGoogleTranslateBanner();
+
+// Watch for DOM changes (when Google injects the banner after language select)
+const observer = new MutationObserver(function(mutations) {
+    hideGoogleTranslateBanner();
+});
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['style']
+});
+
+
+</script>
+<script type="text/javascript">
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+</script>
+
+<script type="text/javascript"
+src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+<!-- The End of google api -->
+
 <script src="../js/main.js"></script>
 <script src="../js/userDashboard.js"></script>
 <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCgvhEjbV7SjgvkRk5gSu_lxPwRDlT1wc8&callback=initMap" async defer></script>-->
+
+
+
+
 </body>
 </html>
