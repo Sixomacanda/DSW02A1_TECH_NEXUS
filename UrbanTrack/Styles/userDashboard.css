@@ -905,3 +905,44 @@ body {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* Hide the Google translate top bar */
+.goog-te-banner-frame {
+    display: none !important;
+}
+
+body {
+    top: 0 !important;
+    position: static !important;
+}
+/* Make the translate widget fit in navbar */
+#google_translate_element {
+    display: inline-block;
+}
+
+
+/* The google translate API */
+
+
+
+
+/* Hide the "Powered by Google" text and logo */
+.goog-logo-link {
+    display: none !important;
+}
+
+.goog-te-gadget {
+    color: transparent !important;
+    font-size: 0 !important;
+}
+
+.goog-te-gadget select {
+    color: white; /* match your navbar text color */
+    background: transparent;
+    border: 1px solid white;
+    border-radius: 4px;
+    font-size: 14px;
+    padding: 2px 4px;
+}
+.goog-te-banner-frame { display: none !important; }
+body { top: 0 !important; }

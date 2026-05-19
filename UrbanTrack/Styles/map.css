@@ -33,3 +33,17 @@ button:hover{
 }
 
 
+/* Hide the Google translate top bar */
+.goog-te-banner-frame {
+    display: none !important;
+}
+
+body {
+    top: 0 !important;
+    position: static !important;
+}
+
+nav{
+    align-content: flex-start;
+}
+
