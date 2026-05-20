@@ -4,6 +4,7 @@
     "connect-mongo": "^6.0.0",
     "cors": "^2.8.6",
     "denque": "^2.1.0",
+    "dotenv": "^17.4.2",
     "generate-function": "^2.3.1",
     "iconv-lite": "^0.7.2",
     "is-property": "^1.0.2",
