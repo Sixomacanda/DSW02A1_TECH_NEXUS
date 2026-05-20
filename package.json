@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "aws-ssl-profiles": "^1.1.2",
+    "connect-mongo": "^6.0.0",
     "cors": "^2.8.6",
     "denque": "^2.1.0",
     "generate-function": "^2.3.1",
