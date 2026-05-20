@@ -10,25 +10,23 @@ const cors = require("cors");
 const app = express();
 
 // Session setup
-app.use(
-    session({
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: false,
-        store: MongoStore.create({
-            mongoUrl: process.env.MONGO_URI,
-            collectionName: "sessions"
-        }),
-        cookie: {
-            maxAge: 1000 * 60 * 60 * 24 // 1 day
-        }
-    })
-);
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: new MongoStore({
+    mongoUrl: process.env.MONGO_URI,
+    collectionName: 'sessions'
+  }),
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 // 1 day
+  }
+}));
+
 app.use(express.static("public"));
-
-
 app.use(passport.initialize());
 app.use(passport.session());
+
 
 // Google Strategy
 passport.use(
@@ -81,7 +79,7 @@ app.get(
     function (req, res) {
         console.log("Google auth successful, user:", req.user ? req.user.displayName : "no user");
         console.log("Google auth successful, redirecting to", FRONTEND_URL);
-        
+
         // Store user data in session and send as query params
         if (req.user) {
             const userData = JSON.stringify({
