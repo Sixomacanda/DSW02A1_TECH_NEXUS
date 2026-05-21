@@ -1,7 +1,5 @@
 require("dotenv").config();
 
-const express = require("express");
-const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
@@ -13,18 +11,22 @@ app.use(cors());
 app.use(express.json());
 
 // Session setup (only once!)
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI,
-      collectionName: "sessions"
+  store: new MongoStore({
+    mongoUrl: process.env.MONGO_URI,
+    collectionName: "sessions"
   }),
   cookie: {
-      maxAge: 1000 * 60 * 60 * 24 // 1 day
+    maxAge: 1000 * 60 * 60 * 24 // 1 day
   }
 }));
+
 
 app.use(express.static("public"));
 app.use(passport.initialize());
