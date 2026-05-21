@@ -293,9 +293,10 @@
                       flex-direction: column;
                       align-items: center;
                       justify-content: center;
-                      gap: 0.5rem;
+                      gap: 0.75rem;
                       color: var(--text-muted);
                       font-size: 0.875rem;
+                      cursor: pointer;
                     "
                   >
                     <div
@@ -308,16 +309,31 @@
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        font-size: 1.1rem;
+                        font-size: 1.3rem;
                         color: var(--accent-light);
                       "
                     >
                       +
                     </div>
-                    <p>Loading the map and locating you…</p>
-                    <small style="opacity: 0.4; font-size: 0.7rem"
-                      >Tap the map or drag the pin to adjust the report location</small
+                    <p style="margin:0;font-weight:600;color:#ffffff;">Tap to open the map</p>
+                    <button
+                      id="loadMapBtn"
+                      style="
+                        padding: 0.55rem 1rem;
+                        border: none;
+                        border-radius: 999px;
+                        background: rgba(255,255,255,0.1);
+                        color: #ffffff;
+                        font-weight: 600;
+                        cursor: pointer;
+                      "
                     >
+                      Load map
+                    </button>
+                    <small style="opacity: 0.6; font-size: 0.72rem; max-width: 220px; text-align: center;"
+                      >Map will show your current location and let you drag the pin or tap to move it.</small
+                    >
+                    <div id="mapError" style="display:none;color:#fecaca;font-size:0.78rem;max-width:240px;text-align:center;"></div>
                   </div>
                 </div>
                 <div
@@ -717,56 +733,6 @@
         el.classList.add(map[sev]);
       };
 
-      // ── 9. STEP NAVIGATION ───────────────────────────────────────
-      window.goStep = function (step) {
-        if (step > window.currentStep) {
-          if (window.currentStep === 1 && !window.selectedCategory) {
-            showToast("Please select a category");
-            return;
-          }
-          if (window.currentStep === 1 && !window.selectedSeverity) {
-            showToast("Please select severity");
-            return;
-          }
-          if (
-            window.currentStep === 2 &&
-            !document.getElementById("issueTitle").value.trim()
-          ) {
-            showToast("Enter issue title");
-            return;
-          }
-          if (
-            window.currentStep === 2 &&
-            !document.getElementById("issueDesc").value.trim()
-          ) {
-            showToast("Enter description");
-            return;
-          }
-          if (
-            window.currentStep === 3 &&
-            !document.getElementById("issueAddress").value.trim()
-          ) {
-            showToast("Enter location");
-            return;
-          }
-        }
-        document
-          .getElementById("step-" + window.currentStep)
-          .classList.remove("active");
-        document
-          .getElementById("dot-" + window.currentStep)
-          .classList.remove("active");
-        if (step > window.currentStep) {
-          document
-            .getElementById("dot-" + window.currentStep)
-            .classList.add("done");
-        }
-        window.currentStep = step;
-        document.getElementById("step-" + step).classList.add("active");
-        document.getElementById("dot-" + step).classList.add("active");
-        if (step === 4) buildReview();
-      };
-
       // ── 10. REVIEW BUILDER ───────────────────────────────────────
       function buildReview() {
         const sevColour = {
@@ -917,122 +883,249 @@
       };
 
       // ── 14. GOOGLE MAPS PIN DROP ─────────────────────────────────
-      window.initMap = function () {
-        const mapPlaceholder = document.getElementById("mapPlaceholder");
-        const mapEl = document.getElementById("map");
-        const defaultCentre = { lat: -26.2041, lng: 28.0473 };
+      window._googleMapsApiReady = false;
+      window._reportMap = null;
+      window._reportMarker = null;
+      window._reportMapBuilt = false;
 
-        if (mapPlaceholder) {
-          mapPlaceholder.style.display = "none";
+      window.setupReportMap = function () {
+        if (window._reportMapBuilt) {
+          return;
         }
 
-        const map = new google.maps.Map(mapEl, {
-          center: defaultCentre,
-          zoom: 15,
-          fullscreenControl: true,
-          zoomControl: true,
-          streetViewControl: false,
-          mapTypeControl: true,
-          mapTypeControlOptions: {
-            style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-            position: google.maps.ControlPosition.TOP_LEFT,
-          },
-          styles: [
-            { elementType: "geometry", stylers: [{ color: "#0f172a" }] },
-            { elementType: "labels.text.fill", stylers: [{ color: "#e2e8f0" }] },
-            { elementType: "labels.text.stroke", stylers: [{ color: "#0f172a" }] },
-            { featureType: "road", elementType: "geometry", stylers: [{ color: "#1e293b" }] },
-            { featureType: "water", elementType: "geometry", stylers: [{ color: "#0284c7" }] },
-            { featureType: "poi", stylers: [{ visibility: "off" }] },
-          ],
-        });
+        const mapPlaceholder = document.getElementById("mapPlaceholder");
+        const mapEl = document.getElementById("map");
+        const loadButton = document.getElementById("loadMapBtn");
+        const mapError = document.getElementById("mapError");
+        const defaultCentre = { lat: -26.2041, lng: 28.0473 };
 
-        const marker = new google.maps.Marker({
-          position: defaultCentre,
-          map,
-          draggable: true,
-          title: "Drag to adjust location",
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 8,
-            fillColor: "#38bdf8",
-            fillOpacity: 1,
-            strokeColor: "#ffffff",
-            strokeWeight: 2,
-          },
-        });
+        function showError(message) {
+          if (mapError) {
+            mapError.textContent = message;
+            mapError.style.display = "block";
+          }
+        }
 
-        const controlPanel = document.createElement("div");
-        controlPanel.style.display = "flex";
-        controlPanel.style.flexDirection = "column";
-        controlPanel.style.alignItems = "flex-end";
-        controlPanel.style.margin = "0.5rem";
+        function hidePlaceholder() {
+          if (mapPlaceholder) {
+            mapPlaceholder.style.display = "none";
+          }
+          if (mapEl) {
+            mapEl.style.opacity = "1";
+          }
+        }
 
-        const locateBtn = document.createElement("button");
-        locateBtn.className = "map-control-button";
-        locateBtn.textContent = "My Location";
-        locateBtn.addEventListener("click", () => {
-          locateCurrentPosition(true);
-        });
-
-        const resetBtn = document.createElement("button");
-        resetBtn.className = "map-control-button";
-        resetBtn.textContent = "Reset View";
-        resetBtn.addEventListener("click", () => {
-          map.setCenter(defaultCentre);
-          map.setZoom(15);
-          marker.setPosition(defaultCentre);
-          updateCoords(defaultCentre.lat, defaultCentre.lng);
-        });
-
-        controlPanel.appendChild(locateBtn);
-        controlPanel.appendChild(resetBtn);
-        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(controlPanel);
-
-        function locateCurrentPosition(showMessage) {
-          if (!navigator.geolocation) {
-            if (showMessage) showToast("Geolocation is not supported by this browser.");
+        function buildMap() {
+          if (!mapEl || typeof google === "undefined" || !google.maps) {
+            showError("Google Maps could not load. Please refresh the page.");
             return;
           }
 
-          if (showMessage) showToast("Finding your location…");
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const lat = position.coords.latitude;
-              const lng = position.coords.longitude;
-              const latLng = { lat, lng };
-              map.setCenter(latLng);
-              map.setZoom(15);
-              marker.setPosition(latLng);
-              marker.setTitle("Your current location");
-              marker.setAnimation(google.maps.Animation.DROP);
-              updateCoords(lat, lng);
+          const map = new google.maps.Map(mapEl, {
+            center: defaultCentre,
+            zoom: 15,
+            fullscreenControl: true,
+            zoomControl: true,
+            streetViewControl: false,
+            mapTypeControl: true,
+            mapTypeControlOptions: {
+              style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+              position: google.maps.ControlPosition.TOP_LEFT,
             },
-            () => {
-              if (showMessage) showToast("Unable to get current location.");
+            styles: [
+              { elementType: "geometry", stylers: [{ color: "#0f172a" }] },
+              { elementType: "labels.text.fill", stylers: [{ color: "#e2e8f0" }] },
+              { elementType: "labels.text.stroke", stylers: [{ color: "#0f172a" }] },
+              { featureType: "road", elementType: "geometry", stylers: [{ color: "#1e293b" }] },
+              { featureType: "water", elementType: "geometry", stylers: [{ color: "#0284c7" }] },
+              { featureType: "poi", stylers: [{ visibility: "off" }] },
+            ],
+          });
+
+          const marker = new google.maps.Marker({
+            position: defaultCentre,
+            map,
+            draggable: true,
+            title: "Drag to adjust location",
+            icon: {
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 9,
+              fillColor: "#38bdf8",
+              fillOpacity: 1,
+              strokeColor: "#ffffff",
+              strokeWeight: 2,
             },
-            {
-              enableHighAccuracy: true,
-              timeout: 10000,
-              maximumAge: 10000,
-            },
-          );
+          });
+
+          const controlPanel = document.createElement("div");
+          controlPanel.style.display = "flex";
+          controlPanel.style.flexDirection = "column";
+          controlPanel.style.alignItems = "flex-end";
+          controlPanel.style.margin = "0.5rem";
+
+          const locateBtn = document.createElement("button");
+          locateBtn.className = "map-control-button";
+          locateBtn.textContent = "My Location";
+          locateBtn.addEventListener("click", () => {
+            locateCurrentPosition(true);
+          });
+
+          const resetBtn = document.createElement("button");
+          resetBtn.className = "map-control-button";
+          resetBtn.textContent = "Reset View";
+          resetBtn.addEventListener("click", () => {
+            map.setCenter(defaultCentre);
+            map.setZoom(15);
+            marker.setPosition(defaultCentre);
+            updateCoords(defaultCentre.lat, defaultCentre.lng);
+          });
+
+          controlPanel.appendChild(locateBtn);
+          controlPanel.appendChild(resetBtn);
+          map.controls[google.maps.ControlPosition.TOP_RIGHT].push(controlPanel);
+
+          function locateCurrentPosition(showMessage) {
+            if (!navigator.geolocation) {
+              if (showMessage) showToast("Geolocation is not supported by this browser.");
+              return;
+            }
+
+            if (showMessage) showToast("Finding your location…");
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                const latLng = { lat, lng };
+                map.setCenter(latLng);
+                map.setZoom(15);
+                marker.setPosition(latLng);
+                marker.setTitle("Your current location");
+                marker.setAnimation(google.maps.Animation.DROP);
+                updateCoords(lat, lng);
+              },
+              () => {
+                if (showMessage) showToast("Unable to get current location.");
+                showError("Location access denied or unavailable.");
+              },
+              {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 10000,
+              },
+            );
+          }
+
+          map.addListener("click", (event) => {
+            const lat = event.latLng.lat();
+            const lng = event.latLng.lng();
+            marker.setPosition(event.latLng);
+            updateCoords(lat, lng);
+          });
+
+          marker.addListener("dragend", () => {
+            const pos = marker.getPosition();
+            updateCoords(pos.lat(), pos.lng());
+          });
+
+          window._reportMap = map;
+          window._reportMarker = marker;
+          window._reportMapBuilt = true;
+
+          hidePlaceholder();
+          locateCurrentPosition(false);
         }
 
-        map.addListener("click", (event) => {
-          const lat = event.latLng.lat();
-          const lng = event.latLng.lng();
-          marker.setPosition(event.latLng);
-          updateCoords(lat, lng);
-        });
+        function ensureMapLoaded() {
+          if (mapPlaceholder) {
+            mapPlaceholder.style.opacity = "0.85";
+          }
+          buildMap();
+        }
 
-        marker.addListener("dragend", () => {
-          const pos = marker.getPosition();
-          updateCoords(pos.lat(), pos.lng());
-        });
+        if (loadButton) {
+          loadButton.addEventListener("click", function (event) {
+            event.stopPropagation();
+            ensureMapLoaded();
+          });
+        }
 
-        locateCurrentPosition(false);
-      }
+        if (mapPlaceholder) {
+          mapPlaceholder.addEventListener("click", function () {
+            ensureMapLoaded();
+          });
+        }
+
+        if (window.currentStep === 3) {
+          buildMap();
+        }
+      };
+
+      window.initMap = function () {
+        window._googleMapsApiReady = true;
+        if (window.currentStep === 3) {
+          window.setupReportMap();
+        }
+      };
+
+      window.goStep = function (step) {
+        if (step > window.currentStep) {
+          if (window.currentStep === 1 && !window.selectedCategory) {
+            showToast("Please select a category");
+            return;
+          }
+          if (window.currentStep === 1 && !window.selectedSeverity) {
+            showToast("Please select severity");
+            return;
+          }
+          if (
+            window.currentStep === 2 &&
+            !document.getElementById("issueTitle").value.trim()
+          ) {
+            showToast("Enter issue title");
+            return;
+          }
+          if (
+            window.currentStep === 2 &&
+            !document.getElementById("issueDesc").value.trim()
+          ) {
+            showToast("Enter description");
+            return;
+          }
+          if (
+            window.currentStep === 3 &&
+            !document.getElementById("issueAddress").value.trim()
+          ) {
+            showToast("Enter location");
+            return;
+          }
+        }
+        document
+          .getElementById("step-" + window.currentStep)
+          .classList.remove("active");
+        document
+          .getElementById("dot-" + window.currentStep)
+          .classList.remove("active");
+        if (step > window.currentStep) {
+          document
+            .getElementById("dot-" + window.currentStep)
+            .classList.add("done");
+        }
+        window.currentStep = step;
+        document.getElementById("step-" + step).classList.add("active");
+        document.getElementById("dot-" + step).classList.add("active");
+        if (step === 3) {
+          if (window._googleMapsApiReady) {
+            window.setupReportMap();
+            if (window._reportMap) {
+              google.maps.event.trigger(window._reportMap, "resize");
+              if (window._reportMarker) {
+                window._reportMap.setCenter(window._reportMarker.getPosition());
+              }
+            }
+          }
+        }
+        if (step === 4) buildReview();
+      };
       function updateCoords(lat, lng) {
         window.pinnedLat = lat.toFixed(6);
         window.pinnedLng = lng.toFixed(6);
