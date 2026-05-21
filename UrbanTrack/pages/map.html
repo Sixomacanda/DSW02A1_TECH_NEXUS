@@ -1,41 +1,48 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Urban Track Map</title>
-    <link rel="stylesheet" href="../Styles/map.css">
-</head>
+    <link rel="stylesheet" href="../Styles/map.css" />
+  </head>
 
-<body>
+  <body>
+    <header class="header">
+      <nav class="navbar">
+        <div class="logo">Urban Track</div>
+
+        <ul class="nav-links">
+          <li><a href="../../homePage.html">Home</a></li>
+          <li><a href="MainPage.html">Report Issue</a></li>
+          <li><a href="UserDashboard.html">Dashboard</a></li>
+          <li><a href="UserSettings.html">Settings</a></li>
+        </ul>
+
+        <div class="menu-button">
+          <div class="menu-button__burger"></div>
+        </div>
+      </nav>
+    </header>
 
     <div class="container">
+      <h1>Urban Track Map</h1>
 
-        <h1>Urban Track Map</h1>
+      <p id="location">location:</p>
 
-        
-        <p id="location">location: </p>
+      <div id="map"></div>
 
-        
-        <div id="map"></div>
-
-        
-        
-        <a href="https://www.google.com/maps/@-26.192307,28.056076,15z?hl=en-US&entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D">View on google maps</a>
-
-    
-
+      <a
+        href="https://www.google.com/maps/@-26.192307,28.056076,15z?hl=en-US&entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D"
+        >View on google maps</a
+      >
     </div>
 
     <script src="../js/main.js"></script>
 
-    
-    <script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCgvhEjbV7SjgvkRk5gSu_lxPwRDlT1wc8&libraries=places&callback=initMap">
-    </script>
-   
-   
-    
-
-</body>
+    <script
+      async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCgvhEjbV7SjgvkRk5gSu_lxPwRDlT1wc8&libraries=places&callback=initMap"
+    ></script>
+  </body>
 </html>

@@ -30,19 +30,20 @@
       </div>
     </nav>
     <!-- hb -->
-     <form id="signupForm" novalidate>
+    <form id="signupForm" novalidate>
       <div class="left">
         <div class="left-content">
-          <h1>Create Account</h1><br><br>
+          <h1>Create Account</h1>
+          <br /><br />
           <h2>Welcome to Urban Track</h2>
           <h4>Empowering communities to improve their cities.</h4>
-          <p>Join our community today and help make a difference in your city!</p>
+          <p>
+            Join our community today and help make a difference in your city!
+          </p>
         </div>
       </div>
       <div class="divider"></div>
-        <div class="signup-container">
-        
-      
+      <div class="signup-container">
         <div class="form-group">
           <label for="surname">Surname</label>
           <input
@@ -95,76 +96,132 @@
           </div>
           <small class="error"></small>
         </div>
-        <button type="submit" id="sign" class="btn" name="signup">
+        <button type="submit" id="signing" class="btn" name="signup">
           Sign Up
         </button>
-      </form>
-      <p class="footer-text">
-        Already have an account? <a href="login.html">Log in</a>
-      </p>
-    </div>
+
+        <!-- Google signup option -->
+        <a
+          id="google-login-btn"
+          href="http://localhost:3000/auth/google"
+          class="btn google-btn"
+        >
+          <i class="fa-brands fa-google"></i> Continue with Google
+        </a>
+
+        <p class="footer-text">
+          Already have an account? <a href="login.html">Log in</a>
+        </p>
+      </div>
+    </form>
     <script src="../js/main.js"></script>
-    <script src="../js/MainPage.js"></script>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-     <!-- Google api -->
- <script>
-       
-function googleTranslateElementInit() {
-    new google.translate.TranslateElement(
-        { pageLanguage: 'en' },
-        'google_translate_element'
-    );
-}
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// Hide Google Translate banner whenever it appears
-function hideGoogleTranslateBanner() {
-    // Remove the top offset Google adds to body
-    document.body.style.top = '0px';
-    
-    // Hide the banner frame
-    const banner = document.querySelector('.goog-te-banner-frame');
-    if (banner) {
-        banner.style.display = 'none';
-    }
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // Also target the iframe by id
-    const bannerById = document.getElementById(':1.container');
-    if (bannerById) {
-        bannerById.style.display = 'none';
-    }
-}
+      const firebaseConfig = {
+        apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
+        authDomain: "urban-track-91e53.firebaseapp.com",
+        projectId: "urban-track-91e53",
+        storageBucket: "urban-track-91e53.firebasestorage.app",
+        messagingSenderId: "519209303536",
+        appId: "1:519209303536:web:c212eb58eb836e27047135",
+      };
 
-// Run on page load
-hideGoogleTranslateBanner();
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
 
-// Watch for DOM changes (when Google injects the banner after language select)
-const observer = new MutationObserver(function(mutations) {
-    hideGoogleTranslateBanner();
-});
+      const form = document.getElementById("signupForm");
+      const surname = document.getElementById("surname");
+      const email = document.getElementById("email");
+      const password = document.getElementById("Signup-password");
+      const confirmPassword = document.getElementById(
+        "Signup-confirm-password",
+      );
 
-observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ['style']
-});
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
+        /* EMAIL VALIDATION */
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-</script>
-<script type="text/javascript">
-function googleTranslateElementInit() {
-    new google.translate.TranslateElement(
-        { pageLanguage: 'en' },
-        'google_translate_element'
-    );
-}
-</script>
+        if (!emailPattern.test(email.value)) {
+          alert("Please enter a valid email address");
+          return;
+        }
 
-<script type="text/javascript"
-src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
-</script>
-<!-- The End of google api -->
+        /* PASSWORD VALIDATION
+Minimum 8 characters
+1 uppercase
+1 lowercase
+1 number
+1 special character
+*/
 
+        const passwordPattern =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
+        if (!passwordPattern.test(password.value)) {
+          alert(
+            "Password must contain:\n- Minimum 8 characters\n- One uppercase letter\n- One lowercase letter\n- One digit\n- One special character",
+          );
+          return;
+        }
+
+        /* CONFIRM PASSWORD CHECK */
+
+        if (password.value !== confirmPassword.value) {
+          alert("Passwords do not match");
+          return;
+        }
+
+        try {
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            email.value,
+            password.value,
+          );
+
+          const user = userCredential.user;
+
+          await setDoc(doc(db, "users", user.uid), {
+            surname: surname.value,
+            email: email.value,
+            reportsCount: 0,
+          });
+
+          alert("Account created successfully");
+
+          window.location.href = "login.html";
+        } catch (error) {
+          alert(error.message);
+        }
+        const menuBtn = document.querySelector(".menu-button");
+        const navLinks = document.querySelector(".nav-links");
+        let menuOpen = false;
+        menuBtn.addEventListener("click", () => {
+          if (!menuOpen) {
+            menuBtn.classList.add("open");
+            navLinks.classList.add("show");
+            menuOpen = true;
+          } else {
+            menuBtn.classList.remove("open");
+            navLinks.classList.remove("show");
+            menuOpen = false;
+          }
+        });
+      });
+    </script>
   </body>
 </html>
