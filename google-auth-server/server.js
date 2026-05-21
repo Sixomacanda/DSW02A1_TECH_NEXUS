@@ -1,6 +1,8 @@
 require("dotenv").config();
 
 const express = require("express");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const cors = require("cors");
@@ -10,29 +12,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use(
-    session({
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: false,
-        store: MongoStore.create({
-            mongoUrl: process.env.MONGO_URI
-        })
-    })
-);
-
-// Session setup
-const session = require("express-session");
-const MongoStore = require("connect-mongo");
-
-const session = require("express-session");
-const MongoStore = require("connect-mongo");
-
+// Session setup (only once!)
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({
+    store: new MongoStore({
         mongoUrl: process.env.MONGO_URI,
         collectionName: "sessions"
     }),
@@ -41,13 +26,9 @@ app.use(session({
     }
 }));
 
-
-
-
 app.use(express.static("public"));
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 // Google Strategy
 passport.use(
@@ -63,47 +44,26 @@ passport.use(
     )
 );
 
-passport.serializeUser(function (user, done) {
-    done(null, user);
-});
-
-passport.deserializeUser(function (user, done) {
-    done(null, user);
-});
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
 
 // Routes
-app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
-
-// Start Google login
-app.get(
-    "/auth/google",
-    function (req, res, next) {
-        const originUrl = req.headers.referer || FRONTEND_LOGIN_URL;
-        req.session.returnTo = originUrl;
-        console.log("Google auth initiated from:", originUrl);
-        next();
-    },
-    passport.authenticate("google", { scope: ["profile", "email"] })
-);
-
-// Callback after Google login
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5501/UrbanTrack/pages/MainPage.html";
 const FRONTEND_LOGIN_URL = process.env.FRONTEND_LOGIN_URL || "http://localhost:5501/UrbanTrack/pages/login.html";
 
-app.get(
-    "/auth/google/callback",
-    function (req, res, next) {
-        console.log("Google callback received, query:", req.query);
-        next();
-    },
-    passport.authenticate("google", {
-        failureRedirect: FRONTEND_LOGIN_URL,
-    }),
-    function (req, res) {
-        console.log("Google auth successful, user:", req.user ? req.user.displayName : "no user");
-        console.log("Google auth successful, redirecting to", FRONTEND_URL);
+app.get("/auth/google", (req, res, next) => {
+    const originUrl = req.headers.referer || FRONTEND_LOGIN_URL;
+    req.session.returnTo = originUrl;
+    console.log("Google auth initiated from:", originUrl);
+    next();
+}, passport.authenticate("google", { scope: ["profile", "email"] }));
 
-        // Store user data in session and send as query params
+app.get("/auth/google/callback",
+    passport.authenticate("google", { failureRedirect: FRONTEND_LOGIN_URL }),
+    (req, res) => {
+        console.log("Google auth successful, user:", req.user ? req.user.displayName : "no user");
+        console.log("Redirecting to", FRONTEND_URL);
+
         if (req.user) {
             const userData = JSON.stringify({
                 name: req.user.displayName,
@@ -119,12 +79,6 @@ app.get(
     }
 );
 
-app.get("/auth/user", function (req, res) {
-    res.json(req.user || null);
-});
+app.get("/auth/user", (req, res) => res.json(req.user || null));
 
-
-// Start server
-app.listen(3000, function () {
-    console.log("Server running on http://localhost:3000");
-});
+app.listen(3000, () => console.log("Server running on http://localhost:3000"));
