@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UrbanTrack — Account Settings</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../Styles/userSettings.css" />
+  </head>
+  <body>
+    <!-- ── HEADER ── -->
+    <!-- <header class="header"> -->
+      <nav class="navbar">
+        <div class="logo">Urban Track</div>
+
+        <ul class="nav-links">
+          <li><a href="../../homePage.html">Home</a></li>
+          <li><a href="MainPage.html">Report Issue</a></li>
+          <li><a href="UserDashboard.html">Dashboard</a></li>
+          <li><a href="#" onclick="doLogout()">Logout</a></li>
+        </ul>
+
+        <div class="menu-button">
+          <div class="menu-button__burger"></div>
+        </div>
+      </nav>
+    <!-- </header> -->
+
+    <!-- ── PAGE ── -->
+    <div class="page">
+      <!-- Left nav -->
+      <div class="settings-nav fu">
+        <div class="snav-label">Account</div>
+        <button class="snav-item active" onclick="showSection('profile', this)">
+          Profile
+        </button>
+        <div class="snav-divider"></div>
+        <div class="snav-label">Danger</div>
+        <button
+          class="snav-item danger-nav"
+          onclick="showSection('danger', this)"
+        >
+          Delete Account
+        </button>
+      </div>
+
+      <!-- Right panel -->
+      <div class="settings-panel">
+        <!-- ══ PROFILE ══ -->
+        <div class="panel-section active" id="section-profile">
+          <div class="settings-card fu d1">
+            <div class="card-header">
+              <div class="card-title">Profile Information</div>
+              <div class="card-sub">
+                Your name and area are shown on reports you submit
+              </div>
+            </div>
+            <div class="card-body">
+              <!-- Avatar + name -->
+              <div class="avatar-row">
+                <div class="avatar-large" id="avatarDisplay">U</div>
+                <div class="avatar-info">
+                  <h3 id="avatarName">Loading...</h3>
+                  <p id="avatarEmail">Loading...</p>
+                </div>
+              </div>
+
+              <!-- Display name -->
+              <div class="form-row single">
+                <div class="field">
+                  <label>Display Name</label>
+                  <input
+                    type="text"
+                    id="displayName"
+                    placeholder="How your name appears on reports"
+                  />
+                </div>
+              </div>
+
+              <!-- Email — read-only, managed by Firebase Auth -->
+              <div class="form-row single">
+                <div class="field">
+                  <label>Email Address</label>
+                  <input
+                    type="email"
+                    id="emailField"
+                    placeholder="your@email.com"
+                    readonly
+                    style="opacity: 0.6; cursor: not-allowed"
+                  />
+                </div>
+              </div>
+
+              <!-- Area -->
+              <div class="form-row single">
+                <div class="field">
+                  <label>Area / Suburb</label>
+                  <select id="areaField">
+                    <option value="">Select your area...</option>
+                    <option>Rosebank</option>
+                    <option>Sandton CBD</option>
+                    <option>Melville</option>
+                    <option>Soweto</option>
+                    <option>Midrand</option>
+                    <option>Fourways</option>
+                    <option>Randburg</option>
+                    <option>Alexandra</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="save-row">
+                <button
+                  class="btn btn-primary"
+                  id="saveBtn"
+                  onclick="saveProfile()"
+                >
+                  Save Changes
+                </button>
+                <button class="btn btn-ghost" onclick="discardProfile()">
+                  Discard
+                </button>
+                <span class="saved-msg" id="profileSavedMsg"
+                  >Profile updated</span
+                >
+                <span class="error-msg" id="profileErrorMsg"
+                  >Failed to save</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ DELETE ACCOUNT ══ -->
+        <div class="panel-section" id="section-danger">
+          <div class="settings-card danger-card fu d1">
+            <div class="card-header">
+              <div class="card-title">Delete Account Permanently</div>
+              <div class="card-sub">
+                This action is irreversible — all your data will be erased
+              </div>
+            </div>
+            <div class="card-body">
+              <ul class="danger-list">
+                <li>
+                  Your profile and all personal information will be removed
+                </li>
+                <li>
+                  All reports and comments you have submitted will be deleted
+                </li>
+                <li>Your upvotes will be removed from all community issues</li>
+                <li>This cannot be undone — there is no recovery option</li>
+              </ul>
+              <button class="btn btn-danger" onclick="openDeleteModal()">
+                Delete My Account Permanently
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /settings-panel -->
+    </div>
+    <!-- /page -->
+
+    <!-- ══ DELETE MODAL ══ -->
+    <div class="modal-overlay" id="deleteModal">
+      <div class="modal">
+        <button class="modal-close" onclick="closeDeleteModal()">x</button>
+        <div class="modal-title">Delete Account Permanently</div>
+        <div class="modal-body">
+          This will immediately and permanently delete your account and all
+          associated data.
+          <strong style="color: var(--danger)">This cannot be undone.</strong>
+        </div>
+        <div class="modal-field">
+          <label>Type DELETE to confirm</label>
+          <input
+            type="text"
+            id="deleteConfirmInput"
+            placeholder="Type DELETE here"
+            oninput="checkDeleteConfirm()"
+          />
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-ghost" onclick="closeDeleteModal()">
+            Cancel
+          </button>
+          <button
+            class="btn btn-danger"
+            id="deleteConfirmBtn"
+            disabled
+            onclick="deleteAccount()"
+          >
+            Delete Permanently
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- ══ SCRIPTS ══ -->
+    <script src="../js/main.js"></script>
+    <script>
+      function doLogout() {
+        localStorage.removeItem("urbanTrack_currentUser");
+        location.href = "../../homePage.html";
+      }
+
+      function getInitials(name) {
+        if (!name) return "U";
+        return name
+          .trim()
+          .split(" ")
+          .slice(0, 2)
+          .map((p) => p[0].toUpperCase())
+          .join("");
+      }
+
+      function showSection(id, btn) {
+        document
+          .querySelectorAll(".panel-section")
+          .forEach((s) => s.classList.remove("active"));
+        document
+          .querySelectorAll(".snav-item")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById("section-" + id).classList.add("active");
+        btn.classList.add("active");
+      }
+
+      function showToast(msg, type) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "toast" + (type ? " " + type : "");
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 3000);
+      }
+
+      function openDeleteModal() {
+        document.getElementById("deleteConfirmInput").value = "";
+        document.getElementById("deleteConfirmBtn").disabled = true;
+        document.getElementById("deleteModal").classList.add("open");
+      }
+      function closeDeleteModal() {
+        document.getElementById("deleteModal").classList.remove("open");
+      }
+      function checkDeleteConfirm() {
+        const val = document.getElementById("deleteConfirmInput").value;
+        document.getElementById("deleteConfirmBtn").disabled = val !== "DELETE";
+      }
+
+      // Stored original values for discard
+      let _origName = "",
+        _origArea = "";
+
+      function discardProfile() {
+        document.getElementById("displayName").value = _origName;
+        document.getElementById("areaField").value = _origArea;
+      }
+    </script>
+
+    <!-- ══ FIREBASE MODULE ══ -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+        deleteUser,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+        setDoc,
+        updateDoc,
+        deleteDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+      // ── Firebase config (unchanged) ──
+      const firebaseConfig = {
+        apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
+        authDomain: "urban-track-91e53.firebaseapp.com",
+        projectId: "urban-track-91e53",
+        storageBucket: "urban-track-91e53.firebasestorage.app",
+        messagingSenderId: "519209303536",
+        appId: "1:519209303536:web:c212eb58eb836e27047135",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      let currentUser = null;
+
+      // ── Helper: populate UI ──
+      function populateUI(name, email, area) {
+        const initials = getInitials(name || email);
+
+        document.getElementById("avatarDisplay").textContent = initials;
+        document.getElementById("userAvatar").textContent = initials;
+        document.getElementById("avatarName").textContent =
+          name || email || "User";
+        document.getElementById("avatarEmail").textContent = email || "";
+        document.getElementById("headerUserName").textContent =
+          name || email || "User";
+        document.getElementById("displayName").value = name || "";
+        document.getElementById("emailField").value = email || "";
+
+        // Pre-select area
+        const sel = document.getElementById("areaField");
+        for (let i = 0; i < sel.options.length; i++) {
+          if (sel.options[i].value === area) {
+            sel.selectedIndex = i;
+            break;
+          }
+        }
+
+        // Store originals for discard
+        window._origName = name || "";
+        window._origArea = area || "";
+      }
+
+      // Try loading extra profile data from Firestore users/{uid}
+      try {
+        const snap = await getDoc(doc(db, "users", user.uid));
+        if (snap.exists()) {
+          const data = snap.data();
+          populateUI(
+            data.name || user.displayName,
+            user.email,
+            data.area || "",
+          );
+        } else {
+          populateUI(user.displayName, user.email, "");
+        }
+      } catch (e) {
+        console.warn("Could not load Firestore profile:", e);
+        populateUI(user.displayName, user.email, "");
+      }
+
+      // ── LocalStorage fallback (while Firebase loads) ──
+      const stored = JSON.parse(
+        localStorage.getItem("urbanTrack_currentUser") || "null",
+      );
+      if (stored) {
+        populateUI(
+          stored.name || stored.email,
+          stored.email,
+          stored.area || "",
+        );
+      }
+
+      // ── Save Profile → writes to Firestore users/{uid} ──
+      window.saveProfile = async function () {
+        if (!currentUser) {
+          showToast("Not signed in", "danger");
+          return;
+        }
+
+        const name = document.getElementById("displayName").value.trim();
+        const area = document.getElementById("areaField").value;
+
+        if (!name) {
+          document.getElementById("displayName").focus();
+          showToast("Display name cannot be empty", "danger");
+          return;
+        }
+
+        const btn = document.getElementById("saveBtn");
+        btn.disabled = true;
+        btn.textContent = "Saving...";
+
+        try {
+          // Write / merge into users/{uid}
+          await setDoc(
+            doc(db, "users", currentUser.uid),
+            {
+              name,
+              area,
+              email: currentUser.email,
+              updatedAt: new Date().toISOString(),
+            },
+            { merge: true },
+          );
+
+          // Also update localStorage so other pages see the new name
+          const stored = JSON.parse(
+            localStorage.getItem("urbanTrack_currentUser") || "{}",
+          );
+          localStorage.setItem(
+            "urbanTrack_currentUser",
+            JSON.stringify({ ...stored, name, area }),
+          );
+
+          // Update stored originals
+          window._origName = name;
+          window._origArea = area;
+
+          // Refresh avatar/name in header + card
+          document.getElementById("avatarDisplay").textContent =
+            getInitials(name);
+          document.getElementById("userAvatar").textContent = getInitials(name);
+          document.getElementById("avatarName").textContent = name;
+          document.getElementById("headerUserName").textContent = name;
+
+          const msg = document.getElementById("profileSavedMsg");
+          msg.classList.add("show");
+          setTimeout(() => msg.classList.remove("show"), 3000);
+          showToast("Profile saved", "success");
+        } catch (e) {
+          console.error("Save failed:", e);
+          const err = document.getElementById("profileErrorMsg");
+          err.classList.add("show");
+          setTimeout(() => err.classList.remove("show"), 3000);
+          showToast("Save failed: " + (e.code || "check console"), "danger");
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Save Changes";
+        }
+      };
+
+      // ── Delete Account ──
+      window.deleteAccount = async function () {
+        if (!currentUser) {
+          alert("Not logged in");
+          return;
+        }
+
+        const btn = document.getElementById("deleteConfirmBtn");
+        btn.disabled = true;
+        btn.textContent = "Deleting...";
+
+        try {
+          //Delete Firestore data
+          await deleteDoc(doc(db, "users", currentUser.uid));
+
+          //Delete Auth account
+          await deleteUser(currentUser);
+
+          //Clear local storage
+          localStorage.removeItem("urbanTrack_currentUser");
+
+          alert("Account deleted");
+
+          window.location.href = "../../homePage.html";
+        } catch (e) {
+          console.error(e);
+
+          if (e.code === "auth/requires-recent-login") {
+            alert("Please log in again and try deleting.");
+          } else {
+            alert("Delete failed");
+          }
+
+          btn.disabled = false;
+          btn.textContent = "Delete Forever";
+        }
+      };
+    </script>
+
+    <script src="../js/UserSettings.js"></script>
+  </body>
+</html>

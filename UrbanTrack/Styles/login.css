@@ -4,6 +4,7 @@
   box-sizing: border-box;
   font-family: "Segoe UI", sans-serif;
 }
+
 /* jhh */
 body {
   height: 100vh;
@@ -20,13 +21,16 @@ body {
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
 }
+
 .navbar {
   position: fixed;
   top: 0;
@@ -48,6 +52,7 @@ body {
   font-weight: bold;
   color: #38bdf8;
 }
+
 .nav-links {
   list-style: none;
   display: flex;
@@ -71,6 +76,7 @@ body {
   color: #dbeafe;
   outline: none;
 }
+
 .menu-button {
   position: relative;
   display: none;
@@ -128,6 +134,7 @@ body {
   transform: rotate(-50deg);
   transform-origin: center;
 }
+
 form#loginForm {
   display: flex;
   align-items: flex-start;
@@ -171,6 +178,7 @@ form#loginForm {
     opacity: 0;
     transform: translateY(40px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -256,11 +264,13 @@ form#loginForm {
 .hide {
   display: none;
 }
+
 .error {
   color: #ff0000;
   font-size: 14px;
   margin-top: 10px;
 }
+
 .btn {
   width: 100%;
   padding: 12px;
@@ -278,6 +288,22 @@ form#loginForm {
 .btn:hover {
   transform: scale(1.05);
   box-shadow: 0 0 15px #38bdf8;
+}
+
+.btn.google-btn {
+  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.btn.google-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(66, 133, 244, 0.6);
 }
 
 .footer-text {
@@ -306,6 +332,7 @@ form#loginForm {
   margin-top: 5px;
   display: block;
 }
+
 .right {
   display: flex;
   align-items: center;
@@ -337,9 +364,11 @@ form#loginForm {
   .divider {
     display: none;
   }
+
   .right {
     display: none;
   }
+
   .navbar {
     padding: 1px 40px;
   }
@@ -397,71 +426,14 @@ form#loginForm {
     visibility: visible;
   }
 }
+
 .forgot-password a {
   font-size: 14px;
   color: #38bdf8;
 
   transition: color 0.2s ease;
 }
+
 .forgot-password a:hover {
   color: #6366f1;
 }
-
-
-/* The google translate API */
-
-/* Hide the "Powered by Google" text and logo */
-/* .goog-logo-link {
-    display: none !important;
-}
-
-.goog-te-gadget {
-    color: transparent !important;
-    font-size: 0 !important;
-}
-
-.goog-te-gadget select {
-    color: white; 
-    background: transparent;
-    border: 1px solid white;
-    border-radius: 4px;
-    font-size: 14px;
-    padding: 2px 4px;
-}
-.goog-te-banner-frame { display: none !important; }
-body { top: 0 !important; } */
-
-
- .goog-te-banner-frame {
-            display: none !important;
-        }
-
-        body {
-            top: 0px !important;
-            position: static !important;
-        }
-
-        .goog-logo-link,
-        .goog-te-gadget span {
-            display: none !important;
-        }
-
-        .goog-te-gadget {
-            color: transparent !important;
-        }
-
-        /* Style the dropdown to match your theme */
-        .goog-te-combo {
-            background: rgba(255, 255, 255, 0.1) !important;
-            border: 1px solid var(--accent-hover) !important;
-            border-radius: 6px !important;
-            color: white !important;
-            padding: 6px 12px !important;
-            font-size: 14px !important;
-            cursor: pointer !important;
-        }
-
-        .goog-te-combo option {
-            background: #1e3a8a !important;
-            color: white !important;
-        }
