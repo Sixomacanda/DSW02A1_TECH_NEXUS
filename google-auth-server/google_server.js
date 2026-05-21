@@ -1,6 +1,5 @@
 require("dotenv").config();
 
-const MongoStore = require("connect-mongo");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const cors = require("cors");
