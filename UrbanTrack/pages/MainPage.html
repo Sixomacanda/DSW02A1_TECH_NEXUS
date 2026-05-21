@@ -9,6 +9,25 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../Styles/MainPage.css" />
+    <style>
+      .map-control-button {
+        background: rgba(15, 23, 42, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: white;
+        padding: 0.5rem 0.65rem;
+        font-size: 0.9rem;
+        border-radius: 0.75rem;
+        cursor: pointer;
+        margin: 0.25rem;
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+      }
+      .map-control-button:hover {
+        background: #2563eb;
+      }
+      #map {
+        min-height: 260px;
+      }
+    </style>
   </head>
   <body>
     <!-- HEADER -->
@@ -255,7 +274,7 @@
                 <div
                   id="mapContainer"
                   style="
-                    height: 220px;
+                    height: 320px;
                     border-radius: var(--radius);
                     overflow: hidden;
                     border: 2px solid rgba(56, 189, 248, 0.3);
@@ -295,9 +314,9 @@
                     >
                       +
                     </div>
-                    <p>Click to drop a pin on the map</p>
+                    <p>Loading the map and locating you…</p>
                     <small style="opacity: 0.4; font-size: 0.7rem"
-                      >Loads Google Maps with your location</small
+                      >Tap the map or drag the pin to adjust the report location</small
                     >
                   </div>
                 </div>
@@ -313,7 +332,11 @@
                 >
                   Pinned: <span id="coordsText"></span>
                 </div>
-                <a href="map.html" class="map-link">View full map</a>
+                <a
+        href="https://www.google.com/maps/@-26.192307,28.056076,15z?hl=en-US&entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D"
+        >View on google maps</a
+      >
+                <!-- <a href="map.html" class="map-link">View full map</a>--> 
               </div>
               <div class="field-group">
                 <label
@@ -894,95 +917,122 @@
       };
 
       // ── 14. GOOGLE MAPS PIN DROP ─────────────────────────────────
-      // Exposed as window.initMap so Google's async callback can find it
       window.initMap = function () {
-        // Map API is ready — nothing to do until user clicks the container
-      };
+        const mapPlaceholder = document.getElementById("mapPlaceholder");
+        const mapEl = document.getElementById("map");
+        const defaultCentre = { lat: -26.2041, lng: 28.0473 };
 
-      document
-        .getElementById("mapContainer")
-        .addEventListener("click", function () {
-          if (window._mapInstance) return; // already built
+        if (mapPlaceholder) {
+          mapPlaceholder.style.display = "none";
+        }
 
-          document.getElementById("mapPlaceholder").style.display = "none";
-
-          const defaultCentre = { lat: -26.2041, lng: 28.0473 }; // Johannesburg
-
-          function buildMap(pos) {
-            window._mapInstance = new google.maps.Map(
-              document.getElementById("map"),
-              {
-                center: pos,
-                zoom: 15,
-                styles: [
-                  { elementType: "geometry", stylers: [{ color: "#1e3a8a" }] },
-                  {
-                    elementType: "labels.text.fill",
-                    stylers: [{ color: "#93c5fd" }],
-                  },
-                  {
-                    elementType: "labels.text.stroke",
-                    stylers: [{ color: "#0f172a" }],
-                  },
-                  {
-                    featureType: "road",
-                    elementType: "geometry",
-                    stylers: [{ color: "#0f172a" }],
-                  },
-                  {
-                    featureType: "water",
-                    elementType: "geometry",
-                    stylers: [{ color: "#0ea5e9" }],
-                  },
-                  { featureType: "poi", stylers: [{ visibility: "off" }] },
-                ],
-              },
-            );
-
-            window._marker = new google.maps.Marker({
-              position: pos,
-              map: window._mapInstance,
-              draggable: true,
-              title: "Drag to adjust",
-              icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                scale: 10,
-                fillColor: "#38bdf8",
-                fillOpacity: 1,
-                strokeColor: "#ffffff",
-                strokeWeight: 2,
-              },
-            });
-
-            updateCoords(pos.lat, pos.lng);
-
-            // Click anywhere on map to move pin
-            window._mapInstance.addListener("click", function (e) {
-              window._marker.setPosition(e.latLng);
-              updateCoords(e.latLng.lat(), e.latLng.lng());
-            });
-
-            // Drag pin to adjust
-            window._marker.addListener("dragend", function (e) {
-              updateCoords(e.latLng.lat(), e.latLng.lng());
-            });
-          }
-
-          // Try GPS first, fall back to Johannesburg
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-              (pos) =>
-                buildMap({
-                  lat: pos.coords.latitude,
-                  lng: pos.coords.longitude,
-                }),
-              () => buildMap(defaultCentre),
-            );
-          } else {
-            buildMap(defaultCentre);
-          }
+        const map = new google.maps.Map(mapEl, {
+          center: defaultCentre,
+          zoom: 15,
+          fullscreenControl: true,
+          zoomControl: true,
+          streetViewControl: false,
+          mapTypeControl: true,
+          mapTypeControlOptions: {
+            style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+            position: google.maps.ControlPosition.TOP_LEFT,
+          },
+          styles: [
+            { elementType: "geometry", stylers: [{ color: "#0f172a" }] },
+            { elementType: "labels.text.fill", stylers: [{ color: "#e2e8f0" }] },
+            { elementType: "labels.text.stroke", stylers: [{ color: "#0f172a" }] },
+            { featureType: "road", elementType: "geometry", stylers: [{ color: "#1e293b" }] },
+            { featureType: "water", elementType: "geometry", stylers: [{ color: "#0284c7" }] },
+            { featureType: "poi", stylers: [{ visibility: "off" }] },
+          ],
         });
 
+        const marker = new google.maps.Marker({
+          position: defaultCentre,
+          map,
+          draggable: true,
+          title: "Drag to adjust location",
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 8,
+            fillColor: "#38bdf8",
+            fillOpacity: 1,
+            strokeColor: "#ffffff",
+            strokeWeight: 2,
+          },
+        });
+
+        const controlPanel = document.createElement("div");
+        controlPanel.style.display = "flex";
+        controlPanel.style.flexDirection = "column";
+        controlPanel.style.alignItems = "flex-end";
+        controlPanel.style.margin = "0.5rem";
+
+        const locateBtn = document.createElement("button");
+        locateBtn.className = "map-control-button";
+        locateBtn.textContent = "My Location";
+        locateBtn.addEventListener("click", () => {
+          locateCurrentPosition(true);
+        });
+
+        const resetBtn = document.createElement("button");
+        resetBtn.className = "map-control-button";
+        resetBtn.textContent = "Reset View";
+        resetBtn.addEventListener("click", () => {
+          map.setCenter(defaultCentre);
+          map.setZoom(15);
+          marker.setPosition(defaultCentre);
+          updateCoords(defaultCentre.lat, defaultCentre.lng);
+        });
+
+        controlPanel.appendChild(locateBtn);
+        controlPanel.appendChild(resetBtn);
+        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(controlPanel);
+
+        function locateCurrentPosition(showMessage) {
+          if (!navigator.geolocation) {
+            if (showMessage) showToast("Geolocation is not supported by this browser.");
+            return;
+          }
+
+          if (showMessage) showToast("Finding your location…");
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const lat = position.coords.latitude;
+              const lng = position.coords.longitude;
+              const latLng = { lat, lng };
+              map.setCenter(latLng);
+              map.setZoom(15);
+              marker.setPosition(latLng);
+              marker.setTitle("Your current location");
+              marker.setAnimation(google.maps.Animation.DROP);
+              updateCoords(lat, lng);
+            },
+            () => {
+              if (showMessage) showToast("Unable to get current location.");
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 10000,
+              maximumAge: 10000,
+            },
+          );
+        }
+
+        map.addListener("click", (event) => {
+          const lat = event.latLng.lat();
+          const lng = event.latLng.lng();
+          marker.setPosition(event.latLng);
+          updateCoords(lat, lng);
+        });
+
+        marker.addListener("dragend", () => {
+          const pos = marker.getPosition();
+          updateCoords(pos.lat(), pos.lng());
+        });
+
+        locateCurrentPosition(false);
+      }
       function updateCoords(lat, lng) {
         window.pinnedLat = lat.toFixed(6);
         window.pinnedLng = lng.toFixed(6);
@@ -998,16 +1048,7 @@
       });
     </script>
 
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCgvhEjbV7SjgvkRk5gSu_lxPwRDlT1wc8&callback=initMap" async defer></script>
     <script src="../js/MainPage.js"></script>
-
-    <!--
-  Google Maps — replace YOUR_GOOGLE_MAPS_API_KEY with your actual key
-  Make sure "Maps JavaScript API" is enabled in Google Cloud Console
--->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"
-      async
-      defer
-    ></script>
   </body>
 </html>

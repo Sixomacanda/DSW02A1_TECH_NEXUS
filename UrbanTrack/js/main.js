@@ -1,11 +1,8 @@
-<<<<<<< HEAD
-=======
 function setupPasswordToggles() {
   const passwordGroups = document.querySelectorAll(".password-group");
   if (!passwordGroups.length) return;
 
   passwordGroups.forEach((group) => {
-    // Skip if already set up
     if (group.dataset.toggleSetup) return;
 
     const input = group.querySelector("input");
@@ -26,7 +23,6 @@ function setupPasswordToggles() {
       show.classList.remove("hide");
     });
 
-    // Mark as set up
     group.dataset.toggleSetup = "true";
   });
 }
@@ -77,17 +73,13 @@ if (loginForm && !loginForm.dataset.authHandled) {
     if (!loginPassword.value.trim()) {
       setError(loginPassword, "Incorrect credentials.");
       valid = false;
-      // } else if (loginPassword.value.length < 6) {
-      //   setError(loginPassword, "Password must be at least 6 characters.");
-      //   valid = false;
     } else {
       clearError(loginPassword);
     }
 
     if (valid) {
       console.log("Login form valid");
-      window.location.href = "MainPage.html"; // Redirect to MainPage after successful validation
-      // loginForm.submit(); // If you want native submit after validation
+      window.location.href = "MainPage.html";
     }
   });
 }
@@ -142,14 +134,11 @@ if (signupForm) {
 
     if (valid) {
       console.log("Signup form valid");
-      // signupForm.submit();
     }
   });
 }
 
-//code for home page
 (function () {
-  // Mobile menu toggle
   const mobileBtn = document.getElementById("mobileMenuBtn");
   const navLinks = document.querySelector(".nav-links");
   if (mobileBtn && navLinks) {
@@ -194,7 +183,6 @@ if (signupForm) {
     });
   }
 
-  // Report button with toast
   const locationField = document.getElementById("locationInput");
   const reportBtn = document.getElementById("reportCta");
   if (locationField && reportBtn) {
@@ -205,7 +193,7 @@ if (signupForm) {
           "📍 Preparing report for: " +
             locationVal +
             " — redirecting to dashboard.",
-          "linear-gradient(135deg, #0ea5e9, #4f46e5)",
+          "linear-gradient(135deg, #0ea5e9, #4f46e5)"
         );
         sessionStorage.setItem("urbanTrack_lastLocation", locationVal);
       } else {
@@ -213,7 +201,7 @@ if (signupForm) {
         showToast(
           "📍 Please enter a location first to continue.",
           "#f59e0b",
-          "#0f172a",
+          "#0f172a"
         );
       }
     });
@@ -243,7 +231,6 @@ if (signupForm) {
     }, 2000);
   }
 
-  // Smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener("click", function (e) {
       const targetId = this.getAttribute("href");
@@ -257,6 +244,7 @@ if (signupForm) {
     });
   });
 })();
+
 const menuBtn = document.querySelector(".menu-button");
 const navLinks = document.querySelector(".nav-links");
 let menuOpen = false;
@@ -267,4 +255,102 @@ if (menuBtn && navLinks) {
     menuOpen = !menuOpen;
   });
 }
->>>>>>> e9b0e2e45e1115ea0b63dd8c841cd30bb47d93e8
+
+window.initMap = function () {
+  const mapElement = document.getElementById("map");
+  if (!mapElement || typeof google === "undefined" || !google.maps) {
+    return;
+  }
+
+  const defaultCentre = { lat: -26.192307, lng: 28.056076 };
+  const map = new google.maps.Map(mapElement, {
+    center: defaultCentre,
+    zoom: 15,
+    mapTypeControl: false,
+    streetViewControl: false,
+    fullscreenControl: false,
+  });
+
+  const marker = new google.maps.Marker({
+    position: defaultCentre,
+    map,
+    title: "Urban Track",
+  });
+
+  const locationText = document.getElementById("location");
+  const findButton = document.getElementById("findLocationBtn");
+
+  function updateLocationDisplay(lat, lng) {
+    if (!locationText) return;
+    locationText.textContent = `location: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  }
+
+  function setStatusMessage(message) {
+    if (!locationText) return;
+    locationText.textContent = message;
+  }
+
+  updateLocationDisplay(defaultCentre.lat, defaultCentre.lng);
+
+  function centerOnPosition(position, label) {
+    const userLatLng = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude,
+    };
+    map.setCenter(userLatLng);
+    map.setZoom(15);
+    marker.setPosition(userLatLng);
+    marker.setTitle(label || "Your location");
+    updateLocationDisplay(userLatLng.lat, userLatLng.lng);
+  }
+
+  if (findButton) {
+    findButton.addEventListener("click", () => {
+      if (!navigator.geolocation) {
+        setStatusMessage("Geolocation not supported by this browser.");
+        return;
+      }
+
+      setStatusMessage("Finding your location…");
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          centerOnPosition(position, "Your current location");
+          setStatusMessage(
+            `location: ${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`
+          );
+        },
+        (error) => {
+          setStatusMessage(
+            "Could not get location; using default map center."
+          );
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
+        }
+      );
+    });
+  }
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        centerOnPosition(position, "Your current location");
+      },
+      () => {
+        setStatusMessage(
+          "Using default location because location permission was denied or unavailable."
+        );
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    );
+  } else {
+    setStatusMessage("Geolocation not supported; using default location.");
+  }
+};
+
