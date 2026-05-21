@@ -22,8 +22,11 @@
         <li><a href="../../homePage.html">Home</a></li>
         <li><a href="signUpPage.html">Sign Up</a></li>
       </ul>
-    </nav>
 
+      <div class="menu-button">
+        <div class="menu-button__burger"></div>
+      </div>
+    </nav>
     <form id="loginForm" novalidate>
       <div class="right">
         <div class="right-content">
@@ -56,6 +59,11 @@
           </div>
 
           <button type="submit" id="log" name="login" class="btn">Login</button>
+          
+          <!-- Google login option -->
+          <a id="google-login-btn" href="http://localhost:3000/auth/google" class="btn google-btn">
+            <i class="fa-brands fa-google"></i> Continue with Google
+          </a>
           
           <p class="forgot-password">
             <a href="passRecovery.html">Forgot password?</a>
