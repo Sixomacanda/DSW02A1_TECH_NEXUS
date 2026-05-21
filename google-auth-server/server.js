@@ -7,22 +7,41 @@ const cors = require("cors");
 
 const app = express();
 
+app.use(cors());
+app.use(express.json());
+
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        store: MongoStore.create({
+            mongoUrl: process.env.MONGO_URI
+        })
+    })
+);
+
 // Session setup
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+
 app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGO_URI,
-    collectionName: "sessions"
-  }),
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24 // 1 day
-  }
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI,
+        collectionName: "sessions"
+    }),
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 // 1 day
+    }
 }));
+
+
 
 
 app.use(express.static("public"));
@@ -59,7 +78,9 @@ app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "em
 app.get(
     "/auth/google",
     function (req, res, next) {
-        console.log("Google auth initiated from:", req.headers.referer);
+        const originUrl = req.headers.referer || FRONTEND_LOGIN_URL;
+        req.session.returnTo = originUrl;
+        console.log("Google auth initiated from:", originUrl);
         next();
     },
     passport.authenticate("google", { scope: ["profile", "email"] })
