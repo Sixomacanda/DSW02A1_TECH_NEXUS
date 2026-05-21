@@ -13,11 +13,14 @@ app.use(cors());
 app.use(express.json());
 
 // Session setup (only once!)
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    store: new MongoStore({
+    store: MongoStore.create({
         mongoUrl: process.env.MONGO_URI,
         collectionName: "sessions"
     }),
