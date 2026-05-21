@@ -161,7 +161,9 @@
       <nav class="navbar">
         <div class="logo">Urban Track</div>
         <ul class="nav-links">
-          <!-- <li><a href="#home">Home</a></li> -->
+              <!-- google api -->
+        <li><div id="google_translate_element"></div></li>
+          <li><a href="#home">Home</a></li>
           <li><a href="#how-it-works">How it works</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="UrbanTrack/pages/login.html">Login</a></li>
@@ -319,6 +321,52 @@
     </section>
 
     <footer class="footer">
+<<<<<<< HEAD
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="user-dashboard.html">Dashboard</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+                <div>
+    <h4>UrbanTrack</h4>
+    <p>Making communities better, one report at a time.</p>
+
+    <!-- Social Icons -->
+    <div class="footer-social">
+        <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+    </div>
+
+    <p style="margin-top: 0.5rem;">
+        <a href="http://localhost:5501/UrbanTrack/pages/login.html" style="color: #38bdf8;">Login</a> |
+        <a href="http://localhost:5501/UrbanTrack/pages/signUpPage.html" style="color: #38bdf8;">Sign Up</a>
+    </p>
+</div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 UrbanTrack. All rights reserved.</p>
+            </div>
+=======
       <div class="container">
         <div class="footer-grid">
           <div>
@@ -360,6 +408,7 @@
               >
             </p>
           </div>
+>>>>>>> e9b0e2e45e1115ea0b63dd8c841cd30bb47d93e8
         </div>
         <div class="footer-bottom">
           <p>© 2026 UrbanTrack. All rights reserved.</p>
@@ -470,5 +519,63 @@
         startAuto();
       })();
     </script>
+      <!-- Google api -->
+ <script>
+       
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+
+// Hide Google Translate banner whenever it appears
+function hideGoogleTranslateBanner() {
+    // Remove the top offset Google adds to body
+    document.body.style.top = '0px';
+    
+    // Hide the banner frame
+    const banner = document.querySelector('.goog-te-banner-frame');
+    if (banner) {
+        banner.style.display = 'none';
+    }
+
+    // Also target the iframe by id
+    const bannerById = document.getElementById(':1.container');
+    if (bannerById) {
+        bannerById.style.display = 'none';
+    }
+}
+
+// Run on page load
+hideGoogleTranslateBanner();
+
+// Watch for DOM changes (when Google injects the banner after language select)
+const observer = new MutationObserver(function(mutations) {
+    hideGoogleTranslateBanner();
+});
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['style']
+});
+
+
+</script>
+<script type="text/javascript">
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+</script>
+
+<script type="text/javascript"
+src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+<!-- The End of google api -->
   </body>
 </html>
