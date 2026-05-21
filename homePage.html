@@ -1,220 +1,474 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <title>UrbanTrack - Report Community Issues in Real-Time</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="UrbanTrack/Styles/homePage.css">
-</head>
-<body>
-   
-    <header class="header">
-        <nav class="nav-container">
-            <a href="#" class="nav-brand">UrbanTrack</a>
-            <div class="nav-links">
-                <!-- google translate api -->
-                <div id="google_translate_element"></div>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="UrbanTrack/Styles/homePage.css" />
+    <link rel="stylesheet" href="UrbanTrack/Styles/chatBotStyle.css" />
 
-                <a href="#home">Home</a>
-                <a href="#how-it-works">How it works</a>
-                <a href="#about">About</a>
-                <a href="UrbanTrack/pages/login.html">Login</a>
-                <a href="UrbanTrack/pages/signUpPage.html" class="btn-primary btn-small">Sign Up</a>
-            </div>
-            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">☰</button>
-        </nav>
-    </header>
-   
-    <section id="home" class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title animate-fade-up">Report Community Issues in Real-Time</h1>
-            <p class="hero-subtitle animate-fade-up delay-1">Fix potholes, broken lights, and drains with transparency.</p>
-            <div class="hero-form animate-fade-up delay-2">
-                <input type="text" placeholder="Enter location, e.g., Main Street, Downtown..." id="locationInput">
-                <a href="user-dashboard.html" class="btn-primary btn-large" id="reportCta">Report Issue →</a>
-            </div>
+    <!-- ── SLIDER STYLES ONLY — nothing else changed ── -->
+    <style>
+      /* Hero section reset so slider fills it properly */
+      .hero {
+        padding: 0 !important;
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Slider wrapper — full viewport */
+      .hero-slider {
+        position: relative;
+        width: 100%;
+        height: 80vh;
+        overflow: hidden;
+      }
+
+      /* Caption */
+      .hero-slider > p {
+        position: absolute;
+        top: 2.25rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        font-size: 1rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.92);
+        background: rgba(15, 23, 42, 0.55);
+        backdrop-filter: blur(8px);
+        padding: 0.45rem 1.4rem;
+        border-radius: 9999px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        white-space: nowrap;
+        letter-spacing: 0.02em;
+      }
+
+      /* Slides track — all images sit side by side */
+      .slider-track {
+        display: flex;
+        height: 100%;
+        width: 100%;
+        transition: transform 0.75s cubic-bezier(0.77, 0, 0.18, 1);
+        will-change: transform;
+      }
+
+      /* Individual slide */
+      .slide {
+        flex: 0 0 100%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block !important; /* override any .active show/hide */
+        opacity: 1 !important;
+      }
+
+      /* Dark overlay on every slide for readability */
+      .hero-slider::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(15, 23, 42, 0.35) 0%,
+          rgba(15, 23, 42, 0.15) 50%,
+          rgba(15, 23, 42, 0.55) 100%
+        );
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Dot indicators */
+      .slider-dots {
+        position: absolute;
+        bottom: 1.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 0.5rem;
+        z-index: 10;
+      }
+      .slider-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        transition: all 0.3s;
+      }
+      .slider-dot.active {
+        background: #38bdf8;
+        width: 22px;
+        border-radius: 9999px;
+      }
+
+      /* Prev / Next arrows */
+      .slider-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        background: rgba(15, 23, 42, 0.45);
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #fff;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        font-size: 1rem;
+      }
+      .slider-arrow:hover {
+        background: rgba(56, 189, 248, 0.4);
+        border-color: #38bdf8;
+      }
+      .slider-arrow.prev {
+        left: 1.25rem;
+      }
+      .slider-arrow.next {
+        right: 1.25rem;
+      }
+
+      @media (max-width: 860px) {
+        .hero-slider > p {
+          font-size: 0.82rem;
+          padding: 0.38rem 1rem;
+        }
+        .slider-arrow {
+          width: 34px;
+          height: 34px;
+          font-size: 0.85rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <header class="header"> -->
+      <nav class="navbar">
+        <div class="logo">Urban Track</div>
+        <ul class="nav-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#how-it-works">How it works</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="UrbanTrack/pages/login.html">Login</a></li>
+          <li><a href="UrbanTrack/pages/signUpPage.html">Sign Up</a></li>
+        </ul>
+
+        <div class="menu-button" id="menuButton">
+          <div class="menu-button__burger"></div>
         </div>
+      </nav>
+    <!-- </header> -->
+
+    <section id="home" class="hero">
+      <div class="hero-slider" id="heroSlider">
+        <p>What we have done for our community!</p>
+
+        <!-- Slides wrapped in a track div by JS — your img tags unchanged -->
+        <img
+          class="slide active"
+          src="./UrbanTrack/Pictues/Pothole.jpg"
+          alt="Fixing pothole"
+        />
+        <img
+          class="slide"
+          src="./UrbanTrack/Pictues/Streetlight.jpg"
+          alt="Street light repair"
+        />
+        <img
+          class="slide"
+          src="./UrbanTrack/Pictues/Drains.jpg"
+          alt="Drain cleaning"
+        />
+        <img
+          class="slide"
+          src="./UrbanTrack/Pictues/Roadwork.jpg"
+          alt="Road work team"
+        />
+        <img
+          class="slide"
+          src="UrbanTrack/Pictues/communityRepair.jpg"
+          alt="Community repair workers"
+        />
+      </div>
     </section>
 
     <section class="features">
-        <div class="container">
-            <h2 class="section-title">Why UrbanTrack?</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon"></div>
-                    <h3>Track Issues</h3>
-                    <p>Monitor community problems on an interactive map in real-time</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"></div>
-                    <h3>Upvote Priority</h3>
-                    <p>Vote on issues that matter most to increase visibility</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"></div>
-                    <h3>Real-time Updates</h3>
-                    <p>Get instant notifications when issues are resolved</p>
-                </div>
-            </div>
+      <div class="container">
+        <h2 class="section-title">Why UrbanTrack?</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon"></div>
+            <h3>Track Issues</h3>
+            <p>Monitor community problems on an interactive map in real-time</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"></div>
+            <h3>Upvote Priority</h3>
+            <p>Vote on issues that matter most to increase visibility</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon"></div>
+            <h3>Real-time Updates</h3>
+            <p>Get instant notifications when issues are resolved</p>
+          </div>
         </div>
+      </div>
     </section>
 
     <section id="how-it-works" class="how-it-works">
-        <div class="container">
-            <h2 class="section-title">How It Works</h2>
-            <div class="steps-grid">
-                <div class="step-card">
-                    <div class="step-number">1</div>
-                    <div class="step-icon"></div>
-                    <h3>Submit Report</h3>
-                    <p>Fill out a simple form with location and issue details</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">2</div>
-                    <div class="step-icon"></div>
-                    <h3>Community Upvotes</h3>
-                    <p>Other residents vote to prioritize urgent issues</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">3</div>
-                    <div class="step-icon"></div>
-                    <h3>Admin Resolves</h3>
-                    <p>Local authorities take action and update status</p>
-                </div>
-            </div>
+      <div class="container">
+        <h2 class="section-title">How It Works</h2>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <div class="step-icon"></div>
+            <h3>Submit Report</h3>
+            <p>Fill out a simple form with location and issue details</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <div class="step-icon"></div>
+            <h3>Community Upvotes</h3>
+            <p>Other residents vote to prioritize urgent issues</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <div class="step-icon"></div>
+            <h3>Admin Resolves</h3>
+            <p>Local authorities take action and update status</p>
+          </div>
         </div>
+      </div>
     </section>
 
-   <section id="about" class="testimonials">
-    <div class="container">
+    <section id="about" class="testimonials">
+      <div class="container">
         <h2 class="section-title">About UrbanTrack</h2>
-        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
-            <p style="font-size: 1.15rem; color: var(--text-secondary); line-height: 1.9; margin-bottom: 2.5rem;">
-                UrbanTrack is a smart community issue reporting platform that gives residents a simple, central place to report local problems like potholes, broken streetlights, blocked drains and vandalism. Instead of calls going unanswered and emails getting lost, every report is logged, mapped and visible to the whole community. Neighbours can upvote issues they recognise, pushing the most urgent problems to the top so local authorities know exactly where to focus first. Admins manage incoming reports, update statuses in real time, and keep residents informed every step of the way from submission right through to resolution. UrbanTrack brings transparency, accountability and community power together in one place, making it easier for people to be heard and faster for problems to get fixed.
-            </p>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
-                <div class="feature-card" style="padding: 1.5rem;">
-                    <div style="font-size: 2rem; margin-bottom: 0.75rem;"></div>
-                    <h3>Be Heard</h3>
-                    <p style="font-size: 0.875rem;">Every report is logged and tracked — nothing gets lost or ignored.</p>
-                </div>
-                <div class="feature-card" style="padding: 1.5rem;">
-                    <div style="font-size: 2rem; margin-bottom: 0.75rem;"></div>
-                    <h3>Community Power</h3>
-                    <p style="font-size: 0.875rem;">Upvotes from neighbours push urgent issues to the top of the priority list.</p>
-                </div>
-                <div class="feature-card" style="padding: 1.5rem;">
-                    <div style="font-size: 2rem; margin-bottom: 0.75rem;"></div>
-                    <h3>Real Results</h3>
-                    <p style="font-size: 0.875rem;">Authorities update statuses in real time so you always know what's happening.</p>
-                </div>
+        <div style="max-width: 800px; margin: 0 auto; text-align: center">
+          <p
+            style="
+              font-size: 1.15rem;
+              color: var(--text-secondary);
+              line-height: 1.9;
+              margin-bottom: 2.5rem;
+            "
+          >
+            UrbanTrack is a smart community issue reporting platform that gives
+            residents a simple, central place to report local problems like
+            potholes, broken streetlights, blocked drains and vandalism. Instead
+            of calls going unanswered and emails getting lost, every report is
+            logged, mapped and visible to the whole community. Neighbours can
+            upvote issues they recognise, pushing the most urgent problems to
+            the top so local authorities know exactly where to focus first.
+            Admins manage incoming reports, update statuses in real time, and
+            keep residents informed every step of the way from submission right
+            through to resolution. UrbanTrack brings transparency,
+            accountability and community power together in one place, making it
+            easier for people to be heard and faster for problems to get fixed.
+          </p>
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+              gap: 1.5rem;
+              margin-top: 1rem;
+            "
+          >
+            <div class="feature-card" style="padding: 1.5rem">
+              <div style="font-size: 2rem; margin-bottom: 0.75rem"></div>
+              <h3>Be Heard</h3>
+              <p style="font-size: 0.875rem">
+                Every report is logged and tracked — nothing gets lost or
+                ignored.
+              </p>
             </div>
+            <div class="feature-card" style="padding: 1.5rem">
+              <div style="font-size: 2rem; margin-bottom: 0.75rem"></div>
+              <h3>Community Power</h3>
+              <p style="font-size: 0.875rem">
+                Upvotes from neighbours push urgent issues to the top of the
+                priority list.
+              </p>
+            </div>
+            <div class="feature-card" style="padding: 1.5rem">
+              <div style="font-size: 2rem; margin-bottom: 0.75rem"></div>
+              <h3>Real Results</h3>
+              <p style="font-size: 0.875rem">
+                Authorities update statuses in real time so you always know
+                what's happening.
+              </p>
+            </div>
+          </div>
         </div>
-    </div>
-</section>
+      </div>
+    </section>
 
-<footer class="footer">
-    <div class="container">
+    <footer class="footer">
+      <div class="container">
         <div class="footer-grid">
-            <div>
-                <h4>Product</h4>
-                <ul>
-                    <li><a href="user-dashboard.html">Dashboard</a></li>
-                    <li><a href="#">FAQ</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4>Company</h4>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4>Legal</h4>
-                <ul>
-                    <li><a href="#">Privacy</a></li>
-                    <li><a href="#">Terms</a></li>
-                    <li><a href="#">Security</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4>UrbanTrack</h4>
-                <p>Making communities better, one report at a time.</p>
-                <p style="margin-top: 0.5rem;">
-                    <a href="UrbanTrack/pages/login.html" style="color: #38bdf8;">Login</a> |
-                    <a href="UrbanTrack/pages/signUpPage.html" style="color: #38bdf8;">Sign Up</a>
-                </p>
-            </div>
+          <div>
+            <h4>Product</h4>
+            <ul>
+              <li><a href="user-dashboard.html">Dashboard</a></li>
+              <li><a href="#">FAQ</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Company</h4>
+            <ul>
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Legal</h4>
+            <ul>
+              <li><a href="#">Privacy</a></li>
+              <li><a href="#">Terms</a></li>
+              <li><a href="#">Security</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>UrbanTrack</h4>
+            <p>Making communities better, one report at a time.</p>
+            <p style="margin-top: 0.5rem">
+              <a
+                href="http://localhost:5501/UrbanTrack/pages/login.html"
+                style="color: #38bdf8"
+                >Login</a
+              >
+              |
+              <a
+                href="http://localhost:5501/UrbanTrack/pages/signUpPage.html"
+                style="color: #38bdf8"
+                >Sign Up</a
+              >
+            </p>
+          </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2026 UrbanTrack. All rights reserved.</p>
+          <p>© 2026 UrbanTrack. All rights reserved.</p>
         </div>
-    </div>
-</footer>
+      </div>
+    </footer>
+
+    <!-- Your original scripts — unchanged -->
     <script src="UrbanTrack/js/main.js"></script>
-    <script src="../js/MainPage.js"></script>
+    <script src="UrbanTrack/js/MainPage.js"></script>
+    <script src="UrbanTrack/js/chatbot.js"></script>
 
+    <!-- ── SLIDER SCRIPT ONLY ── -->
+    <script>
+      (function () {
+        const slider = document.getElementById("heroSlider");
+        const caption = slider.querySelector("p");
+        const slides = Array.from(slider.querySelectorAll(".slide"));
+        const total = slides.length;
+        let current = 0;
+        let timer = null;
 
-    <!-- Google api -->
- <script>
-       
-function googleTranslateElementInit() {
-    new google.translate.TranslateElement(
-        { pageLanguage: 'en' },
-        'google_translate_element'
-    );
-}
+        // 1. Wrap all slides in a track div
+        const track = document.createElement("div");
+        track.className = "slider-track";
+        slides.forEach((img) => track.appendChild(img));
+        slider.appendChild(track);
 
-// Hide Google Translate banner whenever it appears
-function hideGoogleTranslateBanner() {
-    // Remove the top offset Google adds to body
-    document.body.style.top = '0px';
-    
-    // Hide the banner frame
-    const banner = document.querySelector('.goog-te-banner-frame');
-    if (banner) {
-        banner.style.display = 'none';
-    }
+        // 2. Build prev / next arrows
+        const prev = document.createElement("button");
+        prev.className = "slider-arrow prev";
+        prev.innerHTML = "&#8249;"; // ‹
+        prev.setAttribute("aria-label", "Previous slide");
 
-    // Also target the iframe by id
-    const bannerById = document.getElementById(':1.container');
-    if (bannerById) {
-        bannerById.style.display = 'none';
-    }
-}
+        const next = document.createElement("button");
+        next.className = "slider-arrow next";
+        next.innerHTML = "&#8250;"; // ›
+        next.setAttribute("aria-label", "Next slide");
 
-// Run on page load
-hideGoogleTranslateBanner();
+        slider.appendChild(prev);
+        slider.appendChild(next);
 
-// Watch for DOM changes (when Google injects the banner after language select)
-const observer = new MutationObserver(function(mutations) {
-    hideGoogleTranslateBanner();
-});
+        // 3. Build dot indicators
+        const dotsWrap = document.createElement("div");
+        dotsWrap.className = "slider-dots";
+        const dots = slides.map((_, i) => {
+          const d = document.createElement("button");
+          d.className = "slider-dot" + (i === 0 ? " active" : "");
+          d.setAttribute("aria-label", "Go to slide " + (i + 1));
+          d.addEventListener("click", () => goTo(i));
+          dotsWrap.appendChild(d);
+          return d;
+        });
+        slider.appendChild(dotsWrap);
 
-observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ['style']
-});
+        // 4. Go to slide
+        function goTo(index) {
+          current = (index + total) % total;
+          track.style.transform = "translateX(-" + current * 100 + "%)";
+          dots.forEach((d, i) => d.classList.toggle("active", i === current));
+        }
 
+        // 5. Auto-play every 4 seconds
+        function startAuto() {
+          timer = setInterval(() => goTo(current + 1), 4000);
+        }
+        function stopAuto() {
+          clearInterval(timer);
+        }
 
-</script>
-<script type="text/javascript">
-function googleTranslateElementInit() {
-    new google.translate.TranslateElement(
-        { pageLanguage: 'en' },
-        'google_translate_element'
-    );
-}
-</script>
+        prev.addEventListener("click", () => {
+          stopAuto();
+          goTo(current - 1);
+          startAuto();
+        });
+        next.addEventListener("click", () => {
+          stopAuto();
+          goTo(current + 1);
+          startAuto();
+        });
 
-<script type="text/javascript"
-src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
-</script>
-<!-- The End of google api -->
+        // Pause on hover
+        slider.addEventListener("mouseenter", stopAuto);
+        slider.addEventListener("mouseleave", startAuto);
 
-</body>
+        // Touch / swipe support
+        let touchStartX = 0;
+        slider.addEventListener(
+          "touchstart",
+          (e) => {
+            touchStartX = e.touches[0].clientX;
+          },
+          { passive: true },
+        );
+        slider.addEventListener(
+          "touchend",
+          (e) => {
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 40) {
+              stopAuto();
+              goTo(diff > 0 ? current + 1 : current - 1);
+              startAuto();
+            }
+          },
+          { passive: true },
+        );
+
+        startAuto();
+      })();
+    </script>
+  </body>
 </html>

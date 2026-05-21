@@ -113,8 +113,17 @@ function isLoggedIn() {
 }
 
 function logout() {
+  if (isGoogleUser()) {
+    console.warn("Google-authenticated users remain logged in and logout is disabled.");
+    return;
+  }
   localStorage.removeItem(STORAGE_CURRENT_USER);
   window.location.href = "login.html";
+}
+
+// Logout handler for onclick
+function doLogout() {
+  logout();
 }
 
 // TOAST NOTIFICATION
@@ -400,10 +409,22 @@ function initLogin() {
         setTimeout(() => {
           window.location.href = "MainPage.html";
         }, 1500);
+        //GOOGlE AUTH HANDLER
+        async function loadGoogleUser() {
+          const res = await fetch("/auth/user");
+          const user = await res.json();
+
+          if (user) {
+            showToast(`Welcome, ${user.displayName}!`);
+            document.querySelector(".welcome-user").textContent = user.displayName;
+          }
+        }
+        window.onload = loadGoogleUser;
       }
     }
   });
 }
+
 
 //  REPORT PAGE / DASHBOARD PROTECTION
 function initReportPage() {
@@ -637,10 +658,66 @@ function escapeHtml(str) {
   });
 }
 
+// Handle Google user data from OAuth redirect
+function handleGoogleUserData() {
+  const params = new URLSearchParams(window.location.search);
+  const googleUserData = params.get("googleUser");
+  
+  if (googleUserData) {
+    try {
+      const userData = JSON.parse(decodeURIComponent(googleUserData));
+      userData.isGoogleUser = true;
+      // Store in localStorage as current user using the shared helper
+      setCurrentUser(userData);
+      
+      // Display user name and avatar if on MainPage
+      displayUserInfo(userData);
+      toggleLogoutButton();
+      
+      // Clean URL by removing the query parameter
+      window.history.replaceState({}, document.title, window.location.pathname);
+      
+      return userData;
+    } catch (error) {
+      console.error("Error parsing Google user data:", error);
+    }
+  }
+  
+  return null;
+}
+
+// Display user name and avatar
+function displayUserInfo(user) {
+  const userNameDisplay = document.getElementById("userNameDisplay");
+  const userAvatar = document.getElementById("userAvatar");
+  
+  if (userNameDisplay && user && user.name) {
+    userNameDisplay.textContent = user.name;
+  }
+  
+  if (userAvatar && user && user.name) {
+    // Show first letter initial
+    userAvatar.textContent = user.name.charAt(0).toUpperCase();
+  }
+}
+
 //  CHECK PAGE TYPE AND INITIALIZE
 document.addEventListener("DOMContentLoaded", function () {
   // Initialize storage
   initializeUserStorage();
+  
+  // Handle Google OAuth user data first
+  const googleUser = handleGoogleUserData();
+  
+  // If no Google user, check localStorage for email user
+  if (!googleUser) {
+    const currentUser = getCurrentUser();
+    if (currentUser) {
+      displayUserInfo(currentUser);
+    }
+  }
+
+  toggleLogoutButton();
 
   // Setup password toggles on all pages
   setupPasswordToggles();
@@ -694,6 +771,13 @@ document.querySelectorAll(".cat-btn").forEach((btn) => {
       .forEach((b) => b.classList.remove("selected"));
     btn.classList.add("selected");
     selectedCategory = btn.dataset.cat;
+  });
+});
+
+document.querySelectorAll(".severity-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    setSeverity(btn, btn.dataset.sev);
+    goStep(2);
   });
 });
 
