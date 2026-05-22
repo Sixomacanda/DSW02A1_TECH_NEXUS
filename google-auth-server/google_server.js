@@ -14,6 +14,7 @@ app.use(express.json());
 const MongoStore = require("connect-mongo").MongoStore;
 
 // Session setup
+
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
