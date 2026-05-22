@@ -6,6 +6,7 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const cors = require("cors");
 const path = require("path");
+const MongoStore = require("connect-mongo").MongoStore;
 
 const app = express();
 
@@ -20,20 +21,22 @@ app.use(cors({
 
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, "UrbanTrack")));
-
-const MongoStore = require("connect-mongo").MongoStore;
+// FIXED STATIC PATH
+app.use(express.static(path.resolve("UrbanTrack")));
 
 // Debug route
 app.get("/debug", (req, res) => {
     res.json({
         callback: "https://dsw02a1-tech-nexus-2.onrender.com/auth/google/callback",
-        client: process.env.GOOGLE_CLIENT_ID
+        client: process.env.GOOGLE_CLIENT_ID,
+        currentDir: __dirname
     });
 });
 
 app.get("/test-main", (req, res) => {
-    res.sendFile(path.join(__dirname, "UrbanTrack/pages/MainPage.html"));
+    res.sendFile(
+        path.resolve("UrbanTrack/pages/MainPage.html")
+    );
 });
 
 // Session setup
@@ -58,7 +61,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "UrbanTrack/pages/login.html"));
+    res.sendFile(
+        path.resolve("UrbanTrack/pages/login.html")
+    );
 });
 
 // Google Strategy (FIXED - no env risk)
@@ -80,11 +85,9 @@ passport.deserializeUser((user, done) => done(null, user));
 
 // Routes
 const FRONTEND_URL =
-    process.env.FRONTEND_URL ||
     "https://dsw02a1-tech-nexus-2.onrender.com/pages/MainPage.html";
 
 const FRONTEND_LOGIN_URL =
-    process.env.FRONTEND_LOGIN_URL ||
     "https://dsw02a1-tech-nexus-2.onrender.com/pages/login.html";
 
 // Google login
@@ -93,8 +96,11 @@ app.get("/auth/google", passport.authenticate("google", {
 }));
 
 // Google callback
-app.get("/auth/google/callback",
-    passport.authenticate("google", { failureRedirect: FRONTEND_LOGIN_URL }),
+app.get(
+    "/auth/google/callback",
+    passport.authenticate({
+        failureRedirect: FRONTEND_LOGIN_URL
+    }),
     (req, res) => {
 
         if (!req.user) {
@@ -121,6 +127,13 @@ app.get("/auth/user", (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
+
+console.log("CURRENT DIR:", __dirname);
+
+console.log(
+    "MAIN PAGE PATH:",
+    path.resolve("UrbanTrack/pages/MainPage.html")
+);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
