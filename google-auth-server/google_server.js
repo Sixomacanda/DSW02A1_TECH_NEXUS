@@ -22,7 +22,7 @@ app.use(cors({
 app.use(express.json());
 
 // FIXED STATIC PATH
-app.use(express.static(path.resolve("UrbanTrack")));
+app.use(express.static(path.resolve("../UrbanTrack")));
 
 // Debug route
 app.get("/debug", (req, res) => {
@@ -35,7 +35,7 @@ app.get("/debug", (req, res) => {
 
 app.get("/test-main", (req, res) => {
     res.sendFile(
-        path.resolve("UrbanTrack/pages/MainPage.html")
+        path.resolve("../UrbanTrack/pages/MainPage.html")
     );
 });
 
@@ -62,7 +62,7 @@ app.use(passport.session());
 
 app.get("/", (req, res) => {
     res.sendFile(
-        path.resolve("UrbanTrack/pages/login.html")
+        path.resolve("../UrbanTrack/pages/login.html")
     );
 });
 
@@ -132,7 +132,7 @@ console.log("CURRENT DIR:", __dirname);
 
 console.log(
     "MAIN PAGE PATH:",
-    path.resolve("UrbanTrack/pages/MainPage.html")
+    path.resolve("../UrbanTrack/pages/MainPage.html")
 );
 
 app.listen(PORT, () => {
