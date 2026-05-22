@@ -5,6 +5,7 @@ const session = require("express-session");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 
@@ -19,6 +20,8 @@ app.use(cors({
 
 app.use(express.json());
 
+app.use(express.static(path.join(__dirname, "UrbanTrack")));
+
 const MongoStore = require("connect-mongo").MongoStore;
 
 // Debug route
@@ -27,6 +30,10 @@ app.get("/debug", (req, res) => {
         callback: "https://dsw02a1-tech-nexus-2.onrender.com/auth/google/callback",
         client: process.env.GOOGLE_CLIENT_ID
     });
+});
+
+app.get("/test-main", (req, res) => {
+    res.sendFile(path.join(__dirname, "UrbanTrack/pages/MainPage.html"));
 });
 
 // Session setup
@@ -47,13 +54,11 @@ app.use(session({
 
 console.log("CLIENT ID:", process.env.GOOGLE_CLIENT_ID);
 
-app.use(express.static("UrbanTrack"));;
-
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.get("/", (req, res) => {
-    res.send("Server is working");
+    res.sendFile(path.join(__dirname, "UrbanTrack/pages/login.html"));
 });
 
 // Google Strategy (FIXED - no env risk)
