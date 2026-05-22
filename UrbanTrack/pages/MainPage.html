@@ -1002,7 +1002,7 @@
 
     <script src="../js/MainPage.js"></script>
 
-<<<<<<< HEAD
+// HEAD
       // Click anywhere on map to move pin
       window._mapInstance.addListener("click", function(e) {
         window._marker.setPosition(e.latLng);
@@ -1013,7 +1013,7 @@
       window._marker.addListener("dragend", function(e) {
         updateCoords(e.latLng.lat(), e.latLng.lng());
       });
-    }
+    
 
     // Try GPS first, fall back to Johannesburg
     if (navigator.geolocation) {
@@ -1024,7 +1024,6 @@
     } else {
       buildMap(defaultCentre);
     }
-  });
 
   function updateCoords(lat, lng) {
     window.pinnedLat = lat.toFixed(6);
@@ -1038,8 +1037,6 @@
     loadUser();
     loadStats();
   });
-
-</script>
 
 <script src="../js/MainPage.js"></script>
 
