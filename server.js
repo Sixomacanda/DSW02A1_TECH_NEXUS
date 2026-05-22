@@ -1,4 +1,5 @@
 require("dotenv").config();
+
 const express = require("express");
 const path = require("path");
 
@@ -6,26 +7,36 @@ const app = express();
 
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, "public")));
+// FIXED STATIC FOLDER
+app.use(express.static(path.join(__dirname, "UrbanTrack")));
 
-// Serve frontend
-// app.use(express.static(path.join(__dirname)));
+// HOME PAGE
+app.get("/", (req, res) => {
+    res.sendFile(
+        path.join(__dirname, "UrbanTrack/pages/login.html")
+    );
+});
 
-//chat rout
+// Chat route
 app.post("/api/chat", async (req, res) => {
     try {
+
         const userMessage = req.body.message;
 
         const response = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
             {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify({
                     contents: [
                         {
                             role: "user",
-                            parts: [{ text: userMessage }]
+                            parts: [
+                                { text: userMessage }
+                            ]
                         }
                     ]
                 })
@@ -34,21 +45,23 @@ app.post("/api/chat", async (req, res) => {
 
         const data = await response.json();
 
-        // extract clean reply (IMPORTANT FIX)
         const reply =
             data?.candidates?.[0]?.content?.parts?.[0]?.text ||
             "Sorry, I couldn't generate a response.";
 
-        // return clean JSON (NOT full Gemini response)
         res.json({ reply });
 
     } catch (err) {
+
         console.error("Server error:", err);
-        res.status(500).json({ error: err.message });
+
+        res.status(500).json({
+            error: err.message
+        });
     }
 });
 
-//starts server
+// Start server
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
