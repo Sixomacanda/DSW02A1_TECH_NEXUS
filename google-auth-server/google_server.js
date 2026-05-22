@@ -8,10 +8,11 @@ const cors = require("cors");
 
 const app = express();
 
+// IMPORTANT: strict CORS for production
 app.use(cors({
     origin: [
         "http://localhost:5501",
-        process.env.FRONTEND_URL
+        "https://dsw02a1-tech-nexus-2.onrender.com"
     ],
     credentials: true
 }));
@@ -20,9 +21,10 @@ app.use(express.json());
 
 const MongoStore = require("connect-mongo").MongoStore;
 
+// Debug route
 app.get("/debug", (req, res) => {
     res.json({
-        callback: process.env.GOOGLE_CALLBACK_URL,
+        callback: "https://dsw02a1-tech-nexus-2.onrender.com/auth/google/callback",
         client: process.env.GOOGLE_CLIENT_ID
     });
 });
@@ -37,14 +39,16 @@ app.use(session({
         collectionName: "sessions"
     }),
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24
+        maxAge: 1000 * 60 * 60 * 24,
+        secure: true,
+        sameSite: "none"
     }
 }));
 
 console.log("CLIENT ID:", process.env.GOOGLE_CLIENT_ID);
-console.log("CALLBACK:", process.env.GOOGLE_CALLBACK_URL);
 
 app.use(express.static("public"));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -52,13 +56,12 @@ app.get("/", (req, res) => {
     res.send("Server is working");
 });
 
-// Google Strategy (FIXED - no env dependency)
+// Google Strategy (FIXED - no env risk)
 passport.use(
     new GoogleStrategy(
         {
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-
             callbackURL: "https://dsw02a1-tech-nexus-2.onrender.com/auth/google/callback"
         },
         function (accessToken, refreshToken, profile, done) {
@@ -71,14 +74,20 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 // Routes
+const FRONTEND_URL =
+    process.env.FRONTEND_URL ||
+    "https://dsw02a1-tech-nexus-2.onrender.com/UrbanTrack/pages/MainPage.html";
 
-const FRONTEND_URL = process.env.FRONTEND_URL;
-const FRONTEND_LOGIN_URL = process.env.FRONTEND_LOGIN_URL;
+const FRONTEND_LOGIN_URL =
+    process.env.FRONTEND_LOGIN_URL ||
+    "https://dsw02a1-tech-nexus-2.onrender.com/UrbanTrack/pages/login.html";
 
+// Google login
 app.get("/auth/google", passport.authenticate("google", {
     scope: ["profile", "email"]
 }));
 
+// Google callback
 app.get("/auth/google/callback",
     passport.authenticate("google", { failureRedirect: FRONTEND_LOGIN_URL }),
     (req, res) => {
@@ -92,7 +101,7 @@ app.get("/auth/google/callback",
             email: req.user.emails?.[0]?.value,
             id: req.user.id,
             picture: req.user.photos?.[0]?.value,
-            role: 'user'
+            role: "user"
         });
 
         res.redirect(
@@ -101,7 +110,10 @@ app.get("/auth/google/callback",
     }
 );
 
-app.get("/auth/user", (req, res) => res.json(req.user || null));
+// Get user session
+app.get("/auth/user", (req, res) => {
+    res.json(req.user || null);
+});
 
 const PORT = process.env.PORT || 3000;
 
