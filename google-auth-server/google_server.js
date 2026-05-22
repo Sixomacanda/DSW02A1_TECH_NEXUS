@@ -47,7 +47,7 @@ app.use(session({
 
 console.log("CLIENT ID:", process.env.GOOGLE_CLIENT_ID);
 
-app.use(express.static("public"));
+app.use(express.static("UrbanTrack"));;
 
 app.use(passport.initialize());
 app.use(passport.session());
