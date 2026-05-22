@@ -28,9 +28,16 @@ app.use(session({
     }
 }));
 
+console.log("CLIENT ID:", process.env.GOOGLE_CLIENT_ID);
+console.log("CALLBACK:", process.env.GOOGLE_CALLBACK_URL);
+
 app.use(express.static("public"));
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.get("/", (req, res) => {
+    res.send("Server is working");
+});
 
 // Google Strategy
 passport.use(
