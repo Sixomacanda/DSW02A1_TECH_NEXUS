@@ -98,7 +98,7 @@ app.get("/auth/google", passport.authenticate("google", {
 // Google callback
 app.get(
     "/auth/google/callback",
-    passport.authenticate({
+    passport.authenticate("google", {
         failureRedirect: FRONTEND_LOGIN_URL
     }),
     (req, res) => {
