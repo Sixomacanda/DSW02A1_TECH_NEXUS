@@ -1002,41 +1002,6 @@
 
     <script src="../js/MainPage.js"></script>
 
-// HEAD
-      // Click anywhere on map to move pin
-      window._mapInstance.addListener("click", function(e) {
-        window._marker.setPosition(e.latLng);
-        updateCoords(e.latLng.lat(), e.latLng.lng());
-      });
-
-      // Drag pin to adjust
-      window._marker.addListener("dragend", function(e) {
-        updateCoords(e.latLng.lat(), e.latLng.lng());
-      });
-    
-
-    // Try GPS first, fall back to Johannesburg
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        pos => buildMap({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-        ()  => buildMap(defaultCentre)
-      );
-    } else {
-      buildMap(defaultCentre);
-    }
-
-  function updateCoords(lat, lng) {
-    window.pinnedLat = lat.toFixed(6);
-    window.pinnedLng = lng.toFixed(6);
-    document.getElementById("coordsText").textContent = `${window.pinnedLat}, ${window.pinnedLng}`;
-    document.getElementById("pinnedCoords").style.display = "block";
-  }
-
-  // ── 15. INIT ON DOM READY ────────────────────────────────────
-  document.addEventListener("DOMContentLoaded", () => {
-    loadUser();
-    loadStats();
-  });
 
 <script src="../js/MainPage.js"></script>
 
@@ -1047,7 +1012,7 @@
 
 </body>
 </html>
-=======
+
     <!--
   Google Maps — replace YOUR_GOOGLE_MAPS_API_KEY with your actual key
   Make sure "Maps JavaScript API" is enabled in Google Cloud Console
