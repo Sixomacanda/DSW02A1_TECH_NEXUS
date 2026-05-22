@@ -7,25 +7,34 @@
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
     <title>UrbanTrack - Report Community Issues in Real-Time</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="UrbanTrack/Styles/homePage.css">
-</head>
-<body></body>
-    <header class="header">
-        <nav class="nav-container">
-            <a href="#" class="nav-brand">UrbanTrack</a>
-            <div class="nav-links">
-                <a href="#home">Home</a>
-                <a href="#how-it-works">How it works</a>
-                <a href="#about">About</a>
-                <a href="UrbanTrack/pages/login.html">Login</a>
-                <a href="UrbanTrack/pages/signUpPage.html" class="btn-primary btn-small">Sign Up</a>
-            </div>
-            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu">☰</button>
-        </nav>
-    </header>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="UrbanTrack/Styles/homePage.css" />
+    <link rel="stylesheet" href="UrbanTrack/Styles/chatBotStyle.css" />
+    
+  </head>
+  <body>
+    <!-- <header class="header"> -->
+      <nav class="navbar">
+        <div class="logo">Urban Track</div>
+        <ul class="nav-links">
+              <!-- google api -->
+        <li><div id="google_translate_element"></div></li>
+          <li><a href="#how-it-works">How it works</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="UrbanTrack/pages/login.html">Login</a></li>
+          <li><a href="UrbanTrack/pages/signUpPage.html">Sign Up</a></li>
+        </ul>
 
-    <section id="home" class="hero">
+        <div class="menu-button" id="menuButton">
+          <div class="menu-button__burger"></div>
+        </div>
+      </nav>
+    <!-- </header> -->
+
+    <section id="" class="hero">
       <div class="hero-slider" id="heroSlider">
         <p>What we have done for our community!</p>
 
@@ -321,5 +330,63 @@
         startAuto();
       })();
     </script>
+      <!-- Google api -->
+ <script>
+       
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+
+// Hide Google Translate banner whenever it appears
+function hideGoogleTranslateBanner() {
+    // Remove the top offset Google adds to body
+    document.body.style.top = '0px';
+    
+    // Hide the banner frame
+    const banner = document.querySelector('.goog-te-banner-frame');
+    if (banner) {
+        banner.style.display = 'none';
+    }
+
+    // Also target the iframe by id
+    const bannerById = document.getElementById(':1.container');
+    if (bannerById) {
+        bannerById.style.display = 'none';
+    }
+}
+
+// Run on page load
+hideGoogleTranslateBanner();
+
+// Watch for DOM changes (when Google injects the banner after language select)
+const observer = new MutationObserver(function(mutations) {
+    hideGoogleTranslateBanner();
+});
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['style']
+});
+
+
+</script>
+<script type="text/javascript">
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+</script>
+
+<script type="text/javascript"
+src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+<!-- The End of google api -->
   </body>
 </html>

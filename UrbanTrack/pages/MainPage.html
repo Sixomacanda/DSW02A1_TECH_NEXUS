@@ -17,7 +17,9 @@
       <div class="logo">Urban Track</div>
 
       <ul class="nav-links">
-        <li><a href="../../homePage.html">Home</a></li>
+        <!-- google api -->
+        <li><div id="google_translate_element"></div></li>
+
         <li><a href="UserDashboard.html">Dashboard</a></li>
         <li><a href="UserSettings.html">Settings</a></li>
         <li><a href="#" onclick="doLogout()">Logout</a></li>
@@ -1058,6 +1060,68 @@
       async
       defer
     ></script>
+    <!-- Google api -->
+ <script>
+       
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+
+// Hide Google Translate banner whenever it appears
+function hideGoogleTranslateBanner() {
+    // Remove the top offset Google adds to body
+    document.body.style.top = '0px';
+    
+    // Hide the banner frame
+    const banner = document.querySelector('.goog-te-banner-frame');
+    if (banner) {
+        banner.style.display = 'none';
+    }
+
+    // Also target the iframe by id
+    const bannerById = document.getElementById(':1.container');
+    if (bannerById) {
+        bannerById.style.display = 'none';
+    }
+}
+
+// Run on page load
+hideGoogleTranslateBanner();
+
+// Watch for DOM changes (when Google injects the banner after language select)
+const observer = new MutationObserver(function(mutations) {
+    hideGoogleTranslateBanner();
+});
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['style']
+});
+
+
+</script>
+<script type="text/javascript">
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+</script>
+
+<script type="text/javascript"
+src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+<!-- The End of google api -->
   </body>
+<<<<<<< HEAD
 </html>
 >>>>>>> e9b0e2e45e1115ea0b63dd8c841cd30bb47d93e8
+=======
+</html>`
+>>>>>>> be5a7d2d3ac616ffd87fb6774ec11adcf78ff173
