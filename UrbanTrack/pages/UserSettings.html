@@ -405,7 +405,7 @@
     <ul class="nav-links" id="navLinks">
       <li><a href="MainPage.html.html">Home</a></li>
       <li><a href="UserDashboard.html">Dashboard</a></li>
-      <li><a href="#" onclick="doLogout()">Logout</a></li>
+      <li><a href="#" id="logoutBtn" onclick="doLogout()">Logout</a></li>
     </ul>
     <div class="nav-actions">
       <div class="user-chip">
@@ -849,194 +849,116 @@
 
     document.addEventListener("DOMContentLoaded", () => {
 
-      // ====================================
-      // GET GOOGLE USER FROM URL
-      // ====================================
-      const params = new URLSearchParams(window.location.search);
-      const googleUser = params.get("googleUser");
-
-      // ====================================
-      // SAVE GOOGLE USER TO LOCALSTORAGE
-      // ====================================
-      if (googleUser) {
-
-        try {
-
-          const parsedUser = JSON.parse(
-            decodeURIComponent(googleUser)
-          );
-
-          localStorage.setItem(
-            "urbanTrack_currentUser",
-            JSON.stringify({
-              name: parsedUser.name || "My Account",
-              email: parsedUser.email || "",
-              picture: parsedUser.picture || ""
-            })
-          );
-
-          // REMOVE QUERY FROM URL
-          window.history.replaceState(
-            {},
-            document.title,
-            window.location.pathname
-          );
-
-        } catch (err) {
-
-          console.error("Google user parse error:", err);
-
-        }
-      }
-
-      // ====================================
-      // GET CURRENT USER
-      // ====================================
       const currentUser = JSON.parse(
         localStorage.getItem("urbanTrack_currentUser")
       );
 
-      // IF NOT LOGGED IN
-      if (!currentUser) {
-        return;
-      }
+      if (!currentUser) return;
 
-      // ====================================
-      // TOP HEADER USERNAME
-      // ====================================
-      const headerUserName =
-        document.getElementById("headerUserName");
+      // LOAD EXISTING USER INFO
+      const displayInput =
+        document.getElementById("displayName");
 
-      if (headerUserName) {
-
-        headerUserName.textContent =
-          currentUser.name || "My Account";
-
-      }
-
-      // ====================================
-      // SMALL HEADER AVATAR
-      // ====================================
-      const userAvatar =
-        document.getElementById("userAvatar");
-
-      if (userAvatar) {
-
-        if (currentUser.picture) {
-
-          userAvatar.innerHTML = `
-                <img
-                    src="${currentUser.picture}"
-                    alt="Profile"
-                    style="
-                        width:100%;
-                        height:100%;
-                        border-radius:50%;
-                        object-fit:cover;
-                    "
-                >
-            `;
-
-        } else {
-
-          userAvatar.textContent =
-            currentUser.name.charAt(0).toUpperCase();
-
-        }
-      }
-
-      // ====================================
-      // SETTINGS PAGE LARGE AVATAR
-      // ====================================
-      const avatarDisplay =
-        document.getElementById("avatarDisplay");
-
-      if (avatarDisplay) {
-
-        if (currentUser.picture) {
-
-          avatarDisplay.innerHTML = `
-                <img
-                    src="${currentUser.picture}"
-                    alt="Profile"
-                    style="
-                        width:100%;
-                        height:100%;
-                        border-radius:50%;
-                        object-fit:cover;
-                    "
-                >
-            `;
-
-        } else {
-
-          avatarDisplay.textContent =
-            currentUser.name.charAt(0).toUpperCase();
-
-        }
-      }
-
-      // ====================================
-      // SETTINGS PAGE NAME
-      // ====================================
       const avatarName =
         document.getElementById("avatarName");
 
-      if (avatarName) {
+      const headerUserName =
+        document.getElementById("headerUserName");
 
-        avatarName.textContent =
-          currentUser.name || "My Account";
+      const avatarDisplay =
+        document.getElementById("avatarDisplay");
 
+      if (displayInput) {
+        displayInput.value = currentUser.name || "";
       }
 
-      // ====================================
-      // SETTINGS PAGE EMAIL
-      // ====================================
-      const avatarEmail =
-        document.getElementById("avatarEmail");
+      // SAVE CHANGES BUTTON
+      const saveBtn =
+        document.getElementById("saveNameBtn");
 
-      if (avatarEmail) {
+      if (saveBtn) {
 
-        avatarEmail.textContent =
-          currentUser.email || "No Email";
+        saveBtn.addEventListener("click", () => {
 
-      }
+          const newName =
+            displayInput.value.trim();
 
-      // ====================================
-      // DISPLAY NAME INPUT
-      // ====================================
-      const displayName =
-        document.getElementById("displayName");
+          if (!newName) {
+            alert("Please enter a display name.");
+            return;
+          }
 
-      if (displayName) {
+          // UPDATE USER
+          currentUser.name = newName;
 
-        displayName.value =
-          currentUser.name || "";
-
-      }
-
-      // ====================================
-      // LOGOUT BUTTON
-      // ====================================
-      const logoutBtn =
-        document.getElementById("logoutBtn");
-
-      if (logoutBtn) {
-
-        logoutBtn.addEventListener("click", () => {
-
-          localStorage.removeItem(
-            "urbanTrack_currentUser"
+          // SAVE BACK TO LOCAL STORAGE
+          localStorage.setItem(
+            "urbanTrack_currentUser",
+            JSON.stringify(currentUser)
           );
 
-          window.location.href =
-            "homePage.html";
+          // UPDATE UI
+          if (avatarName) {
+            avatarName.textContent = newName;
+          }
+
+          if (headerUserName) {
+            headerUserName.textContent = newName;
+          }
+
+          if (avatarDisplay) {
+            avatarDisplay.textContent =
+              newName.charAt(0).toUpperCase();
+          }
+
+          alert("Profile updated successfully!");
 
         });
 
       }
 
     });
+
+  </script>
+  <script>
+
+    function logoutUser() {
+
+      // REMOVE USER DATA
+      localStorage.removeItem(
+        "urbanTrack_currentUser"
+      );
+
+      // REDIRECT TO LOGIN
+      window.location.href =
+        "/pages/login.html";
+    }
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+
+        // FIND LOGOUT BUTTON/LINK
+        const logoutBtn =
+          document.getElementById("logoutBtn");
+
+        if (logoutBtn) {
+
+          logoutBtn.addEventListener(
+            "click",
+            (e) => {
+
+              e.preventDefault();
+
+              logoutUser();
+
+            }
+          );
+
+        }
+
+      }
+    );
 
   </script>
 
