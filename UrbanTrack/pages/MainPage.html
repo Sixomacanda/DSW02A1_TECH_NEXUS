@@ -22,7 +22,7 @@
       </li>
 
       <li><a href="UserDashboard.html">Dashboard</a></li>
-      <li><a href="/pages/UserSettings.html">Settings</a></li>
+      <li><a href="UserSettings.html">Settings</a></li>
       <li><a href="#" onclick="doLogout()">Logout</a></li>
       <div class="nav-actions">
         <div class="user-chip" id="userChip">
@@ -905,40 +905,56 @@
   defer>
 </script>
 
-<!-- GOOGLE TRANSLATE -->
+<!-- GOOGLE USER + GOOGLE TRANSLATE -->
 <script type="text/javascript">
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    // =========================
     // GET GOOGLE USER FROM URL
+    // =========================
     const params = new URLSearchParams(window.location.search);
+
     const googleUser = params.get("googleUser");
 
-    // SAVE GOOGLE USER TO LOCAL STORAGE
     if (googleUser) {
 
-        const parsedUser = JSON.parse(
-            decodeURIComponent(googleUser)
-        );
+        try {
 
-        localStorage.setItem(
-            "urbanTrack_currentUser",
-            JSON.stringify({
-                name: parsedUser.name || "My Account",
-                email: parsedUser.email || "",
-                picture: parsedUser.picture || ""
-            })
-        );
+            const parsedUser = JSON.parse(
+                decodeURIComponent(googleUser)
+            );
 
-        // REMOVE LONG URL PARAMETERS
-        window.history.replaceState(
-            {},
-            document.title,
-            window.location.pathname
-        );
+            localStorage.setItem(
+                "urbanTrack_currentUser",
+                JSON.stringify({
+                    name: parsedUser.name || "My Account",
+                    email: parsedUser.email || "",
+                    picture: parsedUser.picture || ""
+                })
+            );
+
+            // REMOVE LONG URL PARAMETERS
+            window.history.replaceState(
+                {},
+                document.title,
+                window.location.pathname
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Failed to parse google user:",
+                error
+            );
+
+        }
+
     }
 
-    // GET USER FROM LOCAL STORAGE
+    // =========================
+    // GET USER FROM STORAGE
+    // =========================
     const currentUser = JSON.parse(
         localStorage.getItem("urbanTrack_currentUser")
     );
@@ -946,32 +962,31 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!currentUser) return;
 
     // =========================
-    // TOP NAV USERNAME
+    // UPDATE USER NAME
     // =========================
-    const navName =
-        document.querySelector(".profile-name") ||
-        document.querySelector(".user-name") ||
-        document.querySelector(".account-name");
+    const userNameDisplay =
+        document.getElementById("userNameDisplay");
 
-    if (navName) {
-        navName.textContent = currentUser.name;
+    if (userNameDisplay) {
+
+        userNameDisplay.textContent =
+            currentUser.name || "My Account";
+
     }
 
     // =========================
-    // PROFILE AVATAR
+    // UPDATE AVATAR
     // =========================
-    const avatar =
-        document.querySelector(".avatar") ||
-        document.querySelector(".profile-avatar") ||
-        document.querySelector(".user-avatar");
+    const userAvatar =
+        document.getElementById("userAvatar");
 
-    if (avatar) {
+    if (userAvatar) {
 
         if (currentUser.picture) {
 
-            avatar.innerHTML = `
-                <img 
-                    src="${currentUser.picture}" 
+            userAvatar.innerHTML = `
+                <img
+                    src="${currentUser.picture}"
                     alt="Profile"
                     style="
                         width:100%;
@@ -984,20 +999,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } else {
 
-            avatar.textContent =
-                currentUser.name.charAt(0).toUpperCase();
+            userAvatar.textContent =
+                (currentUser.name || "U")
+                .charAt(0)
+                .toUpperCase();
 
         }
-    }
 
-    // =========================
-    // SETTINGS PAGE NAME INPUT
-    // =========================
-    const displayInput =
-        document.querySelector("#displayName");
-
-    if (displayInput) {
-        displayInput.value = currentUser.name;
     }
 
 });
@@ -1010,62 +1018,25 @@ function googleTranslateElementInit() {
 
     new google.translate.TranslateElement(
         {
-            pageLanguage: "en"
+            pageLanguage: "en",
+            includedLanguages:
+                "en,zu,xh,af,st,tn,ts,ve,nso,ss",
+            layout:
+                google.translate.TranslateElement
+                .InlineLayout.SIMPLE
         },
         "google_translate_element"
     );
-}
-
-
-// =========================
-// HIDE GOOGLE TRANSLATE BAR
-// =========================
-function hideGoogleTranslateBanner() {
-
-    document.body.style.top = "0px";
-
-    const banner =
-        document.querySelector(".goog-te-banner-frame");
-
-    if (banner) {
-        banner.style.display = "none";
-    }
-
-    const iframe =
-        document.querySelector("iframe.goog-te-banner-frame");
-
-    if (iframe) {
-        iframe.style.display = "none";
-    }
 
 }
-
-
-// =========================
-// RUN AFTER PAGE LOAD
-// =========================
-window.addEventListener("load", () => {
-
-    hideGoogleTranslateBanner();
-
-    const observer = new MutationObserver(() => {
-        hideGoogleTranslateBanner();
-    });
-
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
-
-});
-
 
 </script>
 
+<!-- GOOGLE TRANSLATE API -->
 <script
-  type="text/javascript"
-  src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
 </script>
+
 
 </body>
 
