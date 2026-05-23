@@ -128,8 +128,6 @@ app.get("/auth/user", (req, res) => {
 
 //Log out
 
-window.location.href = "/pages/homePage.html";
-
 function logout() {
 
   // Clear ALL stored users
