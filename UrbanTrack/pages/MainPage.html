@@ -908,53 +908,157 @@
 <!-- GOOGLE TRANSLATE -->
 <script type="text/javascript">
 
-  function googleTranslateElementInit() {
+document.addEventListener("DOMContentLoaded", () => {
 
-    new google.translate.TranslateElement(
-      {
-        pageLanguage: "en"
-      },
-      "google_translate_element"
+    // GET GOOGLE USER FROM URL
+    const params = new URLSearchParams(window.location.search);
+    const googleUser = params.get("googleUser");
+
+    // SAVE GOOGLE USER TO LOCAL STORAGE
+    if (googleUser) {
+
+        const parsedUser = JSON.parse(
+            decodeURIComponent(googleUser)
+        );
+
+        localStorage.setItem(
+            "urbanTrack_currentUser",
+            JSON.stringify({
+                name: parsedUser.name || "My Account",
+                email: parsedUser.email || "",
+                picture: parsedUser.picture || ""
+            })
+        );
+
+        // REMOVE LONG URL PARAMETERS
+        window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+        );
+    }
+
+    // GET USER FROM LOCAL STORAGE
+    const currentUser = JSON.parse(
+        localStorage.getItem("urbanTrack_currentUser")
     );
 
-  }
+    if (!currentUser) return;
 
-  // HIDE GOOGLE TRANSLATE TOP BANNER
-  function hideGoogleTranslateBanner() {
+    // =========================
+    // TOP NAV USERNAME
+    // =========================
+    const navName =
+        document.querySelector(".profile-name") ||
+        document.querySelector(".user-name") ||
+        document.querySelector(".account-name");
+
+    if (navName) {
+        navName.textContent = currentUser.name;
+    }
+
+    // =========================
+    // PROFILE AVATAR
+    // =========================
+    const avatar =
+        document.querySelector(".avatar") ||
+        document.querySelector(".profile-avatar") ||
+        document.querySelector(".user-avatar");
+
+    if (avatar) {
+
+        if (currentUser.picture) {
+
+            avatar.innerHTML = `
+                <img 
+                    src="${currentUser.picture}" 
+                    alt="Profile"
+                    style="
+                        width:100%;
+                        height:100%;
+                        border-radius:50%;
+                        object-fit:cover;
+                    "
+                >
+            `;
+
+        } else {
+
+            avatar.textContent =
+                currentUser.name.charAt(0).toUpperCase();
+
+        }
+    }
+
+    // =========================
+    // SETTINGS PAGE NAME INPUT
+    // =========================
+    const displayInput =
+        document.querySelector("#displayName");
+
+    if (displayInput) {
+        displayInput.value = currentUser.name;
+    }
+
+});
+
+
+// =========================
+// GOOGLE TRANSLATE
+// =========================
+function googleTranslateElementInit() {
+
+    new google.translate.TranslateElement(
+        {
+            pageLanguage: "en"
+        },
+        "google_translate_element"
+    );
+}
+
+
+// =========================
+// HIDE GOOGLE TRANSLATE BAR
+// =========================
+function hideGoogleTranslateBanner() {
 
     document.body.style.top = "0px";
 
     const banner =
-      document.querySelector(".goog-te-banner-frame");
+        document.querySelector(".goog-te-banner-frame");
 
     if (banner) {
-      banner.style.display = "none";
+        banner.style.display = "none";
     }
 
     const iframe =
-      document.querySelector("iframe.goog-te-banner-frame");
+        document.querySelector("iframe.goog-te-banner-frame");
 
     if (iframe) {
-      iframe.style.display = "none";
+        iframe.style.display = "none";
     }
 
-  }
+}
 
-  // RUN AFTER PAGE LOAD
-  window.addEventListener("load", () => {
+
+// =========================
+// RUN AFTER PAGE LOAD
+// =========================
+window.addEventListener("load", () => {
 
     hideGoogleTranslateBanner();
 
     const observer = new MutationObserver(() => {
-      hideGoogleTranslateBanner();
+        hideGoogleTranslateBanner();
     });
 
     observer.observe(document.body, {
-      childList: true,
-      subtree: true
+        childList: true,
+        subtree: true
     });
 
-  });
+});
+
 
 </script>
 
