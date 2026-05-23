@@ -849,133 +849,181 @@
 
     document.addEventListener("DOMContentLoaded", () => {
 
-      // GET GOOGLE USER FROM URL
-      const params = new URLSearchParams(window.location.search);
-      const googleUser = params.get("googleUser");
-
-      // SAVE USER
-      if (googleUser) {
-
-        const parsedUser = JSON.parse(
-          decodeURIComponent(googleUser)
-        );
-
-        localStorage.setItem(
-          "urbanTrack_currentUser",
-          JSON.stringify({
-            name: parsedUser.name || "My Account",
-            email: parsedUser.email || "",
-            picture: parsedUser.picture || ""
-          })
-        );
-
-        // CLEAN URL
-        window.history.replaceState(
-          {},
-          document.title,
-          window.location.pathname
-        );
-      }
-
       // GET USER
       const currentUser = JSON.parse(
         localStorage.getItem("urbanTrack_currentUser")
       );
 
-      if (!currentUser) return;
+      console.log(currentUser);
 
-      // =========================
-      // USER NAME
-      // =========================
-      const userName =
-        document.getElementById("headerUserName");
-
-      if (userName) {
-        userName.textContent = currentUser.name;
+      // IF NO USER
+      if (!currentUser) {
+        return;
       }
 
       // =========================
-      // USER AVATAR
+      // TOP HEADER NAME
       // =========================
-      const avatar =
+      const headerUserName =
+        document.getElementById("headerUserName");
+
+      if (headerUserName) {
+        headerUserName.textContent =
+          currentUser.name || "My Account";
+      }
+
+      // =========================
+      // TOP HEADER AVATAR
+      // =========================
+      const userAvatar =
         document.getElementById("userAvatar");
 
-      if (avatar) {
+      if (userAvatar) {
 
         if (currentUser.picture) {
 
-          avatar.innerHTML = `
-                <img 
-                    src="${currentUser.picture}" 
-                    alt="Profile"
+          userAvatar.innerHTML = `
+                <img
+                    src="${currentUser.picture}"
                     style="
                         width:100%;
                         height:100%;
                         border-radius:50%;
                         object-fit:cover;
                     "
-                >`;
+                >
+            `;
 
         } else {
 
-          avatar.textContent =
+          userAvatar.textContent =
             currentUser.name.charAt(0).toUpperCase();
 
         }
       }
 
       // =========================
+      // PROFILE SECTION
+      // =========================
+      const avatarDisplay =
+        document.getElementById("avatarDisplay");
+
+      const avatarName =
+        document.getElementById("avatarName");
+
+      const avatarEmail =
+        document.getElementById("avatarEmail");
+
+      if (avatarDisplay) {
+
+        if (currentUser.picture) {
+
+          avatarDisplay.innerHTML = `
+                <img
+                    src="${currentUser.picture}"
+                    style="
+                        width:100%;
+                        height:100%;
+                        border-radius:50%;
+                        object-fit:cover;
+                    "
+                >
+            `;
+
+        } else {
+
+          avatarDisplay.textContent =
+            currentUser.name.charAt(0).toUpperCase();
+
+        }
+      }
+
+      if (avatarName) {
+        avatarName.textContent =
+          currentUser.name || "";
+      }
+
+      if (avatarEmail) {
+        avatarEmail.textContent =
+          currentUser.email || "";
+      }
+
+      // =========================
       // DISPLAY NAME INPUT
       // =========================
-      const displayInput =
+      const displayName =
         document.getElementById("displayName");
 
-      if (displayInput) {
-        displayInput.value = currentUser.name;
+      if (displayName) {
+        displayName.value =
+          currentUser.name || "";
+      }
+
+      // =========================
+      // SAVE BUTTON
+      // =========================
+      const saveBtn =
+        document.getElementById("saveProfileBtn");
+
+      if (saveBtn) {
+
+        saveBtn.addEventListener("click", () => {
+
+          const newName =
+            displayName.value.trim();
+
+          if (!newName) {
+            alert("Enter a name");
+            return;
+          }
+
+          currentUser.name = newName;
+
+          localStorage.setItem(
+            "urbanTrack_currentUser",
+            JSON.stringify(currentUser)
+          );
+
+          avatarName.textContent = newName;
+
+          headerUserName.textContent = newName;
+
+          if (!currentUser.picture) {
+            avatarDisplay.textContent =
+              newName.charAt(0).toUpperCase();
+
+            userAvatar.textContent =
+              newName.charAt(0).toUpperCase();
+          }
+
+          alert("Profile updated!");
+
+        });
+
+      }
+
+      // =========================
+      // LOGOUT
+      // =========================
+      const logoutBtn =
+        document.getElementById("logoutBtn");
+
+      if (logoutBtn) {
+
+        logoutBtn.addEventListener("click", async (e) => {
+
+          e.preventDefault();
+
+          localStorage.removeItem("urbanTrack_currentUser");
+          localStorage.removeItem("userEmail");
+
+          window.location.href = "/logout";
+
+        });
+
       }
 
     });
-
-  </script>
-  <script>
-
-    function logoutUser() {
-
-      // REMOVE USER DATA
-      localStorage.removeItem(
-        "urbanTrack_currentUser"
-      );
-
-      // REDIRECT TO LOGIN
-      window.location.href =
-        "/pages/login.html";
-    }
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      () => {
-
-        // FIND LOGOUT BUTTON/LINK
-        const logoutBtn =
-          document.getElementById("logoutBtn");
-
-        if (logoutBtn) {
-
-          logoutBtn.addEventListener(
-            "click",
-            (e) => {
-
-              e.preventDefault();
-
-              logoutUser();
-
-            }
-          );
-
-        }
-
-      }
-    );
 
   </script>
 

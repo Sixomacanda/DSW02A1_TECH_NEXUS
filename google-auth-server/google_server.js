@@ -126,30 +126,10 @@ app.get("/auth/user", (req, res) => {
     res.json(req.user || null);
 });
 
-//Log out
-
-function logout() {
-
-  // Clear ALL stored users
-  localStorage.removeItem("urbanTrack_currentUser");
-  localStorage.removeItem("userEmail");
-
-  // Google session logout
-  fetch("/logout", {
-    method: "GET",
-    credentials: "include"
-  })
-  .finally(() => {
-
-    // Redirect to homepage
-    window.location.href = "/pages/homePage.html";
-
-  });
-}
-
+// LOGOUT ROUTE
 app.get("/logout", (req, res) => {
 
-    req.logout(function(err) {
+    req.logout(function (err) {
 
         if (err) {
             console.log(err);
@@ -159,13 +139,15 @@ app.get("/logout", (req, res) => {
 
             res.clearCookie("connect.sid");
 
-            res.redirect("/pages/homePage.html");
+            // REDIRECT TO LOGIN PAGE
+            res.redirect("/pages/login.html");
 
         });
 
     });
 
 });
+
 
 const PORT = process.env.PORT || 3000;
 
