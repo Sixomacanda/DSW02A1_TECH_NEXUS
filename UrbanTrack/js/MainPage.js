@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
 HOMEPAGE ROUTE
 IMPORTANT FIX
 */
-app.get("/homePage.html", (req, res) => {
+app.get("page/homePage.html", (req, res) => {
     res.sendFile(path.join(__dirname, "homePage.html"));
 });
 
