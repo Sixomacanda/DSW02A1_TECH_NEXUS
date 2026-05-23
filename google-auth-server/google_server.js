@@ -126,6 +126,49 @@ app.get("/auth/user", (req, res) => {
     res.json(req.user || null);
 });
 
+//Log out
+
+window.location.href = "/pages/homePage.html";
+
+function logout() {
+
+  // Clear ALL stored users
+  localStorage.removeItem("urbanTrack_currentUser");
+  localStorage.removeItem("userEmail");
+
+  // Google session logout
+  fetch("/logout", {
+    method: "GET",
+    credentials: "include"
+  })
+  .finally(() => {
+
+    // Redirect to homepage
+    window.location.href = "/pages/homePage.html";
+
+  });
+}
+
+app.get("/logout", (req, res) => {
+
+    req.logout(function(err) {
+
+        if (err) {
+            console.log(err);
+        }
+
+        req.session.destroy(() => {
+
+            res.clearCookie("connect.sid");
+
+            res.redirect("/pages/homePage.html");
+
+        });
+
+    });
+
+});
+
 const PORT = process.env.PORT || 3000;
 
 console.log("CURRENT DIR:", __dirname);
