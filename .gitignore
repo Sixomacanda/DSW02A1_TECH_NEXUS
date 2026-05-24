@@ -1,0 +1,4 @@
+.env
+*.json
+google-auth-server/*.json
+UrbanTrack/google-auth-server/*.json
