@@ -466,6 +466,13 @@ function initReportForm(currentUser) {
   const submitBtn = document.getElementById("submitBtn");
   if (!submitBtn) return;
 
+<<<<<<< HEAD
+=======
+  if (typeof window.submitReport === "function") {
+    return;
+  }
+
+>>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
   // Override the existing submitReport function to store in localStorage
   window.submitReport = function () {
     const agreeCheck = document.getElementById("agreeCheck");
@@ -947,4 +954,8 @@ menuBtn.addEventListener("click", () => {
     navLinks.classList.remove("show");
     menuOpen = false;
   }
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba

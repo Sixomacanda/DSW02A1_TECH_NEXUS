@@ -18,7 +18,14 @@
       <div class="logo">Urban Track</div>
 
       <ul class="nav-links">
+<<<<<<< HEAD
         <li><a href="../homePage.html">Home</a></li>
+=======
+        <!-- Google api -->
+        <li><div id="google_translate_element"></div></li>
+
+        <li><a href="../../homePage.html">Home</a></li>
+>>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
         <li><a href="login.html">Login</a></li>
       </ul>
 
@@ -138,6 +145,10 @@
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const db = getFirestore(app);
+<<<<<<< HEAD
+=======
+      const EMAIL_API_BASE = "http://localhost:3000/api/email";
+>>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
 
       const form = document.getElementById("signupForm");
       const surname = document.getElementById("surname");
@@ -184,6 +195,40 @@ Minimum 8 characters
         }
 
         try {
+<<<<<<< HEAD
+=======
+          const signupOtpResponse = await fetch(`${EMAIL_API_BASE}/signup-otp`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: email.value,
+              name: surname.value,
+            }),
+          });
+
+          const signupOtpData = await signupOtpResponse.json();
+          if (!signupOtpResponse.ok) {
+            throw new Error(signupOtpData.error || "Could not send signup OTP.");
+          }
+
+          const otp = prompt("Enter the 6-digit OTP sent to your email.");
+          if (!otp) return;
+
+          const verifyOtpResponse = await fetch(`${EMAIL_API_BASE}/verify-signup-otp`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: email.value,
+              otp,
+            }),
+          });
+
+          const verifyOtpData = await verifyOtpResponse.json();
+          if (!verifyOtpResponse.ok) {
+            throw new Error(verifyOtpData.error || "Invalid OTP.");
+          }
+
+>>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
           const userCredential = await createUserWithEmailAndPassword(
             auth,
             email.value,
@@ -196,6 +241,10 @@ Minimum 8 characters
             surname: surname.value,
             email: email.value,
             reportsCount: 0,
+<<<<<<< HEAD
+=======
+            emailVerifiedByOtp: true,
+>>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
           });
 
           alert("Account created successfully");
@@ -220,5 +269,67 @@ Minimum 8 characters
         });
       });
     </script>
+<<<<<<< HEAD
+=======
+      <!-- Google api -->
+ <script>
+       
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+
+// Hide Google Translate banner whenever it appears
+function hideGoogleTranslateBanner() {
+    // Remove the top offset Google adds to body
+    document.body.style.top = '0px';
+    
+    // Hide the banner frame
+    const banner = document.querySelector('.goog-te-banner-frame');
+    if (banner) {
+        banner.style.display = 'none';
+    }
+
+    // Also target the iframe by id
+    const bannerById = document.getElementById(':1.container');
+    if (bannerById) {
+        bannerById.style.display = 'none';
+    }
+}
+
+// Run on page load
+hideGoogleTranslateBanner();
+
+// Watch for DOM changes (when Google injects the banner after language select)
+const observer = new MutationObserver(function(mutations) {
+    hideGoogleTranslateBanner();
+});
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['style']
+});
+
+
+</script>
+<script type="text/javascript">
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+</script>
+
+<script type="text/javascript"
+src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+<!-- The End of google api -->
+    
+>>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
   </body>
 </html>

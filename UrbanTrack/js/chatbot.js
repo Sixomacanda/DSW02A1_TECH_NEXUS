@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // // UrbanTrack Chat System
 
 // const CP_SYSTEM_PROMPT = `You are the UrbanTrack assistant — a helpful, friendly AI on an urban issue-reporting platform.
@@ -189,4 +190,35 @@
 //     } finally {
 //         cpSetLoading(false);
 //     }
+=======
+// const API_KEY = "";
+
+// async function sendMessage() {
+//   const input = document.getElementById("userInput").value;
+
+//   const response = await fetch(
+//     `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
+//     {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json"
+//       },
+//       body: JSON.stringify({
+//         contents: [
+//           {
+//             parts: [{ text: input }]
+//           }
+//         ]
+//       })
+//     }
+//   );
+
+//   const data = await response.json();
+
+//   const reply =
+//     data.candidates?.[0]?.content?.parts?.[0]?.text ||
+//     "No response";
+
+//   document.getElementById("botReply").innerText = reply;
+>>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
 // }

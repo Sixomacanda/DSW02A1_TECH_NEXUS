@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { 
   getAuth, 
@@ -84,6 +85,8 @@ async function deleteAccount() {
   if (!user || !currentUser) {
     alert("User not found. Please log in again.");
 =======
+=======
+>>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
 async function deleteAccount() {
   const user = auth.currentUser;
 
@@ -96,11 +99,15 @@ async function deleteAccount() {
 
   if (confirmText !== "DELETE") {
     alert("Type DELETE to confirm");
+<<<<<<< HEAD
 >>>>>>> 4ce2eb5006afd9825067a18a711f6a48422db0f0
+=======
+>>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
     return;
   }
 
   try {
+<<<<<<< HEAD
 <<<<<<< HEAD
     // Reauthenticate user with password
     const credential = EmailAuthProvider.credential(user.email, password);
@@ -190,6 +197,8 @@ window.showToast = showToast;
 window.deactivateAccount = deactivateAccount;
 window.signOutAll = signOutAll;
 =======
+=======
+>>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
     const userId = user.uid;
 
     // 1. Delete user data from Firestore
@@ -212,5 +221,9 @@ window.signOutAll = signOutAll;
       alert("Error deleting account");
     }
   }
+<<<<<<< HEAD
 }
 >>>>>>> 4ce2eb5006afd9825067a18a711f6a48422db0f0
+=======
+}
+>>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
