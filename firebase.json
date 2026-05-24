@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "UrbanTrack",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
