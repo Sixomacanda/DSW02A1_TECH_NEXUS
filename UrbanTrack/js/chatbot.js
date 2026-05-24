@@ -1,192 +1,192 @@
-// UrbanTrack Chat System
+// // UrbanTrack Chat System
 
-const CP_SYSTEM_PROMPT = `You are the UrbanTrack assistant — a helpful, friendly AI on an urban issue-reporting platform.
-You help residents:
-1. Report city issues (potholes, broken streetlights, illegal dumping, graffiti, broken sidewalks, water leaks, etc.)
-2. Understand what information is needed (location, description, photo tip)
-3. Learn how reporting and resolution works
-4. Get estimated fix timelines: emergency 24 hr, high priority 3–5 days, medium 1–2 weeks, low 4–6 weeks
-5. Feel heard — people report issues because they care about their community
-    
-Keep responses concise (2–4 sentences). Warm, civic-minded tone. When someone describes an issue, confirm the type, ask for location if missing, and confirm the report will be logged.`;
+// const CP_SYSTEM_PROMPT = `You are the UrbanTrack assistant — a helpful, friendly AI on an urban issue-reporting platform.
+// You help residents:
+// 1. Report city issues (potholes, broken streetlights, illegal dumping, graffiti, broken sidewalks, water leaks, etc.)
+// 2. Understand what information is needed (location, description, photo tip)
+// 3. Learn how reporting and resolution works
+// 4. Get estimated fix timelines: emergency 24 hr, high priority 3–5 days, medium 1–2 weeks, low 4–6 weeks
+// 5. Feel heard — people report issues because they care about their community
 
-const cpHistory = [];
+// Keep responses concise (2–4 sentences). Warm, civic-minded tone. When someone describes an issue, confirm the type, ask for location if missing, and confirm the report will be logged.`;
 
-// Elements
-const cpTrigger = document.getElementById("chatTrigger");
-const cpPanel   = document.getElementById("chatPanel");
-const cpBadge   = document.getElementById("chatBadge");
+// const cpHistory = [];
 
-// Toggle chat open/close
-cpTrigger.addEventListener("click", () => {
-    const isOpen = cpPanel.classList.toggle("open");
-    cpTrigger.classList.toggle("open", isOpen);
+// // Elements
+// const cpTrigger = document.getElementById("chatTrigger");
+// const cpPanel   = document.getElemmentById("chatPanel");
+// const cpBadge   = document.getElementById("chatBadge");
 
-    if (isOpen) {
-        cpBadge.style.display = "none";
-        document.getElementById("cpInput").focus();
-    }
-});
+// // Toggle chat open/close
+// cpTrigger.addEventListener("click", () => {
+//     const isOpen = cpPanel.classList.toggle("open");
+//     cpTrigger.classList.toggle("open", isOpen);
 
-// Show badge after 3 seconds
-setTimeout(() => {
-    if (!cpPanel.classList.contains("open")) {
-        cpBadge.style.display = "flex";
-    }
-}, 3000);
+//     if (isOpen) {
+//         cpBadge.style.display = "none";
+//         document.getElementById("cpInput").focus();
+//     }
+// });
 
-// Auto resize input
-function cpAutoResize(el) {
-    el.style.height = "auto";
-    el.style.height = Math.min(el.scrollHeight, 80) + "px";
-}
+// // Show badge after 3 seconds
+// setTimeout(() => {
+//     if (!cpPanel.classList.contains("open")) {
+//         cpBadge.style.display = "flex";
+//     }
+// }, 3000);
 
-// Enter key send
-function cpHandleKey(e) {
-    if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        cpSendMessage();
-    }
-}
+// // Auto resize input
+// function cpAutoResize(el) {
+//     el.style.height = "auto";
+//     el.style.height = Math.min(el.scrollHeight, 80) + "px";
+// }
 
-// Use suggestion chips
-function cpUseSuggestion(text) {
-    document.getElementById("cpInput").value = text;
-    cpSendMessage();
-}
+// // Enter key send
+// function cpHandleKey(e) {
+//     if (e.key === "Enter" && !e.shiftKey) {
+//         e.preventDefault();
+//         cpSendMessage();
+//     }
+// }
 
-// Clear chat
-function cpClearChat() {
-    cpHistory.length = 0;
+// // Use suggestion chips
+// function cpUseSuggestion(text) {
+//     document.getElementById("cpInput").value = text;
+//     cpSendMessage();
+// }
 
-    document.getElementById("cpBody").innerHTML = `
-        <div class="cp-msg-row bot">
-            <div class="cp-av bot">🏙️</div>
-            <div class="cp-bubble bot">
-                Chat cleared! How can I help with UrbanTrack today?
-            </div>
-        </div>
-    `;
+// // Clear chat
+// function cpClearChat() {
+//     cpHistory.length = 0;
 
-    document.getElementById("cpChips").style.display = "flex";
-}
+//     document.getElementById("cpBody").innerHTML = `
+//         <div class="cp-msg-row bot">
+//             <div class="cp-av bot">🏙️</div>
+//             <div class="cp-bubble bot">
+//                 Chat cleared! How can I help with UrbanTrack today?
+//             </div>
+//         </div>
+//     `;
 
-// Append message
-function cpAppendMsg(role, text) {
-    const body = document.getElementById("cpBody");
+//     document.getElementById("cpChips").style.display = "flex";
+// }
 
-    const row = document.createElement("div");
-    row.className = `cp-msg-row ${role}`;
+// // Append message
+// function cpAppendMsg(role, text) {
+//     const body = document.getElementById("cpBody");
 
-    const av = document.createElement("div");
-    av.className = `cp-av ${role}`;
-    av.textContent = role === "bot" ? "🏙️" : "👤";
+//     const row = document.createElement("div");
+//     row.className = `cp-msg-row ${role}`;
 
-    const bbl = document.createElement("div");
-    bbl.className = `cp-bubble ${role}`;
-    bbl.textContent = text;
+//     const av = document.createElement("div");
+//     av.className = `cp-av ${role}`;
+//     av.textContent = role === "bot" ? "🏙️" : "👤";
 
-    row.appendChild(av);
-    row.appendChild(bbl);
-    body.appendChild(row);
+//     const bbl = document.createElement("div");
+//     bbl.className = `cp-bubble ${role}`;
+//     bbl.textContent = text;
 
-    body.scrollTop = body.scrollHeight;
-}
+//     row.appendChild(av);
+//     row.appendChild(bbl);
+//     body.appendChild(row);
 
-// Typing indicator
-function cpShowTyping() {
-    const body = document.getElementById("cpBody");
+//     body.scrollTop = body.scrollHeight;
+// }
 
-    const row = document.createElement("div");
-    row.className = "cp-msg-row bot";
-    row.id = "cpTypingRow";
+// // Typing indicator
+// function cpShowTyping() {
+//     const body = document.getElementById("cpBody");
 
-    const av = document.createElement("div");
-    av.className = "cp-av bot";
-    av.textContent = "🏙️";
+//     const row = document.createElement("div");
+//     row.className = "cp-msg-row bot";
+//     row.id = "cpTypingRow";
 
-    const bbl = document.createElement("div");
-    bbl.className = "cp-bubble bot";
-    bbl.innerHTML = `<div class="cp-typing"><span></span><span></span><span></span></div>`;
+//     const av = document.createElement("div");
+//     av.className = "cp-av bot";
+//     av.textContent = "🏙️";
 
-    row.appendChild(av);
-    row.appendChild(bbl);
-    body.appendChild(row);
+//     const bbl = document.createElement("div");
+//     bbl.className = "cp-bubble bot";
+//     bbl.innerHTML = `<div class="cp-typing"><span></span><span></span><span></span></div>`;
 
-    body.scrollTop = body.scrollHeight;
-}
+//     row.appendChild(av);
+//     row.appendChild(bbl);
+//     body.appendChild(row);
 
-// Remove typing
-function cpRemoveTyping() {
-    const r = document.getElementById("cpTypingRow");
-    if (r) r.remove();
-}
+//     body.scrollTop = body.scrollHeight;
+// }
 
-// Loading state
-function cpSetLoading(on) {
-    const btn  = document.getElementById("cpSendBtn");
-    const icon = document.getElementById("cpSendIcon");
+// // Remove typing
+// function cpRemoveTyping() {
+//     const r = document.getElementById("cpTypingRow");
+//     if (r) r.remove();
+// }
 
-    btn.disabled = on;
-    btn.classList.toggle("loading", on);
+// // Loading state
+// function cpSetLoading(on) {
+//     const btn  = document.getElementById("cpSendBtn");
+//     const icon = document.getElementById("cpSendIcon");
 
-    icon.innerHTML = on
-        ? `<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.5" stroke-dasharray="40" stroke-dashoffset="15" fill="none"/>`
-        : `<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>`;
-}
+//     btn.disabled = on;
+//     btn.classList.toggle("loading", on);
 
-// MAIN SEND MESSAGE FUNCTION
-async function cpSendMessage() {
-    const input = document.getElementById("cpInput");
-    const text = input.value.trim();
+//     icon.innerHTML = on
+//         ? `<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.5" stroke-dasharray="40" stroke-dashoffset="15" fill="none"/>`
+//         : `<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>`;
+// }
 
-    if (!text) return;
+// // MAIN SEND MESSAGE FUNCTION
+// async function cpSendMessage() {
+//     const input = document.getElementById("cpInput");
+//     const text = input.value.trim();
 
-    document.getElementById("cpChips").style.display = "none";
+//     if (!text) return;
 
-    input.value = "";
-    input.style.height = "auto";
+//     document.getElementById("cpChips").style.display = "none";
 
-    cpAppendMsg("user", text);
+//     input.value = "";
+//     input.style.height = "auto";
 
-    cpHistory.push({
-        role: "user",
-        parts: [{ text }]
-    });
+//     cpAppendMsg("user", text);
 
-    cpSetLoading(true);
-    cpShowTyping();
+//     cpHistory.push({
+//         role: "user",
+//         parts: [{ text }]
+//     });
 
-    try {
-        const res = await fetch("/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                message: text,
-                history: cpHistory
-            })
-        });
+//     cpSetLoading(true);
+//     cpShowTyping();
 
-        const data = await res.json();
+//     try {
+//         const res = await fetch("/api/chat", {
+//             method: "POST",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify({
+//                 message: text,
+//                 history: cpHistory
+//             })
+//         });
 
-        if (!res.ok) {
-            throw new Error(data.error || "API error " + res.status);
-        }
+//         const data = await res.json();
 
-        const reply = data.reply;
+//         if (!res.ok) {
+//             throw new Error(data.error || "API error " + res.status);
+//         }
 
-        cpRemoveTyping();
-        cpAppendMsg("bot", reply);
+//         const reply = data.reply;
 
-        cpHistory.push({
-            role: "model",
-            parts: [{ text: reply }]
-        });
+//         cpRemoveTyping();
+//         cpAppendMsg("bot", reply);
 
-    } catch (err) {
-        cpRemoveTyping();
-        cpAppendMsg("bot", "Error: " + err.message);
-    } finally {
-        cpSetLoading(false);
-    }
-}
+//         cpHistory.push({
+//             role: "model",
+//             parts: [{ text: reply }]
+//         });
+
+//     } catch (err) {
+//         cpRemoveTyping();
+//         cpAppendMsg("bot", "Error: " + err.message);
+//     } finally {
+//         cpSetLoading(false);
+//     }
+// }
