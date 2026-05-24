@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>UrbanTrack - Report Community Issues in Real-Time</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="UrbanTrack/Styles/homePage.css">
+  <link rel="icon" href="favicon.ico" />
+  
+  
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="logo">Urban Track</div>
+    <ul class="nav-links" id="navLinks">
+      <li><div id="google_translate_element"></div></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="UrbanTrack/pages/login.html">Login</a></li>
+      <li><a href="UrbanTrack/pages/signUpPage.html" class="nav-signup">Sign Up</a></li>
+    </ul>
+    <button class="menu-button" id="menuButton" aria-label="Toggle menu">
+      <div class="menu-button__burger"></div>
+    </button>
+  </nav>
+
+  <!-- HERO -->
+  <section id="home" class="hero">
+    
+    <h1 class="hero-title">Urban<span>Track</span></h1>
+    <p class="hero-sub">Report Community Issues in Real-Time</p>
+    <div class="hero-actions">
+      <a href="UrbanTrack/pages/signUpPage.html" class="btn-primary">Get Started</a>
+      <a href="#how-it-works" class="btn-ghost">How It Works</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-pill"><strong>2.4k</strong><span>Issues Reported</span></div>
+      <div class="stat-pill"><strong>89%</strong><span>Resolution Rate</span></div>
+      <div class="stat-pill"><strong>14d</strong><span>Avg Fix Time</span></div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="container">
+      <h2 class="section-title">Why UrbanTrack?</h2>
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <div class="feature-num">01</div>
+          <h3>Track Issues</h3>
+          <p>Monitor community problems on an interactive map in real-time</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-num">02</div>
+          <h3>Upvote Priority</h3>
+          <p>Attach photos to your report so authorities can clearly see the problem</p>
+        </div>
+        <div class="feature-card reveal">
+          <div class="feature-num">03</div>
+          <h3>Real-time Updates</h3>
+          <p>Get instant update when issues are resolved</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how-it-works">
+    <div class="container">
+      <h2 class="section-title">How It Works</h2>
+      <div class="steps-grid">
+        <div class="step-card reveal">
+          <div class="step-num-wrap"><span class="step-number">1</span></div>
+          <h3>Submit Report</h3>
+          <p>Fill out a simple form with location and issue details</p>
+          <span class="step-tag">You</span>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-num-wrap"><span class="step-number">2</span></div>
+          <h3>Community Upvotes</h3>
+          <p>Your report appears on the shared map for the whole community to see</p>
+          <span class="step-tag">Community</span>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-num-wrap"><span class="step-number">3</span></div>
+          <h3>Admin Resolves</h3>
+          <p>Local authorities take action and update status</p>
+          <span class="step-tag">Authorities</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="testimonials">
+    <div class="container">
+      <h2 class="section-title">About UrbanTrack</h2>
+      <div class="about-wrap">
+        <p class="about-body reveal">
+          UrbanTrack is a smart community issue reporting platform that gives
+          residents a simple, central place to report local problems like
+          potholes, broken streetlights, blocked drains and vandalism. Instead
+          of calls going unanswered and emails getting lost, every report is
+          logged, mapped and visible to the whole community. Neighbours can
+          upvote issues they recognise, pushing the most urgent problems to
+          the top so local authorities know exactly where to focus first.
+          Admins manage incoming reports, update statuses in real time, and
+          keep residents informed every step of the way from submission right
+          through to resolution. UrbanTrack brings transparency,
+          accountability and community power together in one place, making it
+          easier for people to be heard and faster for problems to get fixed.
+        </p>
+        <div class="about-cards">
+          <div class="about-card reveal">
+            <div class="card-bar"></div>
+            <div>
+              <h4>Be Heard</h4>
+              <p>Every report is logged and tracked — nothing gets lost or ignored.</p>
+            </div>
+          </div>
+          <div class="about-card reveal">
+            <div class="card-bar"></div>
+            <div>
+              <h4>Community Power</h4>
+              <p>Upvotes from neighbours push urgent issues to the top of the priority list.</p>
+            </div>
+          </div>
+          <div class="about-card reveal">
+            <div class="card-bar"></div>
+            <div>
+              <h4>Real Results</h4>
+              <p>Authorities update statuses in real time so you always know what is happening.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-logo">Urban Track</div>
+          <p>Making communities better, one report at a time.</p>
+          <div class="footer-cta">
+            <a href="UrbanTrack/pages/login.html"      class="footer-btn footer-btn-ghost">Login</a>
+            <a href="UrbanTrack/pages/signUpPage.html" class="footer-btn footer-btn-primary">Sign Up</a>
+          </div>
+        </div>
+        <div>
+          <h4>Product</h4>
+          <ul>
+            <li><a href="user-dashboard.html">Dashboard</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+            <li><a href="#">Security</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>2026 UrbanTrack. All rights reserved.</p>
+        <div class="footer-status">
+          <div class="status-dot"></div>
+          All systems operational
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- FLOATING CHATBOT -->
+  <button id="chatbot-toggle" aria-label="Open chat assistant">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2C6.477 2 2 6.03 2 11c0 2.6 1.13 4.95 2.95 6.64L4 22l4.5-2.25C9.58 20.24 10.77 20.5 12 20.5c5.523 0 10-4.03 10-9s-4.477-9-10-9Z"/>
+    </svg>
+  </button>
+
+  <div id="chatbot-window" role="dialog" aria-label="UrbanTrack Chat Assistant">
+    <div class="chatbot-header">
+      <div class="chatbot-avatar">UT</div>
+      <div class="chatbot-info">
+        <div class="chatbot-name">UrbanBot</div>
+        <div class="chatbot-status">Online — here to help</div>
+      </div>
+      <button class="chatbot-close" id="chatbot-close-btn" aria-label="Close chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="chatbot-messages" id="chatbot-messages"></div>
+    <div class="quick-replies" id="quick-replies">
+      <button class="quick-reply" data-msg="How do I report an issue?">Report issue</button>
+      <button class="quick-reply" data-msg="How does upvoting work?">Upvoting</button>
+      <button class="quick-reply" data-msg="How long does it take to fix issues?">Fix times</button>
+      <button class="quick-reply" data-msg="How do I create an account?">Sign up</button>
+    </div>
+    <div class="chatbot-input-area">
+      <input id="chatbot-input" type="text" placeholder="Ask me anything..." autocomplete="off" maxlength="300" />
+      <button id="chatbot-send" aria-label="Send">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7Z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- GOOGLE TRANSLATE -->
+  <script>
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+    }
+    (function hideBanner() {
+      document.body.style.top = '0px';
+      const b = document.querySelector('.goog-te-banner-frame');
+      if (b) b.style.display = 'none';
+    })();
+    new MutationObserver(() => {
+      document.body.style.top = '0px';
+      const b = document.querySelector('.goog-te-banner-frame');
+      if (b) b.style.display = 'none';
+    }).observe(document.body, { childList:true, subtree:true, attributes:true, attributeFilter:['style'] });
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <!-- JS -->
+  <script>
+    document.getElementById('menuButton').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('show');
+      document.getElementById('menuButton').classList.toggle('open');
+    });
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    //chatbot
+
+(function () {
+  'use strict';
+
+  const toggleBtn  = document.getElementById('chatbot-toggle');
+  const closeBtn   = document.getElementById('chatbot-close-btn');
+  const win        = document.getElementById('chatbot-window');
+  const messagesEl = document.getElementById('chatbot-messages');
+  const inputEl    = document.getElementById('chatbot-input');
+  const sendBtn    = document.getElementById('chatbot-send');
+  const quickWrap  = document.getElementById('quick-replies');
+
+  if (!toggleBtn || !win) return;
+
+  // =======================
+  // CONFIG
+  // =======================
+  
+
+  let isOpen = false;
+  let isTyping = false;
+
+  // =======================
+  // KNOWLEDGE BASE
+  // =======================
+  const KB = [
+    {
+      p: ['report', 'submit', 'how to report'],
+      a: "To report an issue:\n1. Sign up or log in\n2. Click Submit Report\n3. Add details\n4. Submit"
+    },
+    {
+      p: ['upvote', 'vote'],
+      a: "Upvoting pushes important issues to the top so authorities fix them faster."
+    },
+    {
+      p: ['sign up', 'register'],
+      a: "Click Sign Up, enter details, verify email — done."
+    },
+    {
+      p: ['hello', 'hi'],
+      a: "Hi! I am UrbanBot. How can I help you today?"
+    }
+  ];
+
+  function matchKB(text) {
+    const lower = text.toLowerCase();
+    for (const e of KB) {
+      if (e.p.some(p => lower.includes(p))) return e.a;
+    }
+    return null;
+  }
+
+  // =======================
+  // UI FUNCTIONS
+  // =======================
+  function addMsg(role, text) {
+    const el = document.createElement('div');
+    el.className = 'chat-msg ' + role;
+
+    el.innerHTML =
+      (role === 'bot' ? '<div class="bot-icon">UT</div>' : '') +
+      `<div class="bubble">${text}</div>`;
+
+    messagesEl.appendChild(el);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function showTyping() {
+    removeTyping();
+
+    const el = document.createElement('div');
+    el.className = 'chat-msg bot';
+    el.id = 'typing';
+
+    el.innerHTML =
+      '<div class="bot-icon">UT</div><div class="bubble">Typing...</div>';
+
+    messagesEl.appendChild(el);
+  }
+
+  function removeTyping() {
+    const t = document.getElementById('typing');
+    if (t) t.remove();
+  }
+
+  // =======================
+  // GROQ API CALL
+  // =======================
+  async function callAI(msg) {
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${GROQ_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "llama3-8b-8192",
+        messages: [
+          {
+            role: "system",
+            content: "You are UrbanBot for UrbanTrack. Keep answers short, helpful, and simple."
+          },
+          {
+            role: "user",
+            content: msg
+          }
+        ]
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      console.error("Groq error:", err);
+      throw new Error("API error");
+    }
+
+    const data = await res.json();
+
+    return data?.choices?.[0]?.message?.content
+      || "Sorry, I could not respond.";
+  }
+
+  // =======================
+  // SEND HANDLER
+  // =======================
+  async function handleSend(text) {
+    const msg = (text || inputEl.value).trim();
+    if (!msg || isTyping) return;
+
+    inputEl.value = '';
+    isTyping = true;
+
+    addMsg('user', msg);
+
+    // Local KB first
+    const local = matchKB(msg);
+    if (local) {
+      showTyping();
+      setTimeout(() => {
+        removeTyping();
+        addMsg('bot', local);
+        isTyping = false;
+      }, 500);
+      return;
+    }
+
+    showTyping();
+
+    try {
+      const reply = await callAI(msg);
+      removeTyping();
+      addMsg('bot', reply);
+    } catch (e) {
+      removeTyping();
+      addMsg('bot', "⚠️ API error. Check your key or internet.");
+      console.error(e);
+    }
+
+    isTyping = false;
+  }
+
+  // =======================
+  // CHAT OPEN/CLOSE
+  // =======================
+  function openChat() {
+    isOpen = true;
+    win.classList.add('open');
+
+    if (!messagesEl.children.length) {
+      addMsg('bot', "Hi! I am UrbanBot. How can I help?");
+    }
+  }
+
+  function closeChat() {
+    isOpen = false;
+    win.classList.remove('open');
+  }
+
+  // =======================
+  // EVENTS
+  // =======================
+  toggleBtn.onclick = () => isOpen ? closeChat() : openChat();
+  closeBtn.onclick = closeChat;
+  sendBtn.onclick = () => handleSend();
+
+  inputEl.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  });
+
+  if (quickWrap) {
+    quickWrap.querySelectorAll('.quick-reply')
+      .forEach(btn => {
+        btn.onclick = () => handleSend(btn.dataset.msg);
+      });
+  }
+
+})();
+  </script>
+<script src="UrbanTrack/js/chatbot.js"></script>
+</body>
+</html>

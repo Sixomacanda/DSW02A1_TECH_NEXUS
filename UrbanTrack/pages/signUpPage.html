@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urban Track</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="../Styles/SignUp.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="logo">Urban Track</div>
+
+      <ul class="nav-links">
+        <!-- Google api -->
+        <li><div id="google_translate_element"></div></li>
+
+        <li><a href="../../homePage.html">Home</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+
+      <div class="menu-button">
+        <div class="menu-button__burger"></div>
+      </div>
+    </nav>
+    <!-- hb -->
+    <form id="signupForm" novalidate>
+      <div class="left">
+        <div class="left-content">
+          <h1>Create Account</h1>
+          <br /><br />
+          <h2>Welcome to Urban Track</h2>
+          <h4>Empowering communities to improve their cities.</h4>
+          <p>
+            Join our community today and help make a difference in your city!
+          </p>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="signup-container">
+        <div class="form-group">
+          <label for="surname">Surname</label>
+          <input
+            type="text"
+            name="surname"
+            id="surname"
+            placeholder="Enter your surname"
+            required
+          />
+          <small class="error"></small>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            placeholder="Enter your email"
+            required
+          />
+          <small class="error"></small>
+        </div>
+        <div class="form-group password-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <input
+              type="password"
+              name="password"
+              id="Signup-password"
+              placeholder="Enter your password"
+              required
+            />
+            <i class="fa-solid fa-eye"></i>
+            <i class="fa-solid fa-eye-slash hide"></i>
+          </div>
+          <small class="error"></small>
+        </div>
+        <div class="form-group password-group">
+          <label for="confirm-password">Confirm Password</label>
+          <div class="input-wrapper">
+            <input
+              type="password"
+              name="confirm-password"
+              id="Signup-confirm-password"
+              placeholder="Confirm your password"
+              required
+            />
+            <i class="fa-solid fa-eye"></i>
+            <i class="fa-solid fa-eye-slash hide"></i>
+          </div>
+          <small class="error"></small>
+        </div>
+        <button type="submit" id="signing" class="btn" name="signup">
+          Sign Up
+        </button>
+
+        <!-- Google signup option -->
+        <a
+          id="google-login-btn"
+          href="http://localhost:3000/auth/google"
+          class="btn google-btn"
+        >
+          <i class="fa-brands fa-google"></i> Continue with Google
+        </a>
+
+        <p class="footer-text">
+          Already have an account? <a href="login.html">Log in</a>
+        </p>
+      </div>
+    </form>
+    <script src="../js/main.js"></script>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
+        authDomain: "urban-track-91e53.firebaseapp.com",
+        projectId: "urban-track-91e53",
+        storageBucket: "urban-track-91e53.firebasestorage.app",
+        messagingSenderId: "519209303536",
+        appId: "1:519209303536:web:c212eb58eb836e27047135",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      const EMAIL_API_BASE = "http://localhost:3000/api/email";
+
+      const form = document.getElementById("signupForm");
+      const surname = document.getElementById("surname");
+      const email = document.getElementById("email");
+      const password = document.getElementById("Signup-password");
+      const confirmPassword = document.getElementById(
+        "Signup-confirm-password",
+      );
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        /* EMAIL VALIDATION */
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailPattern.test(email.value)) {
+          alert("Please enter a valid email address");
+          return;
+        }
+
+        /* PASSWORD VALIDATION
+Minimum 8 characters
+1 uppercase
+1 lowercase
+1 number
+1 special character
+*/
+
+        const passwordPattern =
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+        if (!passwordPattern.test(password.value)) {
+          alert(
+            "Password must contain:\n- Minimum 8 characters\n- One uppercase letter\n- One lowercase letter\n- One digit\n- One special character",
+          );
+          return;
+        }
+
+        /* CONFIRM PASSWORD CHECK */
+
+        if (password.value !== confirmPassword.value) {
+          alert("Passwords do not match");
+          return;
+        }
+
+        try {
+          const signupOtpResponse = await fetch(`${EMAIL_API_BASE}/signup-otp`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: email.value,
+              name: surname.value,
+            }),
+          });
+
+          const signupOtpData = await signupOtpResponse.json();
+          if (!signupOtpResponse.ok) {
+            throw new Error(signupOtpData.error || "Could not send signup OTP.");
+          }
+
+          const otp = prompt("Enter the 6-digit OTP sent to your email.");
+          if (!otp) return;
+
+          const verifyOtpResponse = await fetch(`${EMAIL_API_BASE}/verify-signup-otp`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: email.value,
+              otp,
+            }),
+          });
+
+          const verifyOtpData = await verifyOtpResponse.json();
+          if (!verifyOtpResponse.ok) {
+            throw new Error(verifyOtpData.error || "Invalid OTP.");
+          }
+
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            email.value,
+            password.value,
+          );
+
+          const user = userCredential.user;
+
+          await setDoc(doc(db, "users", user.uid), {
+            surname: surname.value,
+            email: email.value,
+            reportsCount: 0,
+            emailVerifiedByOtp: true,
+          });
+
+          alert("Account created successfully");
+
+          window.location.href = "login.html";
+        } catch (error) {
+          alert(error.message);
+        }
+        const menuBtn = document.querySelector(".menu-button");
+        const navLinks = document.querySelector(".nav-links");
+        let menuOpen = false;
+        menuBtn.addEventListener("click", () => {
+          if (!menuOpen) {
+            menuBtn.classList.add("open");
+            navLinks.classList.add("show");
+            menuOpen = true;
+          } else {
+            menuBtn.classList.remove("open");
+            navLinks.classList.remove("show");
+            menuOpen = false;
+          }
+        });
+      });
+    </script>
+      <!-- Google api -->
+ <script>
+       
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+
+// Hide Google Translate banner whenever it appears
+function hideGoogleTranslateBanner() {
+    // Remove the top offset Google adds to body
+    document.body.style.top = '0px';
+    
+    // Hide the banner frame
+    const banner = document.querySelector('.goog-te-banner-frame');
+    if (banner) {
+        banner.style.display = 'none';
+    }
+
+    // Also target the iframe by id
+    const bannerById = document.getElementById(':1.container');
+    if (bannerById) {
+        bannerById.style.display = 'none';
+    }
+}
+
+// Run on page load
+hideGoogleTranslateBanner();
+
+// Watch for DOM changes (when Google injects the banner after language select)
+const observer = new MutationObserver(function(mutations) {
+    hideGoogleTranslateBanner();
+});
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['style']
+});
+
+
+</script>
+<script type="text/javascript">
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+</script>
+
+<script type="text/javascript"
+src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+<!-- The End of google api -->
+    
+  </body>
+</html>
