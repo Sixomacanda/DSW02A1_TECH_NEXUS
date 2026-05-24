@@ -248,6 +248,8 @@
 
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
+      const EMAIL_API_BASE = "http://localhost:3000/api/email";
+      let verifiedPasswordOtp = "";
 
       function showStep(step) {
         document.querySelectorAll(".step").forEach((section) => {
@@ -368,7 +370,7 @@
         });
       });
 
-      window.resetPassword = function () {
+      window.resetPassword = async function () {
         const email = document.getElementById("email").value.trim();
         const error = document.querySelector(".step-email .hint");
 
@@ -379,20 +381,30 @@
 
         error.textContent = "";
 
-        sendPasswordResetEmail(auth, email)
-          .then(() => {
-            alert("OTP sent to your email.");
-            showOtpStep();
-          })
-          .catch((error) => {
-            error.textContent = error.message;
+        try {
+          const response = await fetch(`${EMAIL_API_BASE}/password-otp`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
           });
+
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || "Could not send OTP.");
+          }
+
+          alert("OTP sent to your email.");
+          showOtpStep();
+        } catch (err) {
+          error.textContent = err.message;
+        }
       };
 
-      window.verifyOtp = function () {
+      window.verifyOtp = async function () {
         const otp = Array.from(document.querySelectorAll(".otp-box"))
           .map((box) => box.value.trim())
           .join("");
+        const email = document.getElementById("email").value.trim();
         const error = document.querySelector(".step-otp .hint");
 
         if (otp.length !== 6) {
@@ -401,18 +413,54 @@
         }
 
         error.textContent = "";
-        showPasswordStep();
+        try {
+          const response = await fetch(`${EMAIL_API_BASE}/verify-password-otp`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, otp }),
+          });
+
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || "Invalid OTP.");
+          }
+
+          verifiedPasswordOtp = otp;
+          showPasswordStep();
+        } catch (err) {
+          error.textContent = err.message;
+        }
       };
 
-      window.saveNewPassword = function () {
+      window.saveNewPassword = async function () {
         if (!validateNewPasswordFields(true)) {
           return;
         }
 
-        alert(
-          "Password reset successfully. Please log in with your new password.",
-        );
-        window.location.href = "login.html";
+        try {
+          const email = document.getElementById("email").value.trim();
+          const response = await fetch(`${EMAIL_API_BASE}/reset-password`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email,
+              otp: verifiedPasswordOtp,
+              password: newPasswordInput.value.trim(),
+            }),
+          });
+
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || "Could not reset password.");
+          }
+
+          alert(
+            "Password reset successfully. Please log in with your new password.",
+          );
+          window.location.href = "login.html";
+        } catch (err) {
+          passwordError.textContent = err.message;
+        }
       };
       function setupPasswordToggles() {
         const passwordGroups = document.querySelectorAll(".password-group");

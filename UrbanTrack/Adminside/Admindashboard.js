@@ -15,6 +15,7 @@ const firebaseConfig = {
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
+const EMAIL_API_BASE = "http://localhost:3000/api/email";
 
 // ── Global data store (so filters work without re-fetching) ──
 let allReports = [];
@@ -151,7 +152,32 @@ window.handleSearch = function(q) {
 // ── UPDATE STATUS — UNTOUCHED from original ──
 window.updateStatus = async function(id, newStatus) {
   try {
+    const report = allReports.find(r => r.id === id);
     await updateDoc(doc(db, "reports", id), { status: newStatus });
+
+    if (
+      (newStatus === "in-progress" || newStatus === "resolved") &&
+      report?.reporterEmail &&
+      report.reporterEmail !== "N/A" &&
+      report.notifyByEmail !== false
+    ) {
+      try {
+        await fetch(`${EMAIL_API_BASE}/status-update`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: report.reporterEmail,
+            name: report.reporterName,
+            ref: report.ref,
+            title: report.title,
+            status: newStatus,
+          }),
+        });
+      } catch (emailError) {
+        console.warn("Status update email skipped:", emailError);
+      }
+    }
+
     showToast(`Status updated to ${newStatus}`, "success");
     loadDashboardData();
   } catch (e) {
