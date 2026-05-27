@@ -488,7 +488,7 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const EMAIL_API_BASE = "http://localhost:3000/api/email";
+    const EMAIL_API_BASE = "https://dsw02a1-tech-nexus-2.onrender.com/api/email";
 
     // ── 3. GLOBAL STATE ──────────────────────────────────────────
     window.currentStep = 1;
@@ -929,10 +929,6 @@
       );
     }
 
-    window.doLogout = function () {
-      localStorage.removeItem("urbanTrack_currentUser");
-      window.location.href = "/pages/homePage.html";
-    };
     // Hide Google Translate banner whenever it appears
     function hideGoogleTranslateBanner() {
       // Remove the top offset Google adds to body

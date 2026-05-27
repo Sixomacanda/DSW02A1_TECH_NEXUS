@@ -22,7 +22,7 @@ app.use(cors({
 app.use(express.json());
 
 // FIXED STATIC PATH
-app.use(express.static(path.resolve("../UrbanTrack")));
+app.use(express.static(path.join(__dirname, "pages")));
 
 // Debug route
 app.get("/debug", (req, res) => {
@@ -35,7 +35,7 @@ app.get("/debug", (req, res) => {
 
 app.get("/test-main", (req, res) => {
     res.sendFile(
-        path.resolve("../UrbanTrack/pages/MainPage.html")
+        path.resolve(__dirname, "pages/MainPage.html")
     );
 });
 
