@@ -248,6 +248,11 @@
 
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
+<<<<<<< HEAD
+=======
+      const EMAIL_API_BASE = "http://localhost:3000/api/email";
+      let verifiedPasswordOtp = "";
+>>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
 
       function showStep(step) {
         document.querySelectorAll(".step").forEach((section) => {
@@ -368,7 +373,11 @@
         });
       });
 
+<<<<<<< HEAD
       window.resetPassword = function () {
+=======
+      window.resetPassword = async function () {
+>>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
         const email = document.getElementById("email").value.trim();
         const error = document.querySelector(".step-email .hint");
 
@@ -379,6 +388,7 @@
 
         error.textContent = "";
 
+<<<<<<< HEAD
         sendPasswordResetEmail(auth, email)
           .then(() => {
             alert("OTP sent to your email.");
@@ -393,6 +403,32 @@
         const otp = Array.from(document.querySelectorAll(".otp-box"))
           .map((box) => box.value.trim())
           .join("");
+=======
+        try {
+          const response = await fetch(`${EMAIL_API_BASE}/password-otp`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          });
+
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || "Could not send OTP.");
+          }
+
+          alert("OTP sent to your email.");
+          showOtpStep();
+        } catch (err) {
+          error.textContent = err.message;
+        }
+      };
+
+      window.verifyOtp = async function () {
+        const otp = Array.from(document.querySelectorAll(".otp-box"))
+          .map((box) => box.value.trim())
+          .join("");
+        const email = document.getElementById("email").value.trim();
+>>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
         const error = document.querySelector(".step-otp .hint");
 
         if (otp.length !== 6) {
@@ -401,18 +437,68 @@
         }
 
         error.textContent = "";
+<<<<<<< HEAD
         showPasswordStep();
       };
 
       window.saveNewPassword = function () {
+=======
+        try {
+          const response = await fetch(`${EMAIL_API_BASE}/verify-password-otp`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, otp }),
+          });
+
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || "Invalid OTP.");
+          }
+
+          verifiedPasswordOtp = otp;
+          showPasswordStep();
+        } catch (err) {
+          error.textContent = err.message;
+        }
+      };
+
+      window.saveNewPassword = async function () {
+>>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
         if (!validateNewPasswordFields(true)) {
           return;
         }
 
+<<<<<<< HEAD
         alert(
           "Password reset successfully. Please log in with your new password.",
         );
         window.location.href = "login.html";
+=======
+        try {
+          const email = document.getElementById("email").value.trim();
+          const response = await fetch(`${EMAIL_API_BASE}/reset-password`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email,
+              otp: verifiedPasswordOtp,
+              password: newPasswordInput.value.trim(),
+            }),
+          });
+
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || "Could not reset password.");
+          }
+
+          alert(
+            "Password reset successfully. Please log in with your new password.",
+          );
+          window.location.href = "login.html";
+        } catch (err) {
+          passwordError.textContent = err.message;
+        }
+>>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
       };
       function setupPasswordToggles() {
         const passwordGroups = document.querySelectorAll(".password-group");

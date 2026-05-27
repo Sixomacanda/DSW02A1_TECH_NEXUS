@@ -1,228 +1,274 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UrbanTrack — Report an Issue</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../Styles/MainPage.css" />
+  </head>
+  <body>
+    <!-- HEADER -->
+    <!-- <header class="header"> -->
+    <nav class="navbar">
+      <div class="logo">Urban Track</div>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UrbanTrack — Report an Issue</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../Styles/MainPage.css" />
-</head>
+      <ul class="nav-links">
+        <!-- google api -->
+        <li><div id="google_translate_element"></div></li>
 
-<body>
-  <!-- HEADER -->
-  <!-- <header class="header"> -->
-  <nav class="navbar">
-    <div class="logo">Urban Track</div>
-
-    <ul class="nav-links">
-      <!-- google api -->
-      <li>
-        <div id="google_translate_element"></div>
-      </li>
-
-      <li><a href="UserDashboard.html">Dashboard</a></li>
-      <li><a href="UserSettings.html">Settings</a></li>
-      <li><a href="#" onclick="doLogout()">Logout</a></li>
-      <div class="nav-actions">
-        <div class="user-chip" id="userChip">
+        <li><a href="UserDashboard.html">Dashboard</a></li>
+        <li><a href="UserSettings.html">Settings</a></li>
+        <li><a href="#" onclick="doLogout()">Logout</a></li>
+        <div class="nav-actions">
+          <div class="user-chip" id="userChip">
           <div class="avatar" id="userAvatar">?</div>
-          <span class="user-name" id="userNameDisplay">Loading…</span>
-          <span></span><span></span>
-        </div>
-    </ul>
-    <!-- <div class="nav-actions">
+        <span class="user-name" id="userNameDisplay">Loading…</span>
+        <span></span><span></span>
+      </div>
+      </ul>
+      <!-- <div class="nav-actions">
         <div class="user-chip" id="userChip"></div>
         <div class="avatar" id="userAvatar">?</div>
         <span class="user-name" id="userNameDisplay">Loading…</span>
       </div> -->
 
-    <div class="menu-button">
-      <div class="menu-button__burger"></div>
-    </div>
-  </nav>
-  <!-- </header> -->
+      <div class="menu-button">
+        <div class="menu-button__burger"></div>
+      </div>
+    </nav>
+    <!-- </header> -->
 
-  <!-- PAGE SHELL -->
-  <div class="page-shell">
-    <div class="page-header fade-up">
-      <div class="page-badge">New Report</div>
-      <h1 class="page-title">Report a Community Issue</h1>
-      <p class="page-subtitle">
-        Help keep your neighbourhood safe. Issues with more upvotes get
-        prioritised first.
-      </p>
-    </div>
+    <!-- PAGE SHELL -->
+    <div class="page-shell">
+      <div class="page-header fade-up">
+        <div class="page-badge">New Report</div>
+        <h1 class="page-title">Report a Community Issue</h1>
+        <p class="page-subtitle">
+          Help keep your neighbourhood safe. Issues with more upvotes get
+          prioritised first.
+        </p>
+      </div>
 
-    <div class="content-grid">
-      <!-- FORM COLUMN -->
-      <div class="fade-up delay-1">
-        <div class="form-card">
-          <!-- Steps bar -->
-          <div class="steps-bar">
-            <div class="step-dot active" id="dot-1">
-              <div class="step-circle">1</div>
-              <span class="step-label">Category</span>
+      <div class="content-grid">
+        <!-- FORM COLUMN -->
+        <div class="fade-up delay-1">
+          <div class="form-card">
+            <!-- Steps bar -->
+            <div class="steps-bar">
+              <div class="step-dot active" id="dot-1">
+                <div class="step-circle">1</div>
+                <span class="step-label">Category</span>
+              </div>
+              <div class="step-dot" id="dot-2">
+                <div class="step-circle">2</div>
+                <span class="step-label">Details</span>
+              </div>
+              <div class="step-dot" id="dot-3">
+                <div class="step-circle">3</div>
+                <span class="step-label">Location</span>
+              </div>
+              <div class="step-dot" id="dot-4">
+                <div class="step-circle">4</div>
+                <span class="step-label">Review</span>
+              </div>
             </div>
-            <div class="step-dot" id="dot-2">
-              <div class="step-circle">2</div>
-              <span class="step-label">Details</span>
-            </div>
-            <div class="step-dot" id="dot-3">
-              <div class="step-circle">3</div>
-              <span class="step-label">Location</span>
-            </div>
-            <div class="step-dot" id="dot-4">
-              <div class="step-circle">4</div>
-              <span class="step-label">Review</span>
-            </div>
-          </div>
 
-          <!-- STEP 1 -->
-          <div class="form-section active" id="step-1">
-            <p class="section-heading">What type of issue is this?</p>
-            <p class="section-desc">
-              Select the category that best describes the problem.
-            </p>
-            <div class="category-grid">
-              <button class="cat-btn" data-cat="Pothole / Road">
-                <span class="cat-icon"></span>Pothole / Road
-              </button>
-              <button class="cat-btn" data-cat="Streetlight">
-                <span class="cat-icon"></span>Streetlight
-              </button>
-              <button class="cat-btn" data-cat="Blocked Drain">
-                <span class="cat-icon"></span>Blocked Drain
-              </button>
-              <button class="cat-btn" data-cat="Littering / Waste">
-                <span class="cat-icon"></span>Littering / Waste
-              </button>
-              <button class="cat-btn" data-cat="Graffiti / Vandalism">
-                <span class="cat-icon"></span>Graffiti
-              </button>
-              <button class="cat-btn" data-cat="Overgrown Vegetation">
-                <span class="cat-icon"></span>Vegetation
-              </button>
-              <button class="cat-btn" data-cat="Broken Pavement">
-                <span class="cat-icon"></span>Pavement
-              </button>
-              <button class="cat-btn" data-cat="Water Leak">
-                <span class="cat-icon"></span>Water Leak
-              </button>
-              <button class="cat-btn" data-cat="Other">
-                <span class="cat-icon"></span>Other
-              </button>
-            </div>
-            <div class="field-group" style="margin-top: 1.5rem">
-              <label>Severity <span class="req">*</span></label>
-              <div class="severity-row">
-                <button class="severity-btn" data-sev="low" onclick="setSeverity(this, 'low')">
-                  Low
+            <!-- STEP 1 -->
+            <div class="form-section active" id="step-1">
+              <p class="section-heading">What type of issue is this?</p>
+              <p class="section-desc">
+                Select the category that best describes the problem.
+              </p>
+              <div class="category-grid">
+                <button class="cat-btn" data-cat="Pothole / Road">
+                  <span class="cat-icon"></span>Pothole / Road
                 </button>
-                <button class="severity-btn" data-sev="medium" onclick="setSeverity(this, 'medium')">
-                  Medium
+                <button class="cat-btn" data-cat="Streetlight">
+                  <span class="cat-icon"></span>Streetlight
                 </button>
-                <button class="severity-btn" data-sev="high" onclick="setSeverity(this, 'high')">
-                  High / Urgent
+                <button class="cat-btn" data-cat="Blocked Drain">
+                  <span class="cat-icon"></span>Blocked Drain
+                </button>
+                <button class="cat-btn" data-cat="Littering / Waste">
+                  <span class="cat-icon"></span>Littering / Waste
+                </button>
+                <button class="cat-btn" data-cat="Graffiti / Vandalism">
+                  <span class="cat-icon"></span>Graffiti
+                </button>
+                <button class="cat-btn" data-cat="Overgrown Vegetation">
+                  <span class="cat-icon"></span>Vegetation
+                </button>
+                <button class="cat-btn" data-cat="Broken Pavement">
+                  <span class="cat-icon"></span>Pavement
+                </button>
+                <button class="cat-btn" data-cat="Water Leak">
+                  <span class="cat-icon"></span>Water Leak
+                </button>
+                <button class="cat-btn" data-cat="Other">
+                  <span class="cat-icon"></span>Other
+                </button>
+              </div>
+              <div class="field-group" style="margin-top: 1.5rem">
+                <label>Severity <span class="req">*</span></label>
+                <div class="severity-row">
+                  <button
+                    class="severity-btn"
+                    data-sev="low"
+                    onclick="setSeverity(this, 'low')"
+                  >
+                    Low
+                  </button>
+                  <button
+                    class="severity-btn"
+                    data-sev="medium"
+                    onclick="setSeverity(this, 'medium')"
+                  >
+                    Medium
+                  </button>
+                  <button
+                    class="severity-btn"
+                    data-sev="high"
+                    onclick="setSeverity(this, 'high')"
+                  >
+                    High / Urgent
+                  </button>
+                </div>
+              </div>
+              <div class="form-nav">
+                <span></span>
+                <button class="btn-primary btn-medium" onclick="goStep(2)">
+                  Next: Details →
                 </button>
               </div>
             </div>
-            <div class="form-nav">
-              <span></span>
-              <button class="btn-primary btn-medium" onclick="goStep(2)">
-                Next: Details →
-              </button>
-            </div>
-          </div>
 
-          <!-- STEP 2 -->
-          <div class="form-section" id="step-2">
-            <p class="section-heading">Describe the issue</p>
-            <p class="section-desc">
-              The more detail you provide, the faster it gets resolved.
-            </p>
-            <div class="field-group">
-              <label>Title <span class="req">*</span></label>
-              <input id="issueTitle" type="text" class="field-input"
-                placeholder="e.g., Large pothole on Main Street near bus stop" maxlength="100" />
-              <div class="char-count" id="titleCount">0 / 100</div>
-            </div>
-            <div class="field-group">
-              <label>Description <span class="req">*</span></label>
-              <textarea id="issueDesc" class="field-input"
-                placeholder="Describe the issue — when did you first notice it? Any safety concerns?"
-                maxlength="500"></textarea>
-              <div class="char-count" id="descCount">0 / 500</div>
-            </div>
-            <div class="field-group">
-              <label>Photos
-                <span style="opacity: 0.45; font-size: 0.63rem">(optional)</span></label>
-              <div class="upload-zone" onclick="document.getElementById('photoInput').click()">
-                <div class="upload-icon" style="
+            <!-- STEP 2 -->
+            <div class="form-section" id="step-2">
+              <p class="section-heading">Describe the issue</p>
+              <p class="section-desc">
+                The more detail you provide, the faster it gets resolved.
+              </p>
+              <div class="field-group">
+                <label>Title <span class="req">*</span></label>
+                <input
+                  id="issueTitle"
+                  type="text"
+                  class="field-input"
+                  placeholder="e.g., Large pothole on Main Street near bus stop"
+                  maxlength="100"
+                />
+                <div class="char-count" id="titleCount">0 / 100</div>
+              </div>
+              <div class="field-group">
+                <label>Description <span class="req">*</span></label>
+                <textarea
+                  id="issueDesc"
+                  class="field-input"
+                  placeholder="Describe the issue — when did you first notice it? Any safety concerns?"
+                  maxlength="500"
+                ></textarea>
+                <div class="char-count" id="descCount">0 / 500</div>
+              </div>
+              <div class="field-group">
+                <label
+                  >Photos
+                  <span style="opacity: 0.45; font-size: 0.63rem"
+                    >(optional)</span
+                  ></label
+                >
+                <div
+                  class="upload-zone"
+                  onclick="document.getElementById('photoInput').click()"
+                >
+                  <div
+                    class="upload-icon"
+                    style="
                       font-size: 1.5rem;
                       color: var(--accent-light);
                       margin-bottom: 0.4rem;
-                    ">
-                  +
+                    "
+                  >
+                    +
+                  </div>
+                  <p><strong>Click to upload</strong> or drag &amp; drop</p>
+                  <p style="opacity: 0.55; margin-top: 0.2rem">
+                    JPG, PNG · Max 5MB each · Up to 3 photos
+                  </p>
                 </div>
-                <p><strong>Click to upload</strong> or drag &amp; drop</p>
-                <p style="opacity: 0.55; margin-top: 0.2rem">
-                  JPG, PNG · Max 5MB each · Up to 3 photos
+                <input
+                  type="file"
+                  id="photoInput"
+                  accept="image/*"
+                  multiple
+                  style="display: none"
+                  onchange="handlePhotos(this)"
+                />
+                <div class="photo-preview" id="photoPreview"></div>
+              </div>
+              <div class="form-nav">
+                <button class="btn-ghost" onclick="goStep(1)">← Back</button>
+                <button class="btn-primary btn-medium" onclick="goStep(3)">
+                  Next: Location →
+                </button>
+              </div>
+            </div>
+
+            <!-- STEP 3 -->
+            <div class="form-section" id="step-3">
+              <p class="section-heading">Where is the issue?</p>
+              <p class="section-desc">
+                Be specific — a nearby landmark helps workers find it faster.
+              </p>
+              <div class="field-group">
+                <label
+                  >Street Address / Landmark <span class="req">*</span></label
+                >
+                <input
+                  id="issueAddress"
+                  type="text"
+                  class="field-input"
+                  placeholder="e.g., 14 Elm Street, near the Pick n Pay"
+                />
+                <p class="field-hint">
+                  Include a street number or nearby landmark if possible.
                 </p>
               </div>
-              <input type="file" id="photoInput" accept="image/*" multiple style="display: none"
-                onchange="handlePhotos(this)" />
-              <div class="photo-preview" id="photoPreview"></div>
-            </div>
-            <div class="form-nav">
-              <button class="btn-ghost" onclick="goStep(1)">← Back</button>
-              <button class="btn-primary btn-medium" onclick="goStep(3)">
-                Next: Location →
-              </button>
-            </div>
-          </div>
-
-          <!-- STEP 3 -->
-          <div class="form-section" id="step-3">
-            <p class="section-heading">Where is the issue?</p>
-            <p class="section-desc">
-              Be specific — a nearby landmark helps workers find it faster.
-            </p>
-            <div class="field-group">
-              <label>Street Address / Landmark <span class="req">*</span></label>
-              <input id="issueAddress" type="text" class="field-input"
-                placeholder="e.g., 14 Elm Street, near the Pick n Pay" />
-              <p class="field-hint">
-                Include a street number or nearby landmark if possible.
-              </p>
-            </div>
-            <div class="field-group">
-              <label>Area / Suburb</label>
-              <select id="issueArea" class="field-input">
-                <option value="">Select area…</option>
-                <option>Sandton CBD</option>
-                <option>Rosebank</option>
-                <option>Melville</option>
-                <option>Soweto</option>
-                <option>Midrand</option>
-                <option>Fourways</option>
-                <option>Randburg</option>
-                <option>Alexandra</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div class="field-group">
-              <label>Pin on Map</label>
-              <div id="mapContainer" style="
+              <div class="field-group">
+                <label>Area / Suburb</label>
+                <select id="issueArea" class="field-input">
+                  <option value="">Select area…</option>
+                  <option>Sandton CBD</option>
+                  <option>Rosebank</option>
+                  <option>Melville</option>
+                  <option>Soweto</option>
+                  <option>Midrand</option>
+                  <option>Fourways</option>
+                  <option>Randburg</option>
+                  <option>Alexandra</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label>Pin on Map</label>
+                <div
+                  id="mapContainer"
+                  style="
                     height: 220px;
                     border-radius: var(--radius);
                     overflow: hidden;
                     border: 2px solid rgba(56, 189, 248, 0.3);
                     position: relative;
                     cursor: pointer;
-                  ">
-                <div id="map" style="width: 100%; height: 100%"></div>
-                <div id="mapPlaceholder" style="
+                  "
+                >
+                  <div id="map" style="width: 100%; height: 100%"></div>
+                  <div
+                    id="mapPlaceholder"
+                    style="
                       position: absolute;
                       inset: 0;
                       background: linear-gradient(135deg, #1e3a8a, #0f172a);
@@ -233,8 +279,10 @@
                       gap: 0.5rem;
                       color: var(--text-muted);
                       font-size: 0.875rem;
-                    ">
-                  <div style="
+                    "
+                  >
+                    <div
+                      style="
                         width: 40px;
                         height: 40px;
                         border-radius: 50%;
@@ -245,799 +293,799 @@
                         justify-content: center;
                         font-size: 1.1rem;
                         color: var(--accent-light);
-                      ">
-                    +
+                      "
+                    >
+                      +
+                    </div>
+                    <p>Click to drop a pin on the map</p>
+                    <small style="opacity: 0.4; font-size: 0.7rem"
+                      >Loads Google Maps with your location</small
+                    >
                   </div>
-                  <p>Click to drop a pin on the map</p>
-                  <small style="opacity: 0.4; font-size: 0.7rem">Loads Google Maps with your location</small>
                 </div>
-              </div>
-              <div id="pinnedCoords" style="
+                <div
+                  id="pinnedCoords"
+                  style="
                     display: none;
                     margin-top: 0.5rem;
                     font-size: 0.78rem;
                     color: var(--accent-light);
                     padding-left: 0.5rem;
-                  ">
-                Pinned: <span id="coordsText"></span>
+                  "
+                >
+                  Pinned: <span id="coordsText"></span>
+                </div>
+                <a href="map.html" class="map-link">View full map</a>
               </div>
-              <a href="map.html" class="map-link">View full map</a>
+              <div class="field-group">
+                <label
+                  >Google Maps Link
+                  <span style="opacity: 0.45; font-size: 0.63rem"
+                    >(optional)</span
+                  ></label
+                >
+                <input
+                  id="issueNotes"
+                  type="text"
+                  class="field-input"
+                  placeholder="Paste your Google Maps link here…"
+                />
+              </div>
+              <div class="form-nav">
+                <button class="btn-ghost" onclick="goStep(2)">← Back</button>
+                <button class="btn-primary btn-medium" onclick="goStep(4)">
+                  Next: Review →
+                </button>
+              </div>
             </div>
-            <div class="field-group">
-              <label>Google Maps Link
-                <span style="opacity: 0.45; font-size: 0.63rem">(optional)</span></label>
-              <input id="issueNotes" type="text" class="field-input" placeholder="Paste your Google Maps link here…" />
-            </div>
-            <div class="form-nav">
-              <button class="btn-ghost" onclick="goStep(2)">← Back</button>
-              <button class="btn-primary btn-medium" onclick="goStep(4)">
-                Next: Review →
-              </button>
-            </div>
-          </div>
 
-          <!-- STEP 4 -->
-          <div class="form-section" id="step-4">
-            <p class="section-heading">Review your report</p>
-            <p class="section-desc">
-              Double-check everything before submitting to the community.
-            </p>
-            <div id="reviewContent"></div>
-            <div class="field-group" style="margin-top: 1.1rem">
-              <label class="check-label">
-                <input type="checkbox" id="agreeCheck" />
-                I confirm this is a genuine issue and the information provided
-                is accurate.
-              </label>
+            <!-- STEP 4 -->
+            <div class="form-section" id="step-4">
+              <p class="section-heading">Review your report</p>
+              <p class="section-desc">
+                Double-check everything before submitting to the community.
+              </p>
+              <div id="reviewContent"></div>
+              <div class="field-group" style="margin-top: 1.1rem">
+                <label class="check-label">
+                  <input type="checkbox" id="agreeCheck" />
+                  I confirm this is a genuine issue and the information provided
+                  is accurate.
+                </label>
+              </div>
+              <div class="field-group">
+                <label class="check-label">
+                  <input type="checkbox" id="notifyCheck" checked />
+                  Notify me when this issue is updated or resolved.
+                </label>
+              </div>
+              <div class="form-nav">
+                <button class="btn-ghost" onclick="goStep(3)">← Back</button>
+                <button
+                  class="btn-primary btn-medium btn-success"
+                  id="submitBtn"
+                  onclick="submitReport()"
+                >
+                  Submit Report
+                </button>
+              </div>
             </div>
-            <div class="field-group">
-              <label class="check-label">
-                <input type="checkbox" id="notifyCheck" checked />
-                Notify me when this issue is updated or resolved.
-              </label>
-            </div>
-            <div class="form-nav">
-              <button class="btn-ghost" onclick="goStep(3)">← Back</button>
-              <button class="btn-primary btn-medium btn-success" id="submitBtn" onclick="submitReport()">
-                Submit Report
-              </button>
-            </div>
-          </div>
 
-          <!-- SUCCESS -->
-          <div class="success-state" id="successState">
-            <div class="success-icon-wrap" style="
+            <!-- SUCCESS -->
+            <div class="success-state" id="successState">
+              <div
+                class="success-icon-wrap"
+                style="
                   font-size: 1.5rem;
                   font-weight: 700;
                   color: var(--success);
-                ">
-              OK
-            </div>
-            <h2>Report Submitted!</h2>
-            <p>
-              Your issue is now live and visible to the community.<br />Others
-              can upvote it to boost its priority.
-            </p>
-            <div class="issue-ref" id="issueRef">#UT-0000</div>
-            <p style="
+                "
+              >
+                OK
+              </div>
+              <h2>Report Submitted!</h2>
+              <p>
+                Your issue is now live and visible to the community.<br />Others
+                can upvote it to boost its priority.
+              </p>
+              <div class="issue-ref" id="issueRef">#UT-0000</div>
+              <p
+                style="
                   font-size: 0.75rem;
                   opacity: 0.45;
                   margin-bottom: 1.25rem;
-                ">
-              Save this reference number to track your report.
-            </p>
-            <div class="success-actions">
-              <button class="btn-primary btn-medium" onclick="location.reload()">
-                Report Another Issue
-              </button>
-              <a href="UserDashboard.html" class="btn-ghost">View on Dashboard</a>
+                "
+              >
+                Save this reference number to track your report.
+              </p>
+              <div class="success-actions">
+                <button
+                  class="btn-primary btn-medium"
+                  onclick="location.reload()"
+                >
+                  Report Another Issue
+                </button>
+                <a href="UserDashboard.html" class="btn-ghost"
+                  >View on Dashboard</a
+                >
+              </div>
+            </div>
+          </div>
+          <!-- /form-card -->
+        </div>
+        <!-- /form column -->
+
+        <!-- SIDEBAR -->
+        <div class="sidebar fade-up delay-2">
+          <div class="sidebar-card">
+            <p class="sidebar-title">Community Stats</p>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <div class="stat-num" id="myReportsCount">0</div>
+                <div class="stat-label">My Reports</div>
+              </div>
+              <div class="stat-item">
+                <div
+                  class="stat-num"
+                  id="resolvedCount"
+                  style="color: var(--success)"
+                >
+                  0
+                </div>
+                <div class="stat-label">Resolved</div>
+              </div>
+              <div class="stat-item">
+                <div
+                  class="stat-num"
+                  id="progressCount"
+                  style="color: var(--warning)"
+                >
+                  0
+                </div>
+                <div class="stat-label">In Progress</div>
+              </div>
+              <div class="stat-item">
+                <div
+                  class="stat-num"
+                  id="urgentCount"
+                  style="color: var(--danger)"
+                >
+                  0
+                </div>
+                <div class="stat-label">Urgent</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-card">
+            <p class="sidebar-title">Recent Reports</p>
+            <div class="feed-item">
+              <div class="feed-dot" style="background: var(--danger)"></div>
+              <div class="feed-content">
+                <div class="feed-title">Broken streetlight near school</div>
+                <div class="feed-meta">
+                  Melville · just now
+                  <span class="status-badge status-urgent">Urgent</span>
+                </div>
+              </div>
+              <div class="feed-votes">▲ 12</div>
+            </div>
+            <div class="feed-item">
+              <div class="feed-dot" style="background: var(--warning)"></div>
+              <div class="feed-content">
+                <div class="feed-title">Pothole on Jan Smuts Ave</div>
+                <div class="feed-meta">
+                  Rosebank · 2h ago
+                  <span class="status-badge status-pending">Pending</span>
+                </div>
+              </div>
+              <div class="feed-votes">▲ 8</div>
+            </div>
+            <div class="feed-item">
+              <div class="feed-dot" style="background: var(--success)"></div>
+              <div class="feed-content">
+                <div class="feed-title">Blocked drain — flooding risk</div>
+                <div class="feed-meta">
+                  Sandton · 3h ago
+                  <span class="status-badge status-resolved">Resolved</span>
+                </div>
+              </div>
+              <div class="feed-votes">▲ 31</div>
+            </div>
+            <div class="feed-item">
+              <div class="feed-dot" style="background: var(--warning)"></div>
+              <div class="feed-content">
+                <div class="feed-title">Graffiti on community wall</div>
+                <div class="feed-meta">
+                  Soweto · 5h ago
+                  <span class="status-badge status-pending">Pending</span>
+                </div>
+              </div>
+              <div class="feed-votes">▲ 5</div>
+            </div>
+            <div class="feed-item">
+              <div class="feed-dot" style="background: var(--danger)"></div>
+              <div class="feed-content">
+                <div class="feed-title">Water leak on Harris Road</div>
+                <div class="feed-meta">
+                  Midrand · 6h ago
+                  <span class="status-badge status-urgent">Urgent</span>
+                </div>
+              </div>
+              <div class="feed-votes">▲ 19</div>
+            </div>
+          </div>
+
+          <div class="sidebar-card">
+            <p class="sidebar-title">Reporting Tips</p>
+            <div class="tip-item">
+              <span
+                class="tip-icon"
+                style="color: var(--accent-light); font-weight: 700"
+                >+</span
+              ><span>Adding a photo increases resolution speed by 3×.</span>
+            </div>
+            <div class="tip-item">
+              <span
+                class="tip-icon"
+                style="color: var(--accent-light); font-weight: 700"
+                >+</span
+              ><span
+                >Include a street number or nearby landmark for accuracy.</span
+              >
+            </div>
+            <div class="tip-item">
+              <span
+                class="tip-icon"
+                style="color: var(--accent-light); font-weight: 700"
+                >+</span
+              ><span
+                >Share your report so neighbours can upvote and boost
+                priority.</span
+              >
+            </div>
+            <div class="tip-item">
+              <span
+                class="tip-icon"
+                style="color: var(--accent-light); font-weight: 700"
+                >+</span
+              ><span
+                >Enable notifications to be updated when status changes.</span
+              >
             </div>
           </div>
         </div>
-        <!-- /form-card -->
+        <!-- /sidebar -->
       </div>
-      <!-- /form column -->
-
-      <!-- SIDEBAR -->
-      <div class="sidebar fade-up delay-2">
-        <div class="sidebar-card">
-          <p class="sidebar-title">Community Stats</p>
-          <div class="stats-grid">
-            <div class="stat-item">
-              <div class="stat-num" id="myReportsCount">0</div>
-              <div class="stat-label">My Reports</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-num" id="resolvedCount" style="color: var(--success)">
-                0
-              </div>
-              <div class="stat-label">Resolved</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-num" id="progressCount" style="color: var(--warning)">
-                0
-              </div>
-              <div class="stat-label">In Progress</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-num" id="urgentCount" style="color: var(--danger)">
-                0
-              </div>
-              <div class="stat-label">Urgent</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="sidebar-card">
-          <p class="sidebar-title">Recent Reports</p>
-          <div class="feed-item">
-            <div class="feed-dot" style="background: var(--danger)"></div>
-            <div class="feed-content">
-              <div class="feed-title">Broken streetlight near school</div>
-              <div class="feed-meta">
-                Melville · just now
-                <span class="status-badge status-urgent">Urgent</span>
-              </div>
-            </div>
-            <div class="feed-votes">▲ 12</div>
-          </div>
-          <div class="feed-item">
-            <div class="feed-dot" style="background: var(--warning)"></div>
-            <div class="feed-content">
-              <div class="feed-title">Pothole on Jan Smuts Ave</div>
-              <div class="feed-meta">
-                Rosebank · 2h ago
-                <span class="status-badge status-pending">Pending</span>
-              </div>
-            </div>
-            <div class="feed-votes">▲ 8</div>
-          </div>
-          <div class="feed-item">
-            <div class="feed-dot" style="background: var(--success)"></div>
-            <div class="feed-content">
-              <div class="feed-title">Blocked drain — flooding risk</div>
-              <div class="feed-meta">
-                Sandton · 3h ago
-                <span class="status-badge status-resolved">Resolved</span>
-              </div>
-            </div>
-            <div class="feed-votes">▲ 31</div>
-          </div>
-          <div class="feed-item">
-            <div class="feed-dot" style="background: var(--warning)"></div>
-            <div class="feed-content">
-              <div class="feed-title">Graffiti on community wall</div>
-              <div class="feed-meta">
-                Soweto · 5h ago
-                <span class="status-badge status-pending">Pending</span>
-              </div>
-            </div>
-            <div class="feed-votes">▲ 5</div>
-          </div>
-          <div class="feed-item">
-            <div class="feed-dot" style="background: var(--danger)"></div>
-            <div class="feed-content">
-              <div class="feed-title">Water leak on Harris Road</div>
-              <div class="feed-meta">
-                Midrand · 6h ago
-                <span class="status-badge status-urgent">Urgent</span>
-              </div>
-            </div>
-            <div class="feed-votes">▲ 19</div>
-          </div>
-        </div>
-
-        <div class="sidebar-card">
-          <p class="sidebar-title">Reporting Tips</p>
-          <div class="tip-item">
-            <span class="tip-icon" style="color: var(--accent-light); font-weight: 700">+</span><span>Adding a photo
-              increases resolution speed by 3×.</span>
-          </div>
-          <div class="tip-item">
-            <span class="tip-icon" style="color: var(--accent-light); font-weight: 700">+</span><span>Include a street
-              number or nearby landmark for accuracy.</span>
-          </div>
-          <div class="tip-item">
-            <span class="tip-icon" style="color: var(--accent-light); font-weight: 700">+</span><span>Share your report
-              so neighbours can upvote and boost
-              priority.</span>
-          </div>
-          <div class="tip-item">
-            <span class="tip-icon" style="color: var(--accent-light); font-weight: 700">+</span><span>Enable
-              notifications to be updated when status changes.</span>
-          </div>
-        </div>
-      </div>
-      <!-- /sidebar -->
+      <!-- /content-grid -->
     </div>
-    <!-- /content-grid -->
-  </div>
-  <!-- /page-shell -->
+    <!-- /page-shell -->
 
-  <div class="toast" id="toast"></div>
+    <div class="toast" id="toast"></div>
 
-  <script src="../js/main.js"></script>
+    <script src="../js/main.js"></script>
 
-  <script type="module">
-    // ── 1. FIREBASE IMPORTS ──────────────────────────────────────
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      doc,
-      updateDoc,
-      increment,
-      serverTimestamp,
-      query,
-      where,
-      getDocs,
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    <script type="module">
+      // ── 1. FIREBASE IMPORTS ──────────────────────────────────────
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        doc,
+        updateDoc,
+        increment,
+        serverTimestamp,
+        query,
+        where,
+        getDocs,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // ── 2. FIREBASE INIT ─────────────────────────────────────────
-    const firebaseConfig = {
-      apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
-      authDomain: "urban-track-91e53.firebaseapp.com",
-      projectId: "urban-track-91e53",
-      storageBucket: "urban-track-91e53.firebasestorage.app",
-      messagingSenderId: "519209303536",
-      appId: "1:519209303536:web:c212eb58eb836e27047135",
-    };
+      // ── 2. FIREBASE INIT ─────────────────────────────────────────
+      const firebaseConfig = {
+        apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
+        authDomain: "urban-track-91e53.firebaseapp.com",
+        projectId: "urban-track-91e53",
+        storageBucket: "urban-track-91e53.firebasestorage.app",
+        messagingSenderId: "519209303536",
+        appId: "1:519209303536:web:c212eb58eb836e27047135",
+      };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      const EMAIL_API_BASE = "http://localhost:3000/api/email";
 
-    // ── 3. GLOBAL STATE ──────────────────────────────────────────
-    window.currentStep = 1;
-    window.selectedCategory = "";
-    window.selectedSeverity = "";
-    window.uploadedPhotos = [];
-    window.pinnedLat = null;
-    window.pinnedLng = null;
+      // ── 3. GLOBAL STATE ──────────────────────────────────────────
+      window.currentStep = 1;
+      window.selectedCategory = "";
+      window.selectedSeverity = "";
+      window.uploadedPhotos = [];
+      window.pinnedLat = null;
+      window.pinnedLng = null;
 
-    // ── 4. HELPERS ───────────────────────────────────────────────
-    function getInitials(name) {
-      if (!name) return "U";
-      return name
-        .trim()
-        .split(" ")
-        .slice(0, 2)
-        .map((p) => p[0].toUpperCase())
-        .join("");
-    }
-
-    window.showToast = function (msg) {
-      const t = document.getElementById("toast");
-      if (!t) {
-        alert(msg);
-        return;
+      // ── 4. HELPERS ───────────────────────────────────────────────
+      function getInitials(name) {
+        if (!name) return "U";
+        return name
+          .trim()
+          .split(" ")
+          .slice(0, 2)
+          .map((p) => p[0].toUpperCase())
+          .join("");
       }
-      t.textContent = msg;
-      t.classList.add("show");
-      setTimeout(() => t.classList.remove("show"), 3000);
-    };
 
-    // ── 5. USER DISPLAY ──────────────────────────────────────────
-    function loadUser() {
-      const u = JSON.parse(
-        localStorage.getItem("urbanTrack_currentUser") || "null",
-      );
-      if (!u) return;
-      const name = u.name || u.email || "User";
-      document.getElementById("userNameDisplay").textContent = name;
-      document.getElementById("userAvatar").textContent = getInitials(name);
-    }
+      window.showToast = function (msg) {
+        const t = document.getElementById("toast");
+        if (!t) {
+          alert(msg);
+          return;
+        }
+        t.textContent = msg;
+        t.classList.add("show");
+        setTimeout(() => t.classList.remove("show"), 3000);
+      };
 
-    window.doLogout = function () {
-      localStorage.removeItem("urbanTrack_currentUser");
-      location.href = "../../homePage.html";
-    };
-
-    // window.toggleMobileMenu = function() {
-    //   document.querySelector(".nav-links").classList.toggle("show");
-    // };
-
-    // ── 6. COMMUNITY STATS ───────────────────────────────────────
-    async function loadStats() {
-      const u = JSON.parse(
-        localStorage.getItem("urbanTrack_currentUser") || "null",
-      );
-      const userId = auth.currentUser?.uid || u?.uid || u?.id;
-      if (!userId) return;
-      try {
-        const snap = await getDocs(
-          query(collection(db, "reports"), where("reportedBy", "==", userId)),
+      // ── 5. USER DISPLAY ──────────────────────────────────────────
+      function loadUser() {
+        const u = JSON.parse(
+          localStorage.getItem("urbanTrack_currentUser") || "null",
         );
-        let resolved = 0,
-          progress = 0,
-          urgent = 0;
-        snap.forEach((d) => {
-          const r = d.data();
-          if (r.status === "resolved") resolved++;
-          if (r.status === "in-progress") progress++;
-          if (r.severity === "high" && r.status !== "resolved") urgent++;
+        if (!u) return;
+        const name = u.name || u.email || "User";
+        document.getElementById("userNameDisplay").textContent = name;
+        document.getElementById("userAvatar").textContent = getInitials(name);
+      }
+
+      window.doLogout = function () {
+        localStorage.removeItem("urbanTrack_currentUser");
+        location.href = "../../homePage.html";
+      };
+
+      // window.toggleMobileMenu = function() {
+      //   document.querySelector(".nav-links").classList.toggle("show");
+      // };
+
+      // ── 6. COMMUNITY STATS ───────────────────────────────────────
+      async function loadStats() {
+        const u = JSON.parse(
+          localStorage.getItem("urbanTrack_currentUser") || "null",
+        );
+        const userId = auth.currentUser?.uid || u?.uid || u?.id;
+        if (!userId) return;
+        try {
+          const snap = await getDocs(
+            query(collection(db, "reports"), where("reportedBy", "==", userId)),
+          );
+          let resolved = 0,
+            progress = 0,
+            urgent = 0;
+          snap.forEach((d) => {
+            const r = d.data();
+            if (r.status === "resolved") resolved++;
+            if (r.status === "in-progress") progress++;
+            if (r.severity === "high" && r.status !== "resolved") urgent++;
+          });
+          document.getElementById("myReportsCount").textContent = snap.size;
+          document.getElementById("resolvedCount").textContent = resolved;
+          document.getElementById("progressCount").textContent = progress;
+          document.getElementById("urgentCount").textContent = urgent;
+        } catch (e) {
+          console.warn("Stats load failed:", e);
+        }
+      }
+
+      // ── 7. CATEGORY SELECTION ────────────────────────────────────
+      document.querySelectorAll(".cat-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".cat-btn")
+            .forEach((b) => b.classList.remove("selected"));
+          btn.classList.add("selected");
+          window.selectedCategory = btn.dataset.cat;
         });
-        document.getElementById("myReportsCount").textContent = snap.size;
-        document.getElementById("resolvedCount").textContent = resolved;
-        document.getElementById("progressCount").textContent = progress;
-        document.getElementById("urgentCount").textContent = urgent;
-      } catch (e) {
-        console.warn("Stats load failed:", e);
-      }
-    }
-
-    // ── 7. CATEGORY SELECTION ────────────────────────────────────
-    document.querySelectorAll(".cat-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        document
-          .querySelectorAll(".cat-btn")
-          .forEach((b) => b.classList.remove("selected"));
-        btn.classList.add("selected");
-        window.selectedCategory = btn.dataset.cat;
       });
-    });
 
-    // ── 8. SEVERITY SELECTION ────────────────────────────────────
-    window.setSeverity = function (el, sev) {
-      document
-        .querySelectorAll(".severity-btn")
-        .forEach((b) => b.classList.remove("sel-low", "sel-med", "sel-hig"));
-      window.selectedSeverity = sev;
-      const map = { low: "sel-low", medium: "sel-med", high: "sel-hig" };
-      el.classList.add(map[sev]);
-    };
+      // ── 8. SEVERITY SELECTION ────────────────────────────────────
+      window.setSeverity = function (el, sev) {
+        document
+          .querySelectorAll(".severity-btn")
+          .forEach((b) => b.classList.remove("sel-low", "sel-med", "sel-hig"));
+        window.selectedSeverity = sev;
+        const map = { low: "sel-low", medium: "sel-med", high: "sel-hig" };
+        el.classList.add(map[sev]);
+      };
 
-    // ── 9. STEP NAVIGATION ───────────────────────────────────────
-    window.goStep = function (step) {
-      if (step > window.currentStep) {
-        if (window.currentStep === 1 && !window.selectedCategory) {
-          showToast("Please select a category");
-          return;
+      // ── 9. STEP NAVIGATION ───────────────────────────────────────
+      window.goStep = function (step) {
+        if (step > window.currentStep) {
+          if (window.currentStep === 1 && !window.selectedCategory) {
+            showToast("Please select a category");
+            return;
+          }
+          if (window.currentStep === 1 && !window.selectedSeverity) {
+            showToast("Please select severity");
+            return;
+          }
+          if (
+            window.currentStep === 2 &&
+            !document.getElementById("issueTitle").value.trim()
+          ) {
+            showToast("Enter issue title");
+            return;
+          }
+          if (
+            window.currentStep === 2 &&
+            !document.getElementById("issueDesc").value.trim()
+          ) {
+            showToast("Enter description");
+            return;
+          }
+          if (
+            window.currentStep === 3 &&
+            !document.getElementById("issueAddress").value.trim()
+          ) {
+            showToast("Enter location");
+            return;
+          }
         }
-        if (window.currentStep === 1 && !window.selectedSeverity) {
-          showToast("Please select severity");
-          return;
-        }
-        if (
-          window.currentStep === 2 &&
-          !document.getElementById("issueTitle").value.trim()
-        ) {
-          showToast("Enter issue title");
-          return;
-        }
-        if (
-          window.currentStep === 2 &&
-          !document.getElementById("issueDesc").value.trim()
-        ) {
-          showToast("Enter description");
-          return;
-        }
-        if (
-          window.currentStep === 3 &&
-          !document.getElementById("issueAddress").value.trim()
-        ) {
-          showToast("Enter location");
-          return;
-        }
-      }
-      document
-        .getElementById("step-" + window.currentStep)
-        .classList.remove("active");
-      document
-        .getElementById("dot-" + window.currentStep)
-        .classList.remove("active");
-      if (step > window.currentStep) {
+        document
+          .getElementById("step-" + window.currentStep)
+          .classList.remove("active");
         document
           .getElementById("dot-" + window.currentStep)
-          .classList.add("done");
-      }
-      window.currentStep = step;
-      document.getElementById("step-" + step).classList.add("active");
-      document.getElementById("dot-" + step).classList.add("active");
-      if (step === 4) buildReview();
-    };
-
-    // ── 10. REVIEW BUILDER ───────────────────────────────────────
-    function buildReview() {
-      const sevColour = {
-        low: "var(--success)",
-        medium: "var(--warning)",
-        high: "var(--danger)",
+          .classList.remove("active");
+        if (step > window.currentStep) {
+          document
+            .getElementById("dot-" + window.currentStep)
+            .classList.add("done");
+        }
+        window.currentStep = step;
+        document.getElementById("step-" + step).classList.add("active");
+        document.getElementById("dot-" + step).classList.add("active");
+        if (step === 4) buildReview();
       };
-      const rows = [
-        ["Category", window.selectedCategory],
-        ["Severity", window.selectedSeverity],
-        ["Title", document.getElementById("issueTitle").value],
-        ["Address", document.getElementById("issueAddress").value],
-        ["Area", document.getElementById("issueArea").value || "—"],
-        ["Photos", window.uploadedPhotos.length + " attached"],
-        [
-          "Location",
-          window.pinnedLat
-            ? `${window.pinnedLat}, ${window.pinnedLng}`
-            : "Not pinned",
-        ],
-      ];
-      let html = `<div class="review-table">`;
-      rows.forEach((r) => {
-        const colour =
-          r[0] === "Severity"
-            ? sevColour[window.selectedSeverity] || "#fff"
-            : "var(--text)";
-        html += `<div class="review-row">
+
+      // ── 10. REVIEW BUILDER ───────────────────────────────────────
+      function buildReview() {
+        const sevColour = {
+          low: "var(--success)",
+          medium: "var(--warning)",
+          high: "var(--danger)",
+        };
+        const rows = [
+          ["Category", window.selectedCategory],
+          ["Severity", window.selectedSeverity],
+          ["Title", document.getElementById("issueTitle").value],
+          ["Address", document.getElementById("issueAddress").value],
+          ["Area", document.getElementById("issueArea").value || "—"],
+          ["Photos", window.uploadedPhotos.length + " attached"],
+          [
+            "Location",
+            window.pinnedLat
+              ? `${window.pinnedLat}, ${window.pinnedLng}`
+              : "Not pinned",
+          ],
+        ];
+        let html = `<div class="review-table">`;
+        rows.forEach((r) => {
+          const colour =
+            r[0] === "Severity"
+              ? sevColour[window.selectedSeverity] || "#fff"
+              : "var(--text)";
+          html += `<div class="review-row">
         <span class="review-key">${r[0]}</span>
         <span class="review-val" style="color:${colour}">${r[1]}</span>
       </div>`;
-      });
-      html += `</div>`;
-      const desc = document.getElementById("issueDesc").value;
-      if (desc) {
-        html += `<div style="margin-top:1rem;font-size:.85rem;color:var(--text-muted);line-height:1.6">
+        });
+        html += `</div>`;
+        const desc = document.getElementById("issueDesc").value;
+        if (desc) {
+          html += `<div style="margin-top:1rem;font-size:.85rem;color:var(--text-muted);line-height:1.6">
         <strong style="color:var(--accent-light)">Description</strong><br>${desc}
       </div>`;
-      }
-      document.getElementById("reviewContent").innerHTML = html;
-    }
-
-    // ── 11. PHOTO UPLOAD ─────────────────────────────────────────
-    window.handlePhotos = function (input) {
-      Array.from(input.files).forEach((file) => {
-        if (file.size > 5 * 1024 * 1024) {
-          showToast("File exceeds 5MB");
-          return;
         }
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          window.uploadedPhotos.push(e.target.result);
-          renderPhotos();
-        };
-        reader.readAsDataURL(file);
-      });
-    };
-
-    function renderPhotos() {
-      const preview = document.getElementById("photoPreview");
-      preview.innerHTML = "";
-      window.uploadedPhotos.forEach((src, i) => {
-        const div = document.createElement("div");
-        div.className = "photo-thumb";
-        div.innerHTML = `<img src="${src}"><button class="photo-remove" onclick="removePhoto(${i})">×</button>`;
-        preview.appendChild(div);
-      });
-    }
-
-    window.removePhoto = function (i) {
-      window.uploadedPhotos.splice(i, 1);
-      renderPhotos();
-    };
-
-    // ── 12. CHAR COUNTERS ────────────────────────────────────────
-    document
-      .getElementById("issueTitle")
-      .addEventListener("input", function () {
-        const c = document.getElementById("titleCount");
-        c.textContent = `${this.value.length} / 100`;
-        c.className = "char-count" + (this.value.length > 90 ? " warn" : "");
-      });
-
-    document
-      .getElementById("issueDesc")
-      .addEventListener("input", function () {
-        const c = document.getElementById("descCount");
-        c.textContent = `${this.value.length} / 500`;
-        c.className = "char-count" + (this.value.length > 450 ? " warn" : "");
-      });
-
-    // ── 13. SUBMIT REPORT ────────────────────────────────────────
-    window.submitReport = async function () {
-      if (!document.getElementById("agreeCheck").checked) {
-        alert("Please confirm the declaration.");
-        return;
+        document.getElementById("reviewContent").innerHTML = html;
       }
-      const u = JSON.parse(
-        localStorage.getItem("urbanTrack_currentUser") || "null",
-      );
-      const userId = auth.currentUser
-        ? auth.currentUser.uid
-        : u?.uid || u?.id || null;
-      const userName = u ? u.name || u.email : "Community Member";
-      const ref = "UT-" + Math.floor(1000 + Math.random() * 9000);
 
-      const reportData = {
-        category: window.selectedCategory,
-        severity: window.selectedSeverity,
-        title: document.getElementById("issueTitle").value,
-        description: document.getElementById("issueDesc").value,
-        address: document.getElementById("issueAddress").value,
-        area: document.getElementById("issueArea").value,
-        notes: document.getElementById("issueNotes").value,
-        photos: window.uploadedPhotos,
-        lat: window.pinnedLat || null,
-        lng: window.pinnedLng || null,
-        timestamp: serverTimestamp(),
-        reportedBy: userId,
-        reporterName: userName,
-        reporterEmail: u?.email || "N/A",
-        ref,
+      // ── 11. PHOTO UPLOAD ─────────────────────────────────────────
+      window.handlePhotos = function (input) {
+        Array.from(input.files).forEach((file) => {
+          if (file.size > 5 * 1024 * 1024) {
+            showToast("File exceeds 5MB");
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            window.uploadedPhotos.push(e.target.result);
+            renderPhotos();
+          };
+          reader.readAsDataURL(file);
+        });
       };
 
-      try {
-        await addDoc(collection(db, "reports"), reportData);
-        if (userId) {
-          try {
-            await updateDoc(doc(db, "users", userId), {
-              reportsCount: increment(1),
-            });
-          } catch (e) {
-            console.warn("Count increment skipped:", e);
-          }
-        }
-        document.getElementById("issueRef").textContent = "#" + ref;
-        // Hide all steps, show success
-        document
-          .querySelectorAll(".form-section")
-          .forEach((s) => s.classList.remove("active"));
-        document.querySelector(".steps-bar").style.display = "none";
-        document.getElementById("successState").classList.add("active");
-        showToast("Report submitted successfully!");
-      } catch (e) {
-        console.error("Submit error:", e);
-        showToast("Submission failed: " + (e.code || "Check console"));
+      function renderPhotos() {
+        const preview = document.getElementById("photoPreview");
+        preview.innerHTML = "";
+        window.uploadedPhotos.forEach((src, i) => {
+          const div = document.createElement("div");
+          div.className = "photo-thumb";
+          div.innerHTML = `<img src="${src}"><button class="photo-remove" onclick="removePhoto(${i})">×</button>`;
+          preview.appendChild(div);
+        });
       }
-    };
 
-    // ── 14. GOOGLE MAPS PIN DROP ─────────────────────────────────
-    // Exposed as window.initMap so Google's async callback can find it
-    window.initMap = function () {
-      // Map API is ready — nothing to do until user clicks the container
-    };
+      window.removePhoto = function (i) {
+        window.uploadedPhotos.splice(i, 1);
+        renderPhotos();
+      };
 
-    document
-      .getElementById("mapContainer")
-      .addEventListener("click", function () {
-        if (window._mapInstance) return; // already built
+      // ── 12. CHAR COUNTERS ────────────────────────────────────────
+      document
+        .getElementById("issueTitle")
+        .addEventListener("input", function () {
+          const c = document.getElementById("titleCount");
+          c.textContent = `${this.value.length} / 100`;
+          c.className = "char-count" + (this.value.length > 90 ? " warn" : "");
+        });
 
-        document.getElementById("mapPlaceholder").style.display = "none";
+      document
+        .getElementById("issueDesc")
+        .addEventListener("input", function () {
+          const c = document.getElementById("descCount");
+          c.textContent = `${this.value.length} / 500`;
+          c.className = "char-count" + (this.value.length > 450 ? " warn" : "");
+        });
 
-        const defaultCentre = { lat: -26.2041, lng: 28.0473 }; // Johannesburg
-
-        function buildMap(pos) {
-          window._mapInstance = new google.maps.Map(
-            document.getElementById("map"),
-            {
-              center: pos,
-              zoom: 15,
-              styles: [
-                { elementType: "geometry", stylers: [{ color: "#1e3a8a" }] },
-                {
-                  elementType: "labels.text.fill",
-                  stylers: [{ color: "#93c5fd" }],
-                },
-                {
-                  elementType: "labels.text.stroke",
-                  stylers: [{ color: "#0f172a" }],
-                },
-                {
-                  featureType: "road",
-                  elementType: "geometry",
-                  stylers: [{ color: "#0f172a" }],
-                },
-                {
-                  featureType: "water",
-                  elementType: "geometry",
-                  stylers: [{ color: "#0ea5e9" }],
-                },
-                { featureType: "poi", stylers: [{ visibility: "off" }] },
-              ],
-            },
-          );
-
-          window._marker = new google.maps.Marker({
-            position: pos,
-            map: window._mapInstance,
-            draggable: true,
-            title: "Drag to adjust",
-            icon: {
-              path: google.maps.SymbolPath.CIRCLE,
-              scale: 10,
-              fillColor: "#38bdf8",
-              fillOpacity: 1,
-              strokeColor: "#ffffff",
-              strokeWeight: 2,
-            },
-          });
-
-          updateCoords(pos.lat, pos.lng);
-
-          // Click anywhere on map to move pin
-          window._mapInstance.addListener("click", function (e) {
-            window._marker.setPosition(e.latLng);
-            updateCoords(e.latLng.lat(), e.latLng.lng());
-          });
-
-          // Drag pin to adjust
-          window._marker.addListener("dragend", function (e) {
-            updateCoords(e.latLng.lat(), e.latLng.lng());
-          });
+      // ── 13. SUBMIT REPORT ────────────────────────────────────────
+      window.submitReport = async function () {
+        if (!document.getElementById("agreeCheck").checked) {
+          alert("Please confirm the declaration.");
+          return;
         }
+        const u = JSON.parse(
+          localStorage.getItem("urbanTrack_currentUser") || "null",
+        );
+        const userId = auth.currentUser
+          ? auth.currentUser.uid
+          : u?.uid || u?.id || null;
+        const userName = u ? u.name || u.email : "Community Member";
+        const ref = "UT-" + Math.floor(1000 + Math.random() * 9000);
 
-        // Try GPS first, fall back to Johannesburg
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (pos) =>
-              buildMap({
-                lat: pos.coords.latitude,
-                lng: pos.coords.longitude,
-              }),
-            () => buildMap(defaultCentre),
-          );
-        } else {
-          buildMap(defaultCentre);
-        }
-      });
-
-    function updateCoords(lat, lng) {
-      window.pinnedLat = lat.toFixed(6);
-      window.pinnedLng = lng.toFixed(6);
-      document.getElementById("coordsText").textContent =
-        `${window.pinnedLat}, ${window.pinnedLng}`;
-      document.getElementById("pinnedCoords").style.display = "block";
-    }
-
-    // ── 15. INIT ON DOM READY ────────────────────────────────────
-    document.addEventListener("DOMContentLoaded", () => {
-      loadUser();
-      loadStats();
-    });
-  </script>
-
-  <script src="../js/MainPage.js"></script>
-
-
-  <script src="../js/MainPage.js"></script>
-
- <!-- GOOGLE MAPS -->
-<script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCgvhEjbV7SjgvkRk5gSu_lxPwRDlT1wc8&callback=initMap"
-  async
-  defer>
-</script>
-
-<!-- GOOGLE USER + GOOGLE TRANSLATE -->
-<script type="text/javascript">
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    // =========================
-    // GET GOOGLE USER FROM URL
-    // =========================
-    const params = new URLSearchParams(window.location.search);
-
-    const googleUser = params.get("googleUser");
-
-    if (googleUser) {
+        const reportData = {
+          category: window.selectedCategory,
+          severity: window.selectedSeverity,
+          title: document.getElementById("issueTitle").value,
+          description: document.getElementById("issueDesc").value,
+          address: document.getElementById("issueAddress").value,
+          area: document.getElementById("issueArea").value,
+          notes: document.getElementById("issueNotes").value,
+          photos: window.uploadedPhotos,
+          lat: window.pinnedLat || null,
+          lng: window.pinnedLng || null,
+          timestamp: serverTimestamp(),
+          reportedBy: userId,
+          reporterName: userName,
+          reporterEmail: u?.email || "N/A",
+          notifyByEmail: document.getElementById("notifyCheck").checked,
+          ref,
+        };
 
         try {
-
-            const parsedUser = JSON.parse(
-                decodeURIComponent(googleUser)
-            );
-
-            localStorage.setItem(
-                "urbanTrack_currentUser",
-                JSON.stringify({
-                    name: parsedUser.name || "My Account",
-                    email: parsedUser.email || "",
-                    picture: parsedUser.picture || ""
-                })
-            );
-
-            // REMOVE LONG URL PARAMETERS
-            window.history.replaceState(
-                {},
-                document.title,
-                window.location.pathname
-            );
-
-        } catch (error) {
-
-            console.error(
-                "Failed to parse google user:",
-                error
-            );
-
+          await addDoc(collection(db, "reports"), reportData);
+          if (reportData.notifyByEmail && reportData.reporterEmail !== "N/A") {
+            try {
+              await fetch(`${EMAIL_API_BASE}/report-confirmation`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  email: reportData.reporterEmail,
+                  name: reportData.reporterName,
+                  ref: reportData.ref,
+                  title: reportData.title,
+                }),
+              });
+            } catch (emailError) {
+              console.warn("Report confirmation email skipped:", emailError);
+            }
+          }
+          if (userId) {
+            try {
+              await updateDoc(doc(db, "users", userId), {
+                reportsCount: increment(1),
+              });
+            } catch (e) {
+              console.warn("Count increment skipped:", e);
+            }
+          }
+          document.getElementById("issueRef").textContent = "#" + ref;
+          // Hide all steps, show success
+          document
+            .querySelectorAll(".form-section")
+            .forEach((s) => s.classList.remove("active"));
+          document.querySelector(".steps-bar").style.display = "none";
+          document.getElementById("successState").classList.add("active");
+          showToast("Report submitted successfully!");
+        } catch (e) {
+          console.error("Submit error:", e);
+          showToast("Submission failed: " + (e.code || "Check console"));
         }
+      };
 
-    }
+      // ── 14. GOOGLE MAPS PIN DROP ─────────────────────────────────
+      // Exposed as window.initMap so Google's async callback can find it
+      window.initMap = function () {
+        // Map API is ready — nothing to do until user clicks the container
+      };
 
-    // =========================
-    // GET USER FROM STORAGE
-    // =========================
-    const currentUser = JSON.parse(
-        localStorage.getItem("urbanTrack_currentUser")
+      document
+        .getElementById("mapContainer")
+        .addEventListener("click", function () {
+          if (window._mapInstance) return; // already built
+
+          document.getElementById("mapPlaceholder").style.display = "none";
+
+          const defaultCentre = { lat: -26.2041, lng: 28.0473 }; // Johannesburg
+
+          function buildMap(pos) {
+            window._mapInstance = new google.maps.Map(
+              document.getElementById("map"),
+              {
+                center: pos,
+                zoom: 15,
+                styles: [
+                  { elementType: "geometry", stylers: [{ color: "#1e3a8a" }] },
+                  {
+                    elementType: "labels.text.fill",
+                    stylers: [{ color: "#93c5fd" }],
+                  },
+                  {
+                    elementType: "labels.text.stroke",
+                    stylers: [{ color: "#0f172a" }],
+                  },
+                  {
+                    featureType: "road",
+                    elementType: "geometry",
+                    stylers: [{ color: "#0f172a" }],
+                  },
+                  {
+                    featureType: "water",
+                    elementType: "geometry",
+                    stylers: [{ color: "#0ea5e9" }],
+                  },
+                  { featureType: "poi", stylers: [{ visibility: "off" }] },
+                ],
+              },
+            );
+
+            window._marker = new google.maps.Marker({
+              position: pos,
+              map: window._mapInstance,
+              draggable: true,
+              title: "Drag to adjust",
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 10,
+                fillColor: "#38bdf8",
+                fillOpacity: 1,
+                strokeColor: "#ffffff",
+                strokeWeight: 2,
+              },
+            });
+
+            updateCoords(pos.lat, pos.lng);
+
+            // Click anywhere on map to move pin
+            window._mapInstance.addListener("click", function (e) {
+              window._marker.setPosition(e.latLng);
+              updateCoords(e.latLng.lat(), e.latLng.lng());
+            });
+
+            // Drag pin to adjust
+            window._marker.addListener("dragend", function (e) {
+              updateCoords(e.latLng.lat(), e.latLng.lng());
+            });
+          }
+
+          // Try GPS first, fall back to Johannesburg
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (pos) =>
+                buildMap({
+                  lat: pos.coords.latitude,
+                  lng: pos.coords.longitude,
+                }),
+              () => buildMap(defaultCentre),
+            );
+          } else {
+            buildMap(defaultCentre);
+          }
+        });
+
+      function updateCoords(lat, lng) {
+        window.pinnedLat = lat.toFixed(6);
+        window.pinnedLng = lng.toFixed(6);
+        document.getElementById("coordsText").textContent =
+          `${window.pinnedLat}, ${window.pinnedLng}`;
+        document.getElementById("pinnedCoords").style.display = "block";
+      }
+
+      // ── 15. INIT ON DOM READY ────────────────────────────────────
+      document.addEventListener("DOMContentLoaded", () => {
+        loadUser();
+        loadStats();
+      });
+    </script>
+
+    <script src="../js/MainPage.js"></script>
+
+    <!--
+  Google Maps — replace YOUR_GOOGLE_MAPS_API_KEY with your actual key
+  Make sure "Maps JavaScript API" is enabled in Google Cloud Console
+-->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"
+      async
+      defer
+    ></script>
+    <!-- Google api -->
+ <script>
+       
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
     );
+}
 
-    if (!currentUser) return;
-
-    // =========================
-    // UPDATE USER NAME
-    // =========================
-    const userNameDisplay =
-        document.getElementById("userNameDisplay");
-
-    if (userNameDisplay) {
-
-        userNameDisplay.textContent =
-            currentUser.name || "My Account";
-
+// Hide Google Translate banner whenever it appears
+function hideGoogleTranslateBanner() {
+    // Remove the top offset Google adds to body
+    document.body.style.top = '0px';
+    
+    // Hide the banner frame
+    const banner = document.querySelector('.goog-te-banner-frame');
+    if (banner) {
+        banner.style.display = 'none';
     }
 
-    // =========================
-    // UPDATE AVATAR
-    // =========================
-    const userAvatar =
-        document.getElementById("userAvatar");
-
-    if (userAvatar) {
-
-        if (currentUser.picture) {
-
-            userAvatar.innerHTML = `
-                <img
-                    src="${currentUser.picture}"
-                    alt="Profile"
-                    style="
-                        width:100%;
-                        height:100%;
-                        border-radius:50%;
-                        object-fit:cover;
-                    "
-                >
-            `;
-
-        } else {
-
-            userAvatar.textContent =
-                (currentUser.name || "U")
-                .charAt(0)
-                .toUpperCase();
-
-        }
-
+    // Also target the iframe by id
+    const bannerById = document.getElementById(':1.container');
+    if (bannerById) {
+        bannerById.style.display = 'none';
     }
+}
 
+// Run on page load
+hideGoogleTranslateBanner();
+
+// Watch for DOM changes (when Google injects the banner after language select)
+const observer = new MutationObserver(function(mutations) {
+    hideGoogleTranslateBanner();
+});
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['style']
 });
 
 
-// =========================
-// GOOGLE TRANSLATE
-// =========================
+</script>
+<script type="text/javascript">
 function googleTranslateElementInit() {
-
     new google.translate.TranslateElement(
-        {
-            pageLanguage: "en",
-            includedLanguages:
-                "en,zu,xh,af,st,tn,ts,ve,nso,ss",
-            layout:
-                google.translate.TranslateElement
-                .InlineLayout.SIMPLE
-        },
-        "google_translate_element"
+        { pageLanguage: 'en' },
+        'google_translate_element'
     );
-
 }
-
 </script>
 
-<!-- GOOGLE TRANSLATE API -->
-<script
+<script type="text/javascript"
 src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
 </script>
-
-
-</body>
-
-</html>
+<!-- The End of google api -->
+  </body>
+</html>`
