@@ -79,44 +79,38 @@ passport.use(
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
-// Routes
-const FRONTEND_URL =
-    "https://dsw02a1-tech-nexus-2.onrender.com/pages/MainPage.html";
-
-const FRONTEND_LOGIN_URL =
-    "https://dsw02a1-tech-nexus-2.onrender.com/pages/login.html";
-
 // Google login
-app.get("/auth/google", passport.authenticate("google", {
-    scope: ["profile", "email"]
-}));
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5501/UrbanTrack/pages/MainPage.html";
+const FRONTEND_LOGIN_URL = process.env.FRONTEND_LOGIN_URL || "http://localhost:5501/UrbanTrack/pages/login.html";
 
-// Google callback
 app.get(
     "/auth/google/callback",
+    function (req, res, next) {
+        console.log("Google callback received, query:", req.query);
+        next();
+    },
     passport.authenticate("google", {
-        failureRedirect: FRONTEND_LOGIN_URL
+        failureRedirect: FRONTEND_LOGIN_URL,
     }),
-    (req, res) => {
-
-        if (!req.user) {
-            return res.redirect(FRONTEND_LOGIN_URL);
+    function (req, res) {
+        console.log("Google auth successful, user:", req.user ? req.user.displayName : "no user");
+        console.log("Google auth successful, redirecting to", FRONTEND_URL);
+        
+        // Store user data in session and send as query params
+        if (req.user) {
+            const userData = JSON.stringify({
+                name: req.user.displayName,
+                email: req.user.emails[0]?.value,
+                id: req.user.id,
+                picture: req.user.photos[0]?.value,
+                role: 'user'
+            });
+            res.redirect(FRONTEND_URL + "?googleUser=" + encodeURIComponent(userData));
+        } else {
+            res.redirect(FRONTEND_URL);
         }
-
-        const userData = JSON.stringify({
-            name: req.user.displayName,
-            email: req.user.emails?.[0]?.value,
-            id: req.user.id,
-            picture: req.user.photos?.[0]?.value,
-            role: "user"
-        });
-
-        res.redirect(
-            `${FRONTEND_URL}?googleUser=${encodeURIComponent(userData)}`
-        );
     }
 );
-
 // Get user session
 app.get("/auth/user", (req, res) => {
     res.json(req.user || null);
