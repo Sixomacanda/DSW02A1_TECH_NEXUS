@@ -40,6 +40,7 @@ app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "login.html"));
 });
 
+
 // SIGN UP ROUTE
 app.post("/signup", async function (req, res) {
   const { name, email, password } = req.body;
@@ -156,16 +157,15 @@ app.get("/auth/user", (req, res) => {
 
 // LOGOUT ROUTE
 app.get("/logout", (req, res) => {
-  // If you use sessions:
   if (req.session) {
     req.session.destroy(() => {
-      res.redirect("/login"); // send user back to login page
+      res.redirect("/login"); 
     });
   } else {
-    // If you don’t use sessions, just redirect
     res.redirect("/login");
   }
 });
+
 
 
 
