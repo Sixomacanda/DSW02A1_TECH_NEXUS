@@ -46,6 +46,13 @@ app.get("/signup", (req, res) => {
   );
 });
 
+// USER SETTINGS ROUTE
+app.get("/settings", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "..", "UrbanTrack", "pages", "UserSettings.html")
+  );
+});
+
 app.set("trust proxy", 1);
 
 // Session setup

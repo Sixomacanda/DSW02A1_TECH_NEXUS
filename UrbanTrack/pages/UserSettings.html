@@ -708,7 +708,7 @@
     }
 
     onAuthStateChanged(auth, async (user) => {
-      if (!user) { location.href = '/UserSettings.html'; return; }
+      if (!user) { location.href = '/settings'; return; }
       currentUser = user;
       document.getElementById('currentEmailDisplay').value = user.email || '';
       document.getElementById('avatarEmail').textContent = user.email || '';

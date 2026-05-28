@@ -531,10 +531,15 @@
       document.getElementById("userAvatar").textContent = getInitials(name);
     }
 
-    window.doLogout = function () {
-      localStorage.removeItem("urbanTrack_currentUser");
-      location.href = "../homePage.html";
-    };
+    function doLogout() {
+      const confirmLogout = confirm("Are you sure you want to logout?");
+      if (confirmLogout) {
+        localStorage.removeItem('urbanTrack_currentUser');
+        // Redirect to Express logout route
+        location.href = '/logout';
+      }
+    }
+
 
     // window.toggleMobileMenu = function() {
     //   document.querySelector(".nav-links").classList.toggle("show");
