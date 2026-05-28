@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // Storage Keys
 const STORAGE_USERS = "urbanTrack_users";
 const STORAGE_CURRENT_USER = "urbanTrack_currentUser";
@@ -114,8 +113,17 @@ function isLoggedIn() {
 }
 
 function logout() {
+  if (isGoogleUser()) {
+    console.warn("Google-authenticated users remain logged in and logout is disabled.");
+    return;
+  }
   localStorage.removeItem(STORAGE_CURRENT_USER);
   window.location.href = "login.html";
+}
+
+// Logout handler for onclick
+function doLogout() {
+  logout();
 }
 
 // TOAST NOTIFICATION
@@ -401,10 +409,22 @@ function initLogin() {
         setTimeout(() => {
           window.location.href = "MainPage.html";
         }, 1500);
+        //GOOGlE AUTH HANDLER
+        async function loadGoogleUser() {
+          const res = await fetch("/auth/user");
+          const user = await res.json();
+
+          if (user) {
+            showToast(`Welcome, ${user.displayName}!`);
+            document.querySelector(".welcome-user").textContent = user.displayName;
+          }
+        }
+        window.onload = loadGoogleUser;
       }
     }
   });
 }
+
 
 //  REPORT PAGE / DASHBOARD PROTECTION
 function initReportPage() {
@@ -638,10 +658,66 @@ function escapeHtml(str) {
   });
 }
 
+// Handle Google user data from OAuth redirect
+function handleGoogleUserData() {
+  const params = new URLSearchParams(window.location.search);
+  const googleUserData = params.get("googleUser");
+  
+  if (googleUserData) {
+    try {
+      const userData = JSON.parse(decodeURIComponent(googleUserData));
+      userData.isGoogleUser = true;
+      // Store in localStorage as current user using the shared helper
+      setCurrentUser(userData);
+      
+      // Display user name and avatar if on MainPage
+      displayUserInfo(userData);
+      toggleLogoutButton();
+      
+      // Clean URL by removing the query parameter
+      window.history.replaceState({}, document.title, window.location.pathname);
+      
+      return userData;
+    } catch (error) {
+      console.error("Error parsing Google user data:", error);
+    }
+  }
+  
+  return null;
+}
+
+// Display user name and avatar
+function displayUserInfo(user) {
+  const userNameDisplay = document.getElementById("userNameDisplay");
+  const userAvatar = document.getElementById("userAvatar");
+  
+  if (userNameDisplay && user && user.name) {
+    userNameDisplay.textContent = user.name;
+  }
+  
+  if (userAvatar && user && user.name) {
+    // Show first letter initial
+    userAvatar.textContent = user.name.charAt(0).toUpperCase();
+  }
+}
+
 //  CHECK PAGE TYPE AND INITIALIZE
 document.addEventListener("DOMContentLoaded", function () {
   // Initialize storage
   initializeUserStorage();
+  
+  // Handle Google OAuth user data first
+  const googleUser = handleGoogleUserData();
+  
+  // If no Google user, check localStorage for email user
+  if (!googleUser) {
+    const currentUser = getCurrentUser();
+    if (currentUser) {
+      displayUserInfo(currentUser);
+    }
+  }
+
+  toggleLogoutButton();
 
   // Setup password toggles on all pages
   setupPasswordToggles();
@@ -695,6 +771,13 @@ document.querySelectorAll(".cat-btn").forEach((btn) => {
       .forEach((b) => b.classList.remove("selected"));
     btn.classList.add("selected");
     selectedCategory = btn.dataset.cat;
+  });
+});
+
+document.querySelectorAll(".severity-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    setSeverity(btn, btn.dataset.sev);
+    goStep(2);
   });
 });
 
@@ -865,40 +948,3 @@ menuBtn.addEventListener("click", () => {
     menuOpen = false;
   }
 });
-=======
-
- function goStep(n) {
-        if (n > currentStep) {
-            if (currentStep === 1 && !selectedCategory)  { showToast('⚠️ Please select a category.'); return; }
-            if (currentStep === 1 && !selectedSeverity)  { showToast('⚠️ Please select a severity level.'); return; }
-            if (currentStep === 2 && !document.getElementById('issueTitle').value.trim()) { showToast('⚠️ Please add a title.'); return; }
-            if (currentStep === 2 && !document.getElementById('issueDesc').value.trim())  { showToast('⚠️ Please add a description.'); return; }
-            if (currentStep === 3 && !document.getElementById('issueAddress').value.trim()) { showToast('⚠️ Please enter the issue location.'); return; }
-        }
-        document.getElementById('step-'+currentStep).classList.remove('active');
-        document.getElementById('dot-'+currentStep).classList.remove('active');
-        document.getElementById('dot-'+currentStep).classList.add('done');
-        currentStep = n;
-        for (let i=1; i<n; i++) { document.getElementById('dot-'+i).classList.add('done'); document.getElementById('dot-'+i).classList.remove('active'); }
-        for (let i=n+1; i<=4; i++) { document.getElementById('dot-'+i).classList.remove('done','active'); }
-        document.getElementById('dot-'+n).classList.add('active');
-        document.getElementById('dot-'+n).classList.remove('done');
-        document.getElementById('step-'+n).classList.add('active');
-        if (n === 4) buildReview();
-    }
-let selectedCategory = "";
-
-document.querySelectorAll(".cat-btn").forEach(btn => {
-    btn.onclick = function () {
-        selectedCategory = btn.dataset.cat;
-    }
-});
-
-document.querySelectorAll(".severity-btn").forEach(btn => {
-    btn.onclick = function () {
-        let severity = btn.dataset.sev;
-        alert(severity + " severity selected for " + selectedCategory);
-        goStep(2);
-    }
-});
->>>>>>> a19f211240702f8cfc558d21ac6a241d0f5a4d0c
