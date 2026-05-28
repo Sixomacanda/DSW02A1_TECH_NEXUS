@@ -884,15 +884,9 @@
           buildMap(defaultCentre);
         }
       });
-    function doLogout(e) {
-      // stop the browser from following the href immediately
-      if (e) e.preventDefault();
-
-      const confirmLogout = confirm("Are you sure you want to logout?");
-      if (confirmLogout) {
-        localStorage.removeItem("urbanTrack_currentUser");
-        window.location.href = "/logout"; // now safely call backend route
-      }
+    function doLogout() {
+      localStorage.removeItem("urbanTrack_currentUser");
+      location.href = "../../homePage.html";
     }
 
 
@@ -930,15 +924,9 @@
       );
     }
 
-    function doLogout(e) {
-      // stop the browser from following the href immediately
-      if (e) e.preventDefault();
-
-      const confirmLogout = confirm("Are you sure you want to logout?");
-      if (confirmLogout) {
-        localStorage.removeItem("urbanTrack_currentUser");
-        window.location.href = "/logout"; // now safely call backend route
-      }
+    function doLogout() {
+      localStorage.removeItem("urbanTrack_currentUser");
+      location.href = "../../homePage.html";
     }
 
     // Hide Google Translate banner whenever it appears
