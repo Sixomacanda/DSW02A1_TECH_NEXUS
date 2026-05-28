@@ -133,7 +133,6 @@ app.get("/auth/user", (req, res) => {
 });
 
 // LOGOUT ROUTE
-// LOGOUT
 app.get("/logout", (req, res) => {
   req.logout(function (err) {
     if (err) console.log(err);

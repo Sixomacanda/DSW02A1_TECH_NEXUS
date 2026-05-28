@@ -708,7 +708,7 @@
     }
 
     onAuthStateChanged(auth, async (user) => {
-      if (!user) { location.href = '/login.html'; return; }
+      if (!user) { location.href = '/UserSettings.html'; return; }
       currentUser = user;
       document.getElementById('currentEmailDisplay').value = user.email || '';
       document.getElementById('avatarEmail').textContent = user.email || '';
@@ -863,29 +863,29 @@
         "User";
 
       // INITIAL
-      const initial = name.charAt(0).toUpperCase();
+      const avatarDisplay = name.charAt(0).toUpperCase();
 
       // TOP NAV NAME
-      const navName = document.querySelector(".account-name");
+      const avatarEmail = document.querySelector(".account-name");
 
-      if (navName) {
-        navName.textContent = name;
+      if (avatarEmail) {
+        avatarEmail.textContent = name;
       }
 
       // PROFILE INPUT
-      const displayInput =
+      const displayName =
         document.querySelector('input[placeholder="Your name"]');
 
-      if (displayInput) {
-        displayInput.value = name;
+      if (displayName) {
+        displayName.value = name;
       }
 
       // PROFILE CIRCLE
-      const avatar =
+      const avatarName =
         document.querySelector(".profile-avatar");
 
-      if (avatar) {
-        avatar.textContent = initial;
+      if (avatarName) {
+        avatarName.textContent = avatarDisplay;
       }
 
     });
