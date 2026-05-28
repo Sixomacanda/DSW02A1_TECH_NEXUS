@@ -21,8 +21,9 @@ app.use(cors({
 
 app.use(express.json());
 
-// FIXED STATIC PATH
-app.use(express.static(path.join(__dirname, "..", "UrbanTrack", "pages")));
+
+// Serve static files
+app.use(express.static(path.join(__dirname)));
 
 // Debug route
 app.get("/", (req, res) => {
