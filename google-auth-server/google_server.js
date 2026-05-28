@@ -39,6 +39,13 @@ app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "login.html"));
 });
 
+// SIGN UP ROUTE
+app.get("/signup", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "..", "UrbanTrack", "pages", "signUpPage.html")
+  );
+});
+
 app.set("trust proxy", 1);
 
 // Session setup
