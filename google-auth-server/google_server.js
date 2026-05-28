@@ -49,6 +49,9 @@ app.get("/settings", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "UserSettings.html"));
 });
 
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "homePage.html"));
+});
 
 
 // USER SETTINGS ROUTE
