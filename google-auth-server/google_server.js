@@ -18,7 +18,7 @@ app.use(cors({
     ],
     credentials: true
 }));
-
+app.use(express.static("UrbanTrack"));
 app.use(express.json());
 
 
@@ -40,11 +40,18 @@ app.get("/login", (req, res) => {
 });
 
 // SIGN UP ROUTE
-app.get("/signup", (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "..", "UrbanTrack", "pages", "signUpPage.html")
-  );
+app.post("/signup", async function (req, res) {
+  const { name, email, password } = req.body;
+
+  try {
+    await User.create({ name, email, password }); // save to DB
+    res.redirect("/pages/login.html"); // or /MainPage.html
+  } catch (err) {
+    res.status(500).send("Signup failed");
+  }
 });
+
+
 
 // USER SETTINGS ROUTE
 app.get("/settings", (req, res) => {
