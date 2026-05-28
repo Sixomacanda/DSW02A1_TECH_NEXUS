@@ -146,7 +146,7 @@ app.get("/logout", (req, res) => {
             res.clearCookie("connect.sid");
 
             // REDIRECT TO LOGIN PAGE
-            res.redirect("/login.html");
+            res.redirect("/pages/login.html");
 
         });
 
