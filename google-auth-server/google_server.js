@@ -6,7 +6,7 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const cors = require("cors");
 const path = require("path");
-const MongoStore = require("connect-mongo").MongoStore;
+const MongoStore = require("connect-mongo");
 
 const app = express();
 
