@@ -23,7 +23,11 @@ app.use(express.json());
 
 
 // Serve static files
-app.use(express.static(path.join(__dirname)));
+app.use(
+    express.static(
+        path.join(__dirname, "..", "UrbanTrack")
+    )
+);
 
 // Debug route
 app.get("/", (req, res) => {
@@ -83,6 +87,15 @@ passport.deserializeUser((user, done) => done(null, user));
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5501/UrbanTrack/pages/MainPage.html";
 const FRONTEND_LOGIN_URL = process.env.FRONTEND_LOGIN_URL || "http://localhost:5501/UrbanTrack/pages/login.html";
 
+// START GOOGLE LOGIN
+app.get(
+    "/auth/google",
+    passport.authenticate("google", {
+        scope: ["profile", "email"]
+    })
+);
+
+// GOOGLE CALLBACK
 app.get(
     "/auth/google/callback",
     function (req, res, next) {
@@ -93,19 +106,22 @@ app.get(
         failureRedirect: FRONTEND_LOGIN_URL,
     }),
     function (req, res) {
-        console.log("Google auth successful, user:", req.user ? req.user.displayName : "no user");
-        console.log("Google auth successful, redirecting to", FRONTEND_URL);
-        
-        // Store user data in session and send as query params
+        console.log("Google auth successful");
+
         if (req.user) {
             const userData = JSON.stringify({
                 name: req.user.displayName,
                 email: req.user.emails[0]?.value,
                 id: req.user.id,
                 picture: req.user.photos[0]?.value,
-                role: 'user'
+                role: "user"
             });
-            res.redirect(FRONTEND_URL + "?googleUser=" + encodeURIComponent(userData));
+
+            res.redirect(
+                FRONTEND_URL +
+                "?googleUser=" +
+                encodeURIComponent(userData)
+            );
         } else {
             res.redirect(FRONTEND_URL);
         }
