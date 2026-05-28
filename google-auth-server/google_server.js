@@ -29,17 +29,14 @@ app.use(
     )
 );
 
-// Debug route
-app.get("/", (req, res) => {
-    res.sendFile(
-        path.join(__dirname, "..", "UrbanTrack", "pages", "login.html")
-    );
+// HOMEPAGE
+app.get("/homepage", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "MainPage.html"));
 });
 
-app.get("/test-main", (req, res) => {
-    res.sendFile(
-        path.join(__dirname, "..", "UrbanTrack", "pages", "MainPage.html")
-    );
+// LOGIN
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "login.html"));
 });
 
 app.set("trust proxy", 1);
@@ -136,25 +133,15 @@ app.get("/auth/user", (req, res) => {
 });
 
 // LOGOUT ROUTE
+// LOGOUT
 app.get("/logout", (req, res) => {
-
-    req.logout(function (err) {
-
-        if (err) {
-            console.log(err);
-        }
-
-        req.session.destroy(() => {
-
-            res.clearCookie("connect.sid");
-
-            // REDIRECT TO LOGIN PAGE
-            res.redirect("/pages/login.html");
-
-        });
-
+  req.logout(function (err) {
+    if (err) console.log(err);
+    req.session.destroy(() => {
+      res.clearCookie("connect.sid");
+      res.redirect("/login");
     });
-
+  });
 });
 
 

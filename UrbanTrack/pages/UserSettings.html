@@ -606,12 +606,13 @@
 
     function doLogout() {
       const confirmLogout = confirm("Are you sure you want to logout?");
-
       if (confirmLogout) {
         localStorage.removeItem('urbanTrack_currentUser');
-        location.href = '../../homePage.html';
+        // Redirect to Express logout route
+        location.href = '/logout';
       }
     }
+
 
     function getInitials(name) {
       if (!name) return 'U';
@@ -707,7 +708,7 @@
     }
 
     onAuthStateChanged(auth, async (user) => {
-      if (!user) { location.href = '../../homePage.html'; return; }
+      if (!user) { location.href = '/login.html'; return; }
       currentUser = user;
       document.getElementById('currentEmailDisplay').value = user.email || '';
       document.getElementById('avatarEmail').textContent = user.email || '';
@@ -844,7 +845,6 @@
     };
   </script>
 
-  <
   <script>
     document.addEventListener("DOMContentLoaded", () => {
 
