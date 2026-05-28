@@ -1,3 +1,14 @@
+document.addEventListener("DOMContentLoaded", () => {
+  const deleteBtn = document.getElementById("deleteAccountBtn");
+  if (deleteBtn) {
+    deleteBtn.addEventListener("click", (e) => {
+      e.preventDefault(); // stop form refresh
+      deleteAccount();    // call the function once
+    });
+  }
+});
+
+// Define the function separately
 async function deleteAccount() {
   const user = auth.currentUser;
 
@@ -7,7 +18,6 @@ async function deleteAccount() {
   }
 
   const confirmText = document.getElementById("deleteConfirmInput").value;
-
   if (confirmText !== "DELETE") {
     alert("Type DELETE to confirm");
     return;
@@ -24,7 +34,7 @@ async function deleteAccount() {
 
     alert("Account deleted successfully");
 
-    // redirect
+    // Redirect to login
     window.location.href = "login.html";
 
   } catch (error) {

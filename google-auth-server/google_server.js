@@ -148,14 +148,17 @@ app.get("/auth/user", (req, res) => {
 
 // LOGOUT ROUTE
 app.get("/logout", (req, res) => {
-  req.logout(function (err) {
-    if (err) console.log(err);
+  // destroy session if you use express-session
+  if (req.session) {
     req.session.destroy(() => {
-      res.clearCookie("connect.sid");
-      res.redirect("/login");
+      res.redirect("/login"); // redirect back to login page
     });
-  });
+  } else {
+    // if not using sessions, just redirect
+    res.redirect("/login");
+  }
 });
+
 
 
 const PORT = process.env.PORT || 3000;

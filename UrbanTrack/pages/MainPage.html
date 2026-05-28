@@ -534,11 +534,11 @@
     function doLogout() {
       const confirmLogout = confirm("Are you sure you want to logout?");
       if (confirmLogout) {
-        localStorage.removeItem('urbanTrack_currentUser');
-        // Redirect to Express logout route
-        location.href = '/logout';
+        localStorage.removeItem("urbanTrack_currentUser");
+        location.href = "/logout"; // calls the Express route
       }
     }
+
 
 
     // window.toggleMobileMenu = function() {
