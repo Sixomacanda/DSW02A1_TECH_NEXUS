@@ -31,7 +31,7 @@ app.use(
 
 // HOMEPAGE
 app.get("/homePage.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "MainPage.html"));
+  res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "homePage.html"));
 });
 
 
@@ -55,12 +55,6 @@ app.get("/settings", (req, res) => {
 
 
 // USER SETTINGS ROUTE
-app.get("/settings", (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "..", "UrbanTrack", "pages", "UserSettings.html")
-  );
-});
-
 app.set("trust proxy", 1);
 
 // Session setup
