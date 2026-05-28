@@ -6,10 +6,11 @@ const app = express();
 
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, "public")));
+// Static frontend mounts (so URLs like /homePage.html work)
+app.use(express.static(__dirname)); // serves homePage.html from project root
+app.use(express.static(path.join(__dirname, "UrbanTrack/pages"))); // serves /login.html etc.
+app.use(express.static(path.join(__dirname, "UrbanTrack"))); // serves /js, /Styles, /Pictues, etc.
 
-// Serve frontend
-// app.use(express.static(path.join(__dirname)));
 
 //chat rout
 app.post("/api/chat", async (req, res) => {
