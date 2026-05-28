@@ -50,8 +50,8 @@ app.use(session({
     }),
     cookie: {
         maxAge: 1000 * 60 * 60 * 24,
-        secure: true,
-        sameSite: "none"
+        secure: false,
+        sameSite: "lax"
     }
 }));
 
@@ -60,11 +60,6 @@ console.log("CLIENT ID:", process.env.GOOGLE_CLIENT_ID);
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get("/", (req, res) => {
-    res.sendFile(
-        path.resolve("../UrbanTrack/pages/login.html")
-    );
-});
 
 // Google Strategy (FIXED - no env risk)
 passport.use(
@@ -140,7 +135,7 @@ app.get("/logout", (req, res) => {
             res.clearCookie("connect.sid");
 
             // REDIRECT TO LOGIN PAGE
-            res.redirect("/pages/login.html");
+            res.redirect("/login.html");
 
         });
 
