@@ -45,7 +45,13 @@
         <div class="left">
           <div class="form-group">
             <label for="email">Email</label>
-            <input id="email" type="email" name="email" placeholder="example@address.com" required />
+            <input
+              id="email"
+              type="email"
+              name="email"
+              placeholder="example@address.com"
+              required
+            />
             <small class="error"></small>
           </div>
 
@@ -53,7 +59,8 @@
             <label for="password">Password</label>
             <div class="input-wrapper">
               <input
-                id="password" type="password"
+                id="password"
+                type="password"
                 name="password"
                 placeholder="password"
                 required
@@ -69,22 +76,19 @@
           <!-- Google login option -->
           <a
             id="google-login-btn"
-            href="https://dsw02a1-tech-nexus-2.onrender.com/auth/google"
+            href="http://localhost:3000/auth/google"
             class="btn google-btn"
           >
             <i class="fa-brands fa-google"></i> Continue with Google
           </a>
 
-          
-          <p class="forgot-password">
-            <a href="passRecovery.html">Forgot password?</a>
-          </p>
-          <p class="footer-text">
             Don't have an account? <a href="signUpPage.html">Sign up</a>
           </p>
         </div>
       </div>
     </form>
+    <script src="../js/login.js"></script>
+    <script src="../js/main.js"></script>
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
       import {
@@ -257,5 +261,64 @@
       }
     </script>
     <!--<script type="module" src="../js/login.js"></script>-->
+
+    <!-- Google api -->
+ <script>
+       
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+
+// Hide Google Translate banner whenever it appears
+function hideGoogleTranslateBanner() {
+    // Remove the top offset Google adds to body
+    document.body.style.top = '0px';
+    
+    // Hide the banner frame
+    const banner = document.querySelector('.goog-te-banner-frame');
+    if (banner) {
+        banner.style.display = 'none';
+    }
+
+    // Also target the iframe by id
+    const bannerById = document.getElementById(':1.container');
+    if (bannerById) {
+        bannerById.style.display = 'none';
+    }
+}
+
+// Run on page load
+hideGoogleTranslateBanner();
+
+// Watch for DOM changes (when Google injects the banner after language select)
+const observer = new MutationObserver(function(mutations) {
+    hideGoogleTranslateBanner();
+});
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['style']
+});
+
+
+</script>
+<script type="text/javascript">
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+</script>
+
+<script type="text/javascript"
+src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+<!-- The End of google api -->
   </body>
 </html>

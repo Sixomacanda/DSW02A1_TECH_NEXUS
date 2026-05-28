@@ -23,34 +23,188 @@
       <nav class="navbar">
         <div class="logo">Urban Track</div>
 
-      <!-- <ul class="nav-links">
-        <li><a href="../../homePage.html">Home</a></li>
-        <li><a href="signUpPage.html">Sign Up</a></li>
-      </ul> -->
-    </nav>
-    <a class="back" href="login.html"
-      ><i class="fa-solid fa-angle-left"></i>
-    </a>
-    <!-- <h1 class="heading">Password Recovery</h1> -->
-    <form action="/recover" method="POST" novalidate>
-        <h1 class="heading">Password Recovery</h1>
-      <div class="container">
-        <div class="form-group">
-          <p>Enter your email address to receive a password reset link.</p>
-          <br /><br />
-          <label for="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="example@gmail.com"
-            required
-          />
-          <small class="error"></small>
-          <button class="btn" id="resetBtn" type="button" onclick="resetPassword()">
-            Send Reset Link
-          </button>
+        <ul class="nav-links">
+           <!-- google api -->
+        <li><div id="google_translate_element"></div></li>
+          <li><a href="../../homePage.html">Home</a></li>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="signUpPage.html">Sign Up</a></li>
+        </ul>
+
+        <div class="menu-button">
+          <div class="menu-button__burger"></div>
         </div>
+      </nav>
+    </header>
+
+    <main class="page">
+      <div class="wrapper">
+        <section class="card">
+          <a class="back" href="login.html">Back to login</a>
+
+          <div class="icon-circle">
+            <span><i class="fas fa-key"></i></span>
+          </div>
+
+          <h1 class="card-title">Password Recovery</h1>
+          <p class="card-sub">
+            Enter your email address to receive an OTP to reset your password.
+          </p>
+
+          <form action="/recover" method="POST" novalidate class="reset-form">
+            <div class="step step-email active">
+              <div class="field">
+                <label for="email">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="example@gmail.com"
+                  required
+                />
+                <small class="hint err"></small>
+              </div>
+
+              <button
+                class="btn-main"
+                id="resetBtn"
+                type="button"
+                onclick="resetPassword()"
+              >
+                Send OTP
+              </button>
+            </div>
+
+            <div class="step step-otp">
+              <p class="card-sub">
+                Enter the OTP sent to your email to continue.
+              </p>
+
+              <div class="field">
+                <label>OTP Code</label>
+                <div class="otp-row" aria-label="Enter 6-digit code">
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    pattern="\d*"
+                    maxlength="1"
+                    class="otp-box"
+                    aria-label="OTP digit 1"
+                    autocomplete="one-time-code"
+                  />
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    pattern="\d*"
+                    maxlength="1"
+                    class="otp-box"
+                    aria-label="OTP digit 2"
+                    autocomplete="one-time-code"
+                  />
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    pattern="\d*"
+                    maxlength="1"
+                    class="otp-box"
+                    aria-label="OTP digit 3"
+                    autocomplete="one-time-code"
+                  />
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    pattern="\d*"
+                    maxlength="1"
+                    class="otp-box"
+                    aria-label="OTP digit 4"
+                    autocomplete="one-time-code"
+                  />
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    pattern="\d*"
+                    maxlength="1"
+                    class="otp-box"
+                    aria-label="OTP digit 5"
+                    autocomplete="one-time-code"
+                  />
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    pattern="\d*"
+                    maxlength="1"
+                    class="otp-box"
+                    aria-label="OTP digit 6"
+                    autocomplete="one-time-code"
+                  />
+                </div>
+                <small class="hint err"></small>
+              </div>
+
+              <button
+                class="btn-main"
+                id="verifyBtn"
+                type="button"
+                onclick="verifyOtp()"
+              >
+                Verify OTP
+              </button>
+              <button class="btn-ghost" type="button" onclick="showEmailStep()">
+                Edit email
+              </button>
+            </div>
+
+            <div class="step step-password">
+              <p class="card-sub">
+                Enter your new password to complete the reset.
+              </p>
+
+              <div class="field password-group">
+                <label for="password">New Password</label>
+                <div class="input-wrapper">
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your new password"
+                    required
+                  />
+                  <i class="fa-solid fa-eye"></i>
+                  <i class="fa-solid fa-eye-slash hide"></i>
+                </div>
+                <small class="hint err"></small>
+              </div>
+
+              <div class="field password-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <div class="input-wrapper">
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    placeholder="Confirm password"
+                    required
+                  />
+                  <i class="fa-solid fa-eye"></i>
+                  <i class="fa-solid fa-eye-slash hide"></i>
+                </div>
+                <small class="hint err"></small>
+              </div>
+
+              <button
+                class="btn-main"
+                id="resetPasswordBtn"
+                type="button"
+                onclick="saveNewPassword()"
+              >
+                Reset Password
+              </button>
+              <button class="btn-ghost" type="button" onclick="showOtpStep()">
+                Back to OTP
+              </button>
+            </div>
+          </form>
+        </section>
       </div>
     </main>
 
@@ -94,8 +248,6 @@
 
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
-      const EMAIL_API_BASE = "http://localhost:3000/api/email";
-      let verifiedPasswordOtp = "";
 
       function showStep(step) {
         document.querySelectorAll(".step").forEach((section) => {
@@ -216,7 +368,7 @@
         });
       });
 
-      window.resetPassword = async function () {
+      window.resetPassword = function () {
         const email = document.getElementById("email").value.trim();
         const error = document.querySelector(".step-email .hint");
 
@@ -227,30 +379,20 @@
 
         error.textContent = "";
 
-        try {
-          const response = await fetch(`${EMAIL_API_BASE}/password-otp`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email }),
+        sendPasswordResetEmail(auth, email)
+          .then(() => {
+            alert("OTP sent to your email.");
+            showOtpStep();
+          })
+          .catch((error) => {
+            error.textContent = error.message;
           });
-
-          const data = await response.json();
-          if (!response.ok) {
-            throw new Error(data.error || "Could not send OTP.");
-          }
-
-          alert("OTP sent to your email.");
-          showOtpStep();
-        } catch (err) {
-          error.textContent = err.message;
-        }
       };
 
-      window.verifyOtp = async function () {
+      window.verifyOtp = function () {
         const otp = Array.from(document.querySelectorAll(".otp-box"))
           .map((box) => box.value.trim())
           .join("");
-        const email = document.getElementById("email").value.trim();
         const error = document.querySelector(".step-otp .hint");
 
         if (otp.length !== 6) {
@@ -259,54 +401,18 @@
         }
 
         error.textContent = "";
-        try {
-          const response = await fetch(`${EMAIL_API_BASE}/verify-password-otp`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, otp }),
-          });
-
-          const data = await response.json();
-          if (!response.ok) {
-            throw new Error(data.error || "Invalid OTP.");
-          }
-
-          verifiedPasswordOtp = otp;
-          showPasswordStep();
-        } catch (err) {
-          error.textContent = err.message;
-        }
+        showPasswordStep();
       };
 
-      window.saveNewPassword = async function () {
+      window.saveNewPassword = function () {
         if (!validateNewPasswordFields(true)) {
           return;
         }
 
-        try {
-          const email = document.getElementById("email").value.trim();
-          const response = await fetch(`${EMAIL_API_BASE}/reset-password`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              email,
-              otp: verifiedPasswordOtp,
-              password: newPasswordInput.value.trim(),
-            }),
-          });
-
-          const data = await response.json();
-          if (!response.ok) {
-            throw new Error(data.error || "Could not reset password.");
-          }
-
-          alert(
-            "Password reset successfully. Please log in with your new password.",
-          );
-          window.location.href = "login.html";
-        } catch (err) {
-          passwordError.textContent = err.message;
-        }
+        alert(
+          "Password reset successfully. Please log in with your new password.",
+        );
+        window.location.href = "login.html";
       };
       function setupPasswordToggles() {
         const passwordGroups = document.querySelectorAll(".password-group");
@@ -337,5 +443,63 @@
         });
       }
     </script>
+    <!-- Google api -->
+ <script>
+       
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+
+// Hide Google Translate banner whenever it appears
+function hideGoogleTranslateBanner() {
+    // Remove the top offset Google adds to body
+    document.body.style.top = '0px';
+    
+    // Hide the banner frame
+    const banner = document.querySelector('.goog-te-banner-frame');
+    if (banner) {
+        banner.style.display = 'none';
+    }
+
+    // Also target the iframe by id
+    const bannerById = document.getElementById(':1.container');
+    if (bannerById) {
+        bannerById.style.display = 'none';
+    }
+}
+
+// Run on page load
+hideGoogleTranslateBanner();
+
+// Watch for DOM changes (when Google injects the banner after language select)
+const observer = new MutationObserver(function(mutations) {
+    hideGoogleTranslateBanner();
+});
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['style']
+});
+
+
+</script>
+<script type="text/javascript">
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+</script>
+
+<script type="text/javascript"
+src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+<!-- The End of google api -->
   </body>
 </html>
