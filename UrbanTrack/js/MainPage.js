@@ -107,6 +107,21 @@ function isLoggedIn() {
   return getCurrentUser() !== null;
 }
 
+function logout() {
+  if (isGoogleUser()) {
+    console.warn("Google-authenticated users remain logged in and logout is disabled.");
+    return;
+  }
+  localStorage.removeItem(STORAGE_CURRENT_USER);
+  window.location.href = "login.html";
+}
+
+// Logout handler for onclick
+function doLogout() {
+  logout();
+}
+
+// TOAST NOTIFICATION
 function showToast(message, isError = false) {
   const existingToast = document.querySelector(".custom-toast");
   if (existingToast) existingToast.remove();
@@ -176,15 +191,108 @@ function setupSeverityButtons() {
   });
 }
 
-function setSeverity(btn, severity) {
-  document.querySelectorAll(".severity-btn").forEach((b) => b.classList.remove("selected"));
-  btn.classList.add("selected");
-  selectedSeverity = severity;
+//  LOGIN HANDLER
+function initLogin() {
+  const loginForm = document.getElementById("loginForm");
+  if (!loginForm) return;
+
+  const loginEmail = document.getElementById("text");
+  const loginPassword = document.getElementById("password");
+
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    let valid = true;
+
+    // Email validation
+    if (!loginEmail.value.trim()) {
+      setError(loginEmail, "Email is required.");
+      valid = false;
+    } else if (!validateEmail(loginEmail.value.trim())) {
+      setError(loginEmail, "Please enter a valid email address.");
+      valid = false;
+    } else {
+      clearError(loginEmail);
+    }
+
+    // Password validation
+    if (!loginPassword.value.trim()) {
+      setError(loginPassword, "Password is required.");
+      valid = false;
+      // } else if (loginPassword.value.length < 6) {
+      //     setError(loginPassword, "Password must be at least 6 characters.");
+      //     valid = false;
+    } else {
+      clearError(loginPassword);
+    }
+
+    if (valid) {
+      const enteredEmail = loginEmail.value.trim().toLowerCase();
+      const enteredPassword = loginPassword.value;
+
+      // Admin login using hardcoded credentials
+      if (enteredEmail === ADMIN_EMAIL && enteredPassword === ADMIN_PASSWORD) {
+        const adminUser = {
+          id: "admin_001",
+          name: "Administrator",
+          email: ADMIN_EMAIL,
+          role: "admin",
+          createdAt: new Date().toISOString(),
+        };
+
+        setCurrentUser(adminUser);
+        showToast("Welcome Admin! Redirecting to Admin dashboard...");
+        setTimeout(() => {
+          window.location.href = "../Adminside/AdminDashboard.html";
+        }, 1200);
+        return;
+      }
+
+      // Authenticate regular user
+      const user = findUserByEmail(enteredEmail);
+
+      if (!user) {
+        setError(
+          loginEmail,
+          "No account found with this email. Please sign up.",
+        );
+        showToast("Account not found. Please sign up first.", true);
+      } else if (user.password !== enteredPassword) {
+        setError(loginPassword, "Incorrect password. Please try again.");
+      } else {
+        // Login success
+        setCurrentUser(user);
+        showToast(`Welcome back, ${user.name}! Redirecting to Main Page...`);
+
+        setTimeout(() => {
+          window.location.href = "MainPage.html";
+        }, 1500);
+        //GOOGlE AUTH HANDLER
+        async function loadGoogleUser() {
+          const res = await fetch("/auth/user");
+          const user = await res.json();
+
+          if (user) {
+            showToast(`Welcome, ${user.displayName}!`);
+            document.querySelector(".welcome-user").textContent = user.displayName;
+          }
+        }
+        window.onload = loadGoogleUser;
+      }
+    }
+  });
 }
 
-function setupCharCounters() {
-  const titleInput = document.getElementById("issueTitle");
-  const descInput = document.getElementById("issueDesc");
+
+//  REPORT PAGE / DASHBOARD PROTECTION
+function initReportPage() {
+  // Check if user is logged in
+  if (!isLoggedIn()) {
+    showToast("Please login to report an issue", true);
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 1500);
+    return;
+  }
 
   if (titleInput) {
     titleInput.addEventListener("input", () => {
@@ -597,7 +705,7 @@ window.goStep = function(step) {
       logout();
     });
   }
-}
+
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -909,5 +1017,6 @@ menuBtn.addEventListener("click", () => {
     navLinks.classList.remove("show");
     menuOpen = false;
   }
-});
->>>>>>> e9b0e2e45e1115ea0b63dd8c841cd30bb47d93e8
+})
+
+

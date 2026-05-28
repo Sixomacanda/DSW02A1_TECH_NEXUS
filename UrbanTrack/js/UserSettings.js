@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 async function deleteAccount() {
   const user = auth.currentUser;
 
@@ -39,4 +37,3 @@ async function deleteAccount() {
     }
   }
 }
->>>>>>> e9b0e2e45e1115ea0b63dd8c841cd30bb47d93e8

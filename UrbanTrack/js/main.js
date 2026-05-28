@@ -3,6 +3,7 @@ function setupPasswordToggles() {
   if (!passwordGroups.length) return;
 
   passwordGroups.forEach((group) => {
+    // Skip if already set up
     if (group.dataset.toggleSetup) return;
 
     const input = group.querySelector("input");
@@ -23,6 +24,7 @@ function setupPasswordToggles() {
       show.classList.remove("hide");
     });
 
+    // Mark as set up
     group.dataset.toggleSetup = "true";
   });
 }
@@ -255,102 +257,3 @@ if (menuBtn && navLinks) {
     menuOpen = !menuOpen;
   });
 }
-
-window.initMap = function () {
-  const mapElement = document.getElementById("map");
-  if (!mapElement || typeof google === "undefined" || !google.maps) {
-    return;
-  }
-
-  const defaultCentre = { lat: -26.192307, lng: 28.056076 };
-  const map = new google.maps.Map(mapElement, {
-    center: defaultCentre,
-    zoom: 15,
-    mapTypeControl: false,
-    streetViewControl: false,
-    fullscreenControl: false,
-  });
-
-  const marker = new google.maps.Marker({
-    position: defaultCentre,
-    map,
-    title: "Urban Track",
-  });
-
-  const locationText = document.getElementById("location");
-  const findButton = document.getElementById("findLocationBtn");
-
-  function updateLocationDisplay(lat, lng) {
-    if (!locationText) return;
-    locationText.textContent = `location: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
-  }
-
-  function setStatusMessage(message) {
-    if (!locationText) return;
-    locationText.textContent = message;
-  }
-
-  updateLocationDisplay(defaultCentre.lat, defaultCentre.lng);
-
-  function centerOnPosition(position, label) {
-    const userLatLng = {
-      lat: position.coords.latitude,
-      lng: position.coords.longitude,
-    };
-    map.setCenter(userLatLng);
-    map.setZoom(15);
-    marker.setPosition(userLatLng);
-    marker.setTitle(label || "Your location");
-    updateLocationDisplay(userLatLng.lat, userLatLng.lng);
-  }
-
-  if (findButton) {
-    findButton.addEventListener("click", () => {
-      if (!navigator.geolocation) {
-        setStatusMessage("Geolocation not supported by this browser.");
-        return;
-      }
-
-      setStatusMessage("Finding your location…");
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          centerOnPosition(position, "Your current location");
-          setStatusMessage(
-            `location: ${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`
-          );
-        },
-        (error) => {
-          setStatusMessage(
-            "Could not get location; using default map center."
-          );
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 0,
-        }
-      );
-    });
-  }
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        centerOnPosition(position, "Your current location");
-      },
-      () => {
-        setStatusMessage(
-          "Using default location because location permission was denied or unavailable."
-        );
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0,
-      }
-    );
-  } else {
-    setStatusMessage("Geolocation not supported; using default location.");
-  }
-};
-
