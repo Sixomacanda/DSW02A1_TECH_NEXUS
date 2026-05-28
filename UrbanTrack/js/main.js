@@ -1,23 +1,35 @@
-<<<<<<< HEAD
-const passwordGroups = document.querySelectorAll(".password-group");
+function setupPasswordToggles() {
+  const passwordGroups = document.querySelectorAll(".password-group");
+  if (!passwordGroups.length) return;
 
-passwordGroups.forEach((group) => {
-  const input = group.querySelector("input");
-  const show = group.querySelector(".fa-eye");
-  const hide = group.querySelector(".fa-eye-slash");
+  passwordGroups.forEach((group) => {
+    // Skip if already set up
+    if (group.dataset.toggleSetup) return;
 
-  show.addEventListener("click", () => {
-    input.type = "text";
-    hide.classList.remove("hide");
-    show.classList.add("hide");
+    const input = group.querySelector("input");
+    const show = group.querySelector(".fa-eye");
+    const hide = group.querySelector(".fa-eye-slash");
+
+    if (!input || !show || !hide) return;
+
+    show.addEventListener("click", () => {
+      input.type = "text";
+      hide.classList.remove("hide");
+      show.classList.add("hide");
+    });
+
+    hide.addEventListener("click", () => {
+      input.type = "password";
+      hide.classList.add("hide");
+      show.classList.remove("hide");
+    });
+
+    // Mark as set up
+    group.dataset.toggleSetup = "true";
   });
+}
 
-  hide.addEventListener("click", () => {
-    input.type = "password";
-    hide.classList.add("hide");
-    show.classList.remove("hide");
-  });
-});
+setupPasswordToggles();
 
 function validateEmail(value) {
   return /\S+@\S+\.\S+/.test(value);
@@ -42,8 +54,8 @@ function clearError(input) {
 }
 
 const loginForm = document.getElementById("loginForm");
-if (loginForm) {
-  const loginEmail = document.getElementById("text");
+if (loginForm && !loginForm.dataset.authHandled) {
+  const loginEmail = document.getElementById("email");
   const loginPassword = document.getElementById("password");
 
   loginForm.addEventListener("submit", (e) => {
@@ -51,17 +63,17 @@ if (loginForm) {
     let valid = true;
 
     if (!loginEmail.value.trim()) {
-      setError(loginEmail, "Email is required.");
+      setError(loginEmail, "Incorrect credentials.");
       valid = false;
     } else if (!validateEmail(loginEmail.value.trim())) {
-      setError(loginEmail, "Please enter a valid email address.");
+      setError(loginEmail, "Incorrect credentials.");
       valid = false;
     } else {
       clearError(loginEmail);
     }
 
     if (!loginPassword.value.trim()) {
-      setError(loginPassword, "Password is required.");
+      setError(loginPassword, "Incorrect credentials.");
       valid = false;
       // } else if (loginPassword.value.length < 6) {
       //   setError(loginPassword, "Password must be at least 6 characters.");
@@ -246,148 +258,10 @@ if (signupForm) {
 const menuBtn = document.querySelector(".menu-button");
 const navLinks = document.querySelector(".nav-links");
 let menuOpen = false;
-menuBtn.addEventListener("click", () => {
-  if (!menuOpen) {
-    menuBtn.classList.add("open");
-    navLinks.classList.add("show");
-    menuOpen = true;
-  } else {
-    menuBtn.classList.remove("open");
-    navLinks.classList.remove("show");
-    menuOpen = false;
-  }
-});
-/*function getlocation(){
-    navigator.geolocation.getCurrentPosition(function(position){
-        let la=position.coords.latitude;
-        let lon=position.coords.longitude;
-
-        let userlocation={lat:lat , lon:lon};
-        let map=new google.maps.map(document.getElementById("map"),{
-            zoom:15,
-            center:userlocation
-
-
-
-        });
-        new google.maps.marker({
-            position:userlocation,
-            map:map
-        });
-            
-            
-});
-}*/
-
-/*function getLocation(){
-    navigator.geolocation.getCurrentPosition(function(position){
-        let lat=position.coords.latitude
-        let lon=position.coords.longitude
-        initMap(lat, lon)
-
-        let userlocation={lat:lat, lng:lon};
-
-        let map=new google.maps.Map(document.getElementById("map"),{
-            zoom:15,
-            center:userlocation
-
-        });
-        new google.maps.Marker({
-            position:userlocation,
-            map:map
-        });
-    });
+if (menuBtn && navLinks) {
+  menuBtn.addEventListener("click", () => {
+    menuBtn.classList.toggle("open");
+    navLinks.classList.toggle("show");
+    menuOpen = !menuOpen;
+  });
 }
-let directionsService;
-let directionsRenderer;
-
-function initMap(){
-
-    let map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 10,
-        center: { lat: -26.2041, lng: 28.0473 }
-    });
-
-    directionsService = new google.maps.DirectionsService();
-    directionsRenderer = new google.maps.DirectionsRenderer();
-
-    directionsRenderer.setMap(map);
-}
-function getDirections(){
-
-    let from = document.getElementById("from").value;
-    let to = document.getElementById("to").value;
-
-    let request = {
-        origin: from,
-        destination: to,
-        travelMode: "DRIVING"
-    };
-
-    directionsService.route(request, function(result, status){
-
-        if(status === "OK"){
-            directionsRenderer.setDirections(result);
-        }
-
-    });
-
-}*/
-function getLocation(){
-
-    if(navigator.geolocation){
-
-        navigator.geolocation.getCurrentPosition(function(position){
-
-            let lat = position.coords.latitude;
-            let lon = position.coords.longitude;
-
-            console.log("Latitude: " + lat);
-            console.log("Longitude: " + lon);
-
-            document.getElementById("location").textContent =
-                "Lat: " + lat + " | Lon: " + lon;
-
-        });
-
-    } else {
-        alert("Geolocation not supported");
-    }
-};
-function initMap(){
-
-    let location = { lat: -26.2041, lng: 28.0473 }; 
-
-    let map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 10,
-        center: location
-    });
-
-    new google.maps.Marker({
-        position: location,
-        map: map
-    });
-};
-/*function getLocation(){
-
-    navigator.geolocation.getCurrentPosition(function(position){
-
-        let lat = position.coords.latitude;
-        let lon = position.coords.longitude;
-
-        let userLocation = { lat: lat, lng: lon };
-
-        let map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 15,
-            center: userLocation
-        });
-
-        new google.maps.Marker({
-            position: userLocation,
-            map: map
-        });
-
-    });
-};*/
-=======
->>>>>>> a19f211240702f8cfc558d21ac6a241d0f5a4d0c
