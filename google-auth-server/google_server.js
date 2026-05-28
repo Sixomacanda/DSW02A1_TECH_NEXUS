@@ -155,15 +155,12 @@ app.get("/auth/user", (req, res) => {
 app.get("/logout", (req, res) => {
   if (req.session) {
     req.session.destroy(() => {
-      res.redirect("/login"); 
+      res.redirect("/login"); // always go to login page
     });
   } else {
     res.redirect("/login");
   }
 });
-
-
-
 
 
 const PORT = process.env.PORT || 3000;
