@@ -851,21 +851,19 @@
       const user = JSON.parse(localStorage.getItem("urbanTrack_currentUser"));
       if (!user) return;
 
-      // USER NAME
+      // USER NAME + EMAIL
       const name = user.name || user.displayName || user.email || "User";
+      const email = user.email || "";
 
       // INITIALS (first letter of name)
       const initials = name.charAt(0).toUpperCase();
 
-      // EMAIL
-      const email = user.email || "";
-
-      // TOP NAV NAME
+      // NAVBAR NAME
       const navName = document.querySelector(".account-name");
       if (navName) navName.textContent = name;
 
-      // PROFILE INPUT
-      const displayName = document.querySelector("#displayName");
+      // PROFILE INPUT FIELD
+      const displayName = document.getElementById("displayName");
       if (displayName) displayName.value = name;
 
       // PROFILE AVATAR CIRCLE
@@ -880,7 +878,6 @@
       const avatarEmail = document.getElementById("avatarEmail");
       if (avatarEmail) avatarEmail.textContent = email;
     });
-
   </script>
 
   <script src="../js/UserSettings.js"></script>
