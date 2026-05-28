@@ -74,7 +74,7 @@
             </div>
             <div class="step-dot" id="dot-4">
               <div class="step-circle">4</div>
-              <span class= "step-label">Review</span>
+              <span class="step-label">Review</span>
             </div>
           </div>
 
@@ -535,7 +535,7 @@
       const confirmLogout = confirm("Are you sure you want to logout?");
       if (confirmLogout) {
         localStorage.removeItem("urbanTrack_currentUser");
-        location.href = "/logout"; // calls the Express route
+        window.location.href = "/logout"; // call Express route
       }
     }
 
