@@ -117,6 +117,9 @@ app.get(
                 role: "user"
             });
 
+            // Upsert user into Firestore-like JS DB in backend is not possible here.
+            // Instead, we store minimal user data in a localStorage-ready query param
+            // and let the frontend write to Firestore.
             res.redirect(
                 FRONTEND_URL +
                 "?googleUser=" +
