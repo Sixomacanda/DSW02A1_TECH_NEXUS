@@ -41,16 +41,12 @@ app.get("/login", (req, res) => {
 });
 
 
-// SIGN UP ROUTE
-app.post("/signup", async function (req, res) {
-  const { name, email, password } = req.body;
+app.get("/dashboard", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "UserDashboard.html"));
+});
 
-  try {
-    await User.create({ name, email, password }); // save to DB
-    res.redirect("/pages/login.html"); // or /MainPage.html
-  } catch (err) {
-    res.status(500).send("Signup failed");
-  }
+app.get("/settings", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "UserSettings.html"));
 });
 
 
@@ -165,8 +161,6 @@ app.get("/logout", (req, res) => {
     res.redirect("/login");
   }
 });
-
-
 
 
 
