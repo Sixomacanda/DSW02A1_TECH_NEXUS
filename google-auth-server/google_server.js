@@ -22,18 +22,18 @@ app.use(cors({
 app.use(express.json());
 
 // FIXED STATIC PATH
-app.use(express.static(path.join(__dirname, "pages")));
+app.use(express.static(path.join(__dirname, "..", "UrbanTrack", "pages")));
 
 // Debug route
 app.get("/", (req, res) => {
     res.sendFile(
-        path.join(__dirname, "pages", "login.html")
+        path.join(__dirname, "..", "UrbanTrack", "pages", "login.html")
     );
 });
 
 app.get("/test-main", (req, res) => {
     res.sendFile(
-        path.join(__dirname, "pages", "MainPage.html")
+        path.join(__dirname, "..", "UrbanTrack", "pages", "MainPage.html")
     );
 });
 
