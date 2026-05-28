@@ -25,19 +25,19 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "pages")));
 
 // Debug route
-app.get("/debug", (req, res) => {
-    res.json({
-        callback: "https://dsw02a1-tech-nexus-2.onrender.com/auth/google/callback",
-        client: process.env.GOOGLE_CLIENT_ID,
-        currentDir: __dirname
-    });
+app.get("/", (req, res) => {
+    res.sendFile(
+        path.join(__dirname, "pages", "login.html")
+    );
 });
 
 app.get("/test-main", (req, res) => {
     res.sendFile(
-        path.resolve(__dirname, "pages/MainPage.html")
+        path.join(__dirname, "pages", "MainPage.html")
     );
 });
+
+app.set("trust proxy", 1);
 
 // Session setup
 app.use(session({
@@ -85,10 +85,10 @@ passport.deserializeUser((user, done) => done(null, user));
 
 // Routes
 const FRONTEND_URL =
-    "https://dsw02a1-tech-nexus-2.onrender.com/pages/MainPage.html";
+    "https://dsw02a1-tech-nexus-2.onrender.com/MainPage.html";
 
 const FRONTEND_LOGIN_URL =
-    "https://dsw02a1-tech-nexus-2.onrender.com/pages/login.html";
+    "https://dsw02a1-tech-nexus-2.onrender.com/login.html";
 
 // Google login
 app.get("/auth/google", passport.authenticate("google", {
