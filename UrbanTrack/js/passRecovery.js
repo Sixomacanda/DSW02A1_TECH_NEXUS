@@ -1,6 +1,6 @@
 var cur = 1;
 var userEmail = "";
-<<<<<<< HEAD
+ <<<<<<< HEAD
 =======
 var verifiedPasswordOtp = "";
 >>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
@@ -41,20 +41,6 @@ function sendCode() {
   sp.style.display = "block";
   txt.textContent = "Sending…";
 
-<<<<<<< HEAD
-  setTimeout(function () {
-    btn.disabled = false;
-    sp.style.display = "none";
-    txt.textContent = "Send Reset Code";
-    document.getElementById("otpSub").innerHTML =
-      "We sent a 6-digit code to <strong>" +
-      em +
-      "</strong>. Check your inbox.";
-    goTo(2);
-    startTimer();
-    toast("Code sent to " + em, "success");
-  }, 1500);
-=======
   fetch("http://localhost:3000/api/email/password-otp", {
     method: "POST",
     headers: {
@@ -89,7 +75,6 @@ function sendCode() {
       console.error("Password OTP send error:", error);
       toast("Failed to send reset code. Please try again.", "danger");
     });
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
 }
 
 document.getElementById("emailIn").addEventListener("keydown", function (e) {
@@ -164,16 +149,6 @@ function verifyOtp() {
   sp.style.display = "block";
   txt.textContent = "Verifying…";
 
-<<<<<<< HEAD
-  setTimeout(function () {
-    btn.disabled = false;
-    sp.style.display = "none";
-    txt.textContent = "Verify Code";
-    clearInterval(timerInterval);
-    goTo(3);
-    toast("Code verified! Set your new password.", "success");
-  }, 1400);
-=======
   fetch("http://localhost:3000/api/email/verify-password-otp", {
     method: "POST",
     headers: {
@@ -205,7 +180,6 @@ function verifyOtp() {
       console.error("OTP verification error:", error);
       toast("Invalid or expired code. Please try again.", "danger");
     });
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
 }
 
 function startTimer() {
@@ -313,14 +287,6 @@ function doReset() {
   sp.style.display = "block";
   txt.textContent = "Resetting…";
 
-<<<<<<< HEAD
-  setTimeout(function () {
-    btn.disabled = false;
-    sp.style.display = "none";
-    txt.textContent = "Reset Password";
-    goTo(4);
-  }, 1500);
-=======
   fetch("http://localhost:3000/api/email/reset-password", {
     method: "POST",
     headers: {
@@ -354,7 +320,6 @@ function doReset() {
       console.error("Password reset error:", error);
       toast("Failed to reset password. Please try again.", "danger");
     });
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
 }
 
 /* ---- TOAST ---- */

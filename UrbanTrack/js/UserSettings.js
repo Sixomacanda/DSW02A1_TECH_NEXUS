@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { 
   getAuth, 
@@ -228,5 +229,7 @@ window.signOutAll = signOutAll;
 =======
 }
 >>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
+=======
+>>>>>>> 8985b8fd27a4320938f2957ed9b03b9a0c194500
 =======
 >>>>>>> 8985b8fd27a4320938f2957ed9b03b9a0c194500
