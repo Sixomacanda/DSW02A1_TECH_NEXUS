@@ -81,10 +81,10 @@ passport.deserializeUser((user, done) => done(null, user));
 
 // Routes
 const FRONTEND_URL =
-    "https://dsw02a1-tech-nexus-2.onrender.com/MainPage.html";
+    "https://dsw02a1-tech-nexus-2.onrender.com/pages/MainPage.html";
 
 const FRONTEND_LOGIN_URL =
-    "https://dsw02a1-tech-nexus-2.onrender.com/login.html";
+    "https://dsw02a1-tech-nexus-2.onrender.com/pages/login.html";
 
 // Google login
 app.get("/auth/google", passport.authenticate("google", {
