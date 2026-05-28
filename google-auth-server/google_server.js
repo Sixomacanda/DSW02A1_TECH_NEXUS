@@ -148,16 +148,17 @@ app.get("/auth/user", (req, res) => {
 
 // LOGOUT ROUTE
 app.get("/logout", (req, res) => {
-  // destroy session if you use express-session
+  // If you use sessions:
   if (req.session) {
     req.session.destroy(() => {
-      res.redirect("/login"); // redirect back to login page
+      res.redirect("/login"); // send user back to login page
     });
   } else {
-    // if not using sessions, just redirect
+    // If you don’t use sessions, just redirect
     res.redirect("/login");
   }
 });
+
 
 
 

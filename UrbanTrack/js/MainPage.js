@@ -1,4 +1,14 @@
-nk// Storage Keys
+// Storage Keys
+document.addEventListener("DOMContentLoaded", () => {
+  const logoutLink = document.querySelector('a[onclick="doLogout()"]');
+  if (logoutLink) {
+    logoutLink.addEventListener("click", (e) => {
+      e.preventDefault(); // stop the link refresh caused by href="#"
+      doLogout();         // call your existing function
+    });
+  }
+});
+
 const STORAGE_USERS = "urbanTrack_users";
 const STORAGE_CURRENT_USER = "urbanTrack_currentUser";
 const STORAGE_ISSUES = "urbanTrack_issues";
