@@ -847,48 +847,40 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-
       // GET USER FROM LOCAL STORAGE
-      const user = JSON.parse(
-        localStorage.getItem("urbanTrack_currentUser")
-      );
-
+      const user = JSON.parse(localStorage.getItem("urbanTrack_currentUser"));
       if (!user) return;
 
       // USER NAME
-      const name =
-        user.name ||
-        user.displayName ||
-        user.email ||
-        "User";
+      const name = user.name || user.displayName || user.email || "User";
 
-      // INITIAL
-      const avatarDisplay = name.charAt(0).toUpperCase();
+      // INITIALS (first letter of name)
+      const initials = name.charAt(0).toUpperCase();
+
+      // EMAIL
+      const email = user.email || "";
 
       // TOP NAV NAME
-      const avatarEmail = document.querySelector(".account-name");
-
-      if (avatarEmail) {
-        avatarEmail.textContent = name;
-      }
+      const navName = document.querySelector(".account-name");
+      if (navName) navName.textContent = name;
 
       // PROFILE INPUT
-      const displayName =
-        document.querySelector('input[placeholder="Your name"]');
+      const displayName = document.querySelector("#displayName");
+      if (displayName) displayName.value = name;
 
-      if (displayName) {
-        displayName.value = name;
-      }
+      // PROFILE AVATAR CIRCLE
+      const avatarDisplay = document.getElementById("avatarDisplay");
+      if (avatarDisplay) avatarDisplay.textContent = initials;
 
-      // PROFILE CIRCLE
-      const avatarName =
-        document.querySelector(".profile-avatar");
+      // PROFILE INFO NAME
+      const avatarName = document.getElementById("avatarName");
+      if (avatarName) avatarName.textContent = name;
 
-      if (avatarName) {
-        avatarName.textContent = avatarDisplay;
-      }
-
+      // PROFILE INFO EMAIL
+      const avatarEmail = document.getElementById("avatarEmail");
+      if (avatarEmail) avatarEmail.textContent = email;
     });
+
   </script>
 
   <script src="../js/UserSettings.js"></script>
