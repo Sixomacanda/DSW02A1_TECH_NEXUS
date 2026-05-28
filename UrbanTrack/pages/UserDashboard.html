@@ -13,19 +13,21 @@
     <nav class="navbar">
       <div class="logo">Urban Track</div>
 
-      <ul class="nav-links">
-            <!-- google api -->
-        <li><div id="google_translate_element"></div></li>
-        <li><a href="MainPage.html">Home</a></li>
-        <li><a href="UserSettings.html">Settings</a></li>
-        <li><a href="#" onclick="doLogout()">Logout</a></li>
-      </ul>
-
-      <div class="menu-button">
-        <div class="menu-button__burger"></div>
+<header class="header">
+  <nav class="nav-container">
+    <a href="index.html" class="nav-brand">UrbanTrack</a>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="MainPage.html">Report Issue</a>
+        <a href="MainPage.html">Home</a>
       </div>
-    </nav>
-<!-- </header> -->
+      <div class="user-pill">
+        <div class="user-av"></div>
+        
+      </div>
+    </div>
+  </nav>
+</header>
 
 <!-- ═══════════ PAGE ═══════════ -->
 <div class="page">
@@ -154,147 +156,5 @@
     return name.trim().split(" ").slice(0,2).map(p => p[0].toUpperCase()).join("");
   }
 </script>
-
-<!-- ═══════════════════════════════════════════════════
-     FIREBASE MODULE — DATABASE CODE COMPLETELY UNTOUCHED
-════════════════════════════════════════════════════ -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import {
-    getAuth,
-    onAuthStateChanged,
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import {
-    getFirestore,
-    collection,
-    query,
-    where,
-    getDocs,
-    doc,
-    getDoc,
-  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
-    authDomain: "urban-track-91e53.firebaseapp.com",
-    projectId: "urban-track-91e53",
-    storageBucket: "urban-track-91e53.firebasestorage.app",
-    messagingSenderId: "519209303536",
-    appId: "1:519209303536:web:c212eb58eb836e27047135",
-  };
-
-  const app  = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db   = getFirestore(app);
-
-  const reportsElement = document.querySelector(".sc-blue .stat-num");
-
-  /* ── Auth state listener — identical logic to original ── */
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      try {
-        const q = query(
-          collection(db, "reports"),
-          where("reportedBy", "==", user.uid)
-        );
-        const querySnapshot = await getDocs(q);
-        reportsElement.textContent = querySnapshot.size;
-
-        let resolved = 0, progress = 0, urgent = 0;
-        querySnapshot.forEach((doc) => {
-          const report = doc.data();
-          if (report.status === "resolved")         resolved++;
-          else if (report.status === "in-progress") progress++;
-          if (report.severity === "high" && report.status !== "resolved") urgent++;
-        });
-
-        document.getElementById("Resolved_reports").textContent = resolved;
-        document.getElementById("Progress_reports").textContent = progress;
-        document.getElementById("Urgent_reports").textContent   = urgent;
-
-        /* Update name/avatar from auth */
-        const nameEl  = document.getElementById("welcomeName");
-        const emailEl = document.getElementById("useremail");
-        const avEl    = document.getElementById("userAvatar");
-        if (emailEl) emailEl.textContent = user.email;
-        if (nameEl)  nameEl.textContent  = "Welcome back, " + (user.displayName || user.email.split("@")[0]);
-        if (avEl)    avEl.textContent    = getInitials(user.displayName || user.email);
-
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  });
-
-  /* ── LocalStorage fallback — identical to original ── */
-  const currentUser = JSON.parse(localStorage.getItem("urbanTrack_currentUser") || "null");
-  if (currentUser) {
-    const name    = currentUser.name || currentUser.email || "User";
-    const emailEl = document.getElementById("useremail");
-    const nameEl  = document.getElementById("welcomeName");
-    const avEl    = document.getElementById("userAvatar");
-    if (emailEl) emailEl.textContent = currentUser.email;
-    if (nameEl)  nameEl.textContent  = "Welcome back, " + (currentUser.name || currentUser.email.split("@")[0]);
-    if (avEl)    avEl.textContent    = getInitials(name);
-  }
-</script>
-  <!-- Google api -->
- <script>
-       
-function googleTranslateElementInit() {
-    new google.translate.TranslateElement(
-        { pageLanguage: 'en' },
-        'google_translate_element'
-    );
-}
-
-// Hide Google Translate banner whenever it appears
-function hideGoogleTranslateBanner() {
-    // Remove the top offset Google adds to body
-    document.body.style.top = '0px';
-    
-    // Hide the banner frame
-    const banner = document.querySelector('.goog-te-banner-frame');
-    if (banner) {
-        banner.style.display = 'none';
-    }
-
-    // Also target the iframe by id
-    const bannerById = document.getElementById(':1.container');
-    if (bannerById) {
-        bannerById.style.display = 'none';
-    }
-}
-
-// Run on page load
-hideGoogleTranslateBanner();
-
-// Watch for DOM changes (when Google injects the banner after language select)
-const observer = new MutationObserver(function(mutations) {
-    hideGoogleTranslateBanner();
-});
-
-observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ['style']
-});
-
-
-</script>
-<script type="text/javascript">
-function googleTranslateElementInit() {
-    new google.translate.TranslateElement(
-        { pageLanguage: 'en' },
-        'google_translate_element'
-    );
-}
-</script>
-
-<script type="text/javascript"
-src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
-</script>
-<!-- The End of google api -->
 </body>
 </html>
