@@ -171,7 +171,7 @@ app.get(
 app.get(
     "/auth/google/callback",
     passport.authenticate("google", {
-        failureRedirect: FRONTEND_LOGIN_URL,
+        failureRedirect: FRONTEND_URL,
     }),
 
     async function (req, res) {
@@ -209,11 +209,11 @@ app.get(
             req.session.user = googleUser;
 
             // REDIRECT
-            res.redirect("/homePage");
+            res.redirect(FRONTEND_URL);
 
         } catch (err) {
 
-            console.error(err);
+            console.error(FRONTEND_URL);
 
             res.redirect(FRONTEND_LOGIN_URL);
         }
@@ -229,10 +229,10 @@ app.get("/auth/user", (req, res) => {
 app.get("/logout", (req, res) => {
     if (req.session) {
         req.session.destroy(() => {
-            res.redirect("/login"); // always go to login page
+            res.redirect("/login" || "http://127.0.0.1:5501/UrbanTrack/pages/login.html"); // always go to login page
         });
     } else {
-        res.redirect("/login");
+        res.redirect("/login" || "http://127.0.0.1:5501/UrbanTrack/pages/login.html");
     }
 });
 
