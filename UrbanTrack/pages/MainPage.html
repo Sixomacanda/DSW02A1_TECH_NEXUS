@@ -14,6 +14,7 @@
   <!-- <header class="header"> -->
   <nav class="navbar">
     <div class="logo">Urban Track</div>
+    <div id="authSection"></div>
 
     <ul class="nav-links">
       <!-- google api -->
@@ -934,88 +935,39 @@
     defer></script>
   <!-- Google api -->
   <script>
-  
-  async function checkUser() {
-
+    async function checkUser() {
       try {
-
-        const res = await fetch(
-          "https://dsw02a1-tech-nexus-2.onrender.com/auth/user",
-          {
-            credentials: "include"
-          }
-        );
+        const res = await fetch("/auth/user", {
+          credentials: "include"
+        });
 
         const user = await res.json();
 
+        const authSection = document.getElementById("authSection");
+
         if (user) {
-
-          // HIDE LOGIN BUTTON
-          const loginBtn =
-            document.getElementById("log");
-
-          if (loginBtn) {
-            loginBtn.style.display = "none";
-          }
-
-          // SHOW USER NAME
-          const userName =
-            document.getElementById("userNameDisplay");
-
-          if (userName) {
-            userName.textContent =
-              user.name || "User";
-          }
-
-          // SHOW AVATAR
-          const avatar =
-            document.getElementById("userAvatar");
-
-          if (avatar) {
-
-            // GOOGLE USER IMAGE
-            if (user.picture) {
-
-              avatar.innerHTML = `
-            <img
-              src="${user.picture}"
-              alt="Profile"
-              style="
-                width:100%;
-                height:100%;
-                border-radius:50%;
-                object-fit:cover;
-              "
-            >
-          `;
-
-            } else {
-
-              // LOCAL LOGIN INITIALS
-              const initials = user.name
-                .split(" ")
-                .map(n => n[0])
-                .join("")
-                .toUpperCase();
-
-              avatar.textContent = initials;
-            }
-          }
-
+          authSection.innerHTML = `
+                <div style="color:white;">
+                    👋 ${user.name}
+                    <button onclick="logout()">Logout</button>
+                </div>
+            `;
+        } else {
+          authSection.innerHTML = `
+                <a href="/login" style="color:white;">Login</a>
+            `;
         }
-
       } catch (err) {
-
-        console.error(
-          "User check failed:",
-          err
-        );
+        console.error(err);
       }
     }
 
+    async function logout() {
+      await fetch("/logout");
+      window.location.href = "/login";
+    }
+
     checkUser();
-
-
   </script>
   <script type="text/javascript">
     function googleTranslateElementInit() {
