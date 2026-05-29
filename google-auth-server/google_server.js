@@ -1,3 +1,45 @@
+const db = getFirestore();
+const admin = require("firebase-admin");
+admin.initializeApp({
+    credential: admin.credential.applicationDefault()
+});
+const db = admin.firestore();
+
+const bcrypt = require("bcrypt");
+
+app.post("/login", async (req, res) => {
+    const { email, password } = req.body;
+
+    const userDoc = await db.collection("users").doc(email).get();
+    if (!userDoc.exists) {
+        return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    const user = userDoc.data();
+    const match = await bcrypt.compare(password, user.passwordHash);
+    if (!match) return res.status(401).json({ error: "Invalid credentials" });
+
+    req.session.user = { uid: email, email: user.email, name: user.name };
+    res.json({ success: true, user: req.session.user });
+});
+
+
+app.post("/login", async (req, res) => {
+    const { email, password } = req.body;
+
+    const userDoc = await db.collection("users").doc(email).get();
+    if (!userDoc.exists()) {
+        return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    const user = userDoc.data();
+    // TODO: verify password with bcrypt if you store hashed passwords
+
+    req.session.user = { uid: email, email: user.email, name: user.name };
+    res.json({ success: true, user: req.session.user });
+});
+
+
 require("dotenv").config();
 
 const express = require("express");
@@ -31,22 +73,22 @@ app.use(
 
 // MAINPAGE
 app.get("/homePage", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "MainPage.html"));
+    res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "MainPage.html"));
 });
 
 
 // LOGIN
 app.get("/login", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "login.html"));
+    res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "login.html"));
 });
 
 
 app.get("/dashboard", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "UserDashboard.html"));
+    res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "UserDashboard.html"));
 });
 
 app.get("/settings", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "UserSettings.html"));
+    res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "UserSettings.html"));
 });
 
 /*app.get("/", (req, res) => {
@@ -76,7 +118,6 @@ console.log("CLIENT ID:", process.env.GOOGLE_CLIENT_ID);
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 // Google Strategy (FIXED - no env risk)
 passport.use(
@@ -144,18 +185,19 @@ app.get(
 );
 // Get user session
 app.get("/auth/user", (req, res) => {
-    res.json(req.user || null);
+  res.json(req.session.user || null);
 });
+
 
 // LOGOUT ROUTE
 app.get("/logout", (req, res) => {
-  if (req.session) {
-    req.session.destroy(() => {
-      res.redirect("/login"); // always go to login page
-    });
-  } else {
-    res.redirect("/login");
-  }
+    if (req.session) {
+        req.session.destroy(() => {
+            res.redirect("/login"); // always go to login page
+        });
+    } else {
+        res.redirect("/login");
+    }
 });
 
 
