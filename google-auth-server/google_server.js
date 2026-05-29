@@ -30,7 +30,7 @@ app.use(
 );
 
 // HOMEPAGE
-app.get("/homePage.html", (req, res) => {
+app.get("/homePage", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "homePage.html"));
 });
 
