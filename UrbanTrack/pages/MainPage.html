@@ -945,10 +945,11 @@
 
         const authSection = document.getElementById("authSection");
 
-        if (user && user.name) {{
+        if (user && user.name) {
+
           authSection.innerHTML = `
         <div style="color:white;">
-          👋 ${user.name}
+          ${user.name}
           <button onclick="logout()">Logout</button>
         </div>
       `;
