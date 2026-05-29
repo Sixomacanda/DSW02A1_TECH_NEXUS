@@ -121,8 +121,6 @@ app.get("/test-session", (req, res) => {
 });
 
 
-const isProduction = process.env.NODE_ENV === "production";
-
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -164,14 +162,10 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 // Google login
+const BASE_URL = process.env.BASE_URL;
 
-const FRONTEND_URL = isProduction
-    ? "https://dsw02a1-tech-nexus-2.onrender.com/pages/MainPage.html"
-    : "http://127.0.0.1:5501/UrbanTrack/pages/MainPage.html";
-
-const FRONTEND_LOGIN_URL = isProduction
-    ? "https://dsw02a1-tech-nexus-2.onrender.com/pages/login.html"
-    : "http://127.0.0.1:5501/UrbanTrack/pages/login.html";
+const FRONTEND_URL = `${BASE_URL}/pages/MainPage.html`;
+const FRONTEND_LOGIN_URL = `${BASE_URL}/pages/login.html`;
 
 // START GOOGLE LOGIN
 app.get(
@@ -182,51 +176,28 @@ app.get(
 );
 
 // GOOGLE CALLBACK
-app.get("/auth/google/callback",
-    passport.authenticate("google", { failureRedirect: FRONTEND_LOGIN_URL }),
-    async (req, res) => {
-        try {
-            if (req.user) {
-                const googleUser = {
-                    name: req.user.displayName,
-                    email: req.user.emails[0]?.value,
-                    id: req.user.id,
-                    picture: req.user.photos[0]?.value,
-                    role: "user"
-                };
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: FRONTEND_LOGIN_URL,
+  }),
+  (req, res) => {
 
-                // Save to Firestore
-                const userRef = db.collection("users").doc(googleUser.email);
-                const existingUser = await userRef.get();
-                if (!existingUser.exists) {
-                    await userRef.set({
-                        name: googleUser.name,
-                        email: googleUser.email,
-                        googleId: googleUser.id,
-                        picture: googleUser.picture,
-                        createdAt: new Date()
-                    });
-                }
+    const googleUser = {
+      name: req.user.displayName,
+      email: req.user.emails?.[0]?.value,
+      id: req.user.id,
+      picture: req.user.photos?.[0]?.value,
+      role: "user"
+    };
 
-                // Save session
-                req.session.user = googleUser;
-                req.session.save((err) => {
-                    if (err) {
-                        console.error("SESSION SAVE ERROR:", err);
-                        return res.redirect(FRONTEND_LOGIN_URL);
-                    }
-                    return res.redirect(FRONTEND_URL); // MainPage.html
-                });
-            } else {
-                res.redirect(FRONTEND_LOGIN_URL);
-            }
-        } catch (err) {
-            console.error("GOOGLE CALLBACK ERROR:", err);
-            res.redirect(FRONTEND_LOGIN_URL);
-        }
-    }
+    req.session.user = googleUser;
+
+    req.session.save(() => {
+      return res.redirect(FRONTEND_URL);
+    });
+  }
 );
-
 
 // Get user session
 app.get("/auth/user", (req, res) => {
