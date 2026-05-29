@@ -29,9 +29,14 @@ app.use(
     )
 );
 
-// HOMEPAGE
+// MAINPAGE
 app.get("/homePage", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "MainPage.html"));
+});
+
+//HOMEPAGE
+app.get("/home", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "homePage.html"));
 });
 
 
