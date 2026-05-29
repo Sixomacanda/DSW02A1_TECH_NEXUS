@@ -1,12 +1,30 @@
+require("dotenv").config();
+
+const express = require("express");
+const session = require("express-session");
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const cors = require("cors");
+const path = require("path");
+const MongoStore = require("connect-mongo");
+const bcrypt = require("bcryptjs");
 const admin = require("firebase-admin");
 
+const serviceAccount = JSON.parse(
+    process.env.FIREBASE_SERVICE_ACCOUNT
+);
+
 admin.initializeApp({
-    credential: admin.credential.applicationDefault()
+    credential: admin.credential.cert(serviceAccount)
 });
 
 const db = admin.firestore();
 
-const bcrypt = require("bcryptjs");
+const app = express();
+
+app.set("trust proxy", 1);
+
+app.use(express.json());;
 
 app.post("/login", async (req, res) => {
     try {
@@ -59,18 +77,6 @@ app.post("/login", async (req, res) => {
 });
 
 
-require("dotenv").config();
-
-const express = require("express");
-const session = require("express-session");
-const passport = require("passport");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const cors = require("cors");
-const path = require("path");
-const MongoStore = require("connect-mongo");
-
-const app = express();
-
 // IMPORTANT: strict CORS for production
 app.use(cors({
     origin: [
@@ -80,7 +86,7 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.static("UrbanTrack"));
-app.use(express.json());
+
 
 
 // Serve static files
