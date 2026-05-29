@@ -595,7 +595,6 @@
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const db = getFirestore(app);
-      const EMAIL_API_BASE = "http://localhost:3000/api/email";
 
       // ── 3. GLOBAL STATE ──────────────────────────────────────────
       window.currentStep = 1;
@@ -868,28 +867,11 @@
           reportedBy: userId,
           reporterName: userName,
           reporterEmail: u?.email || "N/A",
-          notifyByEmail: document.getElementById("notifyCheck").checked,
           ref,
         };
 
         try {
           await addDoc(collection(db, "reports"), reportData);
-          if (reportData.notifyByEmail && reportData.reporterEmail !== "N/A") {
-            try {
-              await fetch(`${EMAIL_API_BASE}/report-confirmation`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  email: reportData.reporterEmail,
-                  name: reportData.reporterName,
-                  ref: reportData.ref,
-                  title: reportData.title,
-                }),
-              });
-            } catch (emailError) {
-              console.warn("Report confirmation email skipped:", emailError);
-            }
-          }
           if (userId) {
             try {
               await updateDoc(doc(db, "users", userId), {
