@@ -19,6 +19,12 @@
       <div class="logo">Urban Track</div>
 
       <ul class="nav-links">
+        <!-- google api -->
+        <!-- <li><div id="google_translate_element"></div></li> -->
+
+        <!-- google api -->
+        <li><div id="google_translate_element"></div></li>
+        
         <li><a href="../../homePage.html">Home</a></li>
         <li><a href="signUpPage.html">Sign Up</a></li>
       </ul>
@@ -27,7 +33,7 @@
         <div class="menu-button__burger"></div>
       </div>
     </nav>
-    <form id="loginForm" novalidate>
+    <form id="loginForm" data-auth-handled="true" novalidate>
       <div class="right">
         <div class="right-content">
           <h1>Welcome Back to Urban Track</h1>
@@ -39,7 +45,13 @@
         <div class="left">
           <div class="form-group">
             <label for="email">Email</label>
-            <input id="email" type="email" name="email" placeholder="example@address.com" required />
+            <input
+              id="email"
+              type="email"
+              name="email"
+              placeholder="example@address.com"
+              required
+            />
             <small class="error"></small>
           </div>
 
@@ -47,7 +59,8 @@
             <label for="password">Password</label>
             <div class="input-wrapper">
               <input
-                id="password" type="password"
+                id="password"
+                type="password"
                 name="password"
                 placeholder="password"
                 required
@@ -59,7 +72,16 @@
           </div>
 
           <button type="submit" id="log" name="login" class="btn">Login</button>
-          
+
+          <!-- Google login option -->
+          <a
+            id="google-login-btn"
+            href="http://localhost:3000/auth/google"
+            class="btn google-btn"
+          >
+            <i class="fa-brands fa-google"></i> Continue with Google
+          </a>
+
           <p class="forgot-password">
             <a href="passRecovery.html">Forgot password?</a>
           </p>
@@ -69,10 +91,19 @@
         </div>
       </div>
     </form>
+    <script src="../js/login.js"></script>
+    <script src="../js/main.js"></script>
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-      import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-      import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+      import {
+        getAuth,
+        signInWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
@@ -80,7 +111,7 @@
         projectId: "urban-track-91e53",
         storageBucket: "urban-track-91e53.firebasestorage.app",
         messagingSenderId: "519209303536",
-        appId: "1:519209303536:web:c212eb58eb836e27047135"
+        appId: "1:519209303536:web:c212eb58eb836e27047135",
       };
 
       const app = initializeApp(firebaseConfig);
@@ -107,32 +138,59 @@
 
       const form = document.getElementById("loginForm");
       const emailInput = document.getElementById("email");
+      const loginError = passwordGroup.querySelector(".error");
+
+      function showLoginError() {
+        emailInput.classList.add("input-error");
+        passwordInput.classList.add("input-error");
+        loginError.textContent = "Incorrect credentials.";
+      }
+
+      function clearLoginError() {
+        emailInput.classList.remove("input-error");
+        passwordInput.classList.remove("input-error");
+        loginError.textContent = "";
+      }
+
+      emailInput.addEventListener("input", clearLoginError);
+      passwordInput.addEventListener("input", clearLoginError);
 
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
+        clearLoginError();
 
         const emailValue = emailInput.value.trim();
         const passwordValue = passwordInput.value;
 
         if (!emailValue || !passwordValue) {
-          alert("Please fill in all fields.");
+          showLoginError();
           return;
         }
 
         try {
           // Special Admin Check
-          if (emailValue === 'admin@urbantrack.com' && passwordValue === 'Admin@1234') {
-            localStorage.setItem('urbanTrack_currentUser', JSON.stringify({
-              email: emailValue,
-              role: 'admin',
-              name: 'Administrator'
-            }));
-            localStorage.setItem('userEmail', emailValue);
+          if (
+            emailValue === "admin@urbantrack.com" &&
+            passwordValue === "Admin@1234"
+          ) {
+            localStorage.setItem(
+              "urbanTrack_currentUser",
+              JSON.stringify({
+                email: emailValue,
+                role: "admin",
+                name: "Administrator",
+              }),
+            );
+            localStorage.setItem("userEmail", emailValue);
             window.location.href = "../Adminside/AdminDashboard.html";
             return;
           }
 
-          const userCredential = await signInWithEmailAndPassword(auth, emailValue, passwordValue);
+          const userCredential = await signInWithEmailAndPassword(
+            auth,
+            emailValue,
+            passwordValue,
+          );
           const user = userCredential.user;
 
           // Fetch user details from Firestore
@@ -140,7 +198,7 @@
           let userData = {
             uid: user.uid,
             email: user.email,
-            role: 'user'
+            role: "user",
           };
 
           if (userDoc.exists()) {
@@ -148,28 +206,123 @@
             userData = {
               ...userData,
               ...data,
-              name: data.surname || '', // Map surname to name for display compatibility
-              uid: user.uid // Ensure uid is present for reference
+              name: data.surname || "", // Map surname to name for display compatibility
+              uid: user.uid, // Ensure uid is present for reference
             };
           }
 
           // Save session data for use in dashboards
-          localStorage.setItem('urbanTrack_currentUser', JSON.stringify(userData));
-          localStorage.setItem('userEmail', user.email);
+          localStorage.setItem(
+            "urbanTrack_currentUser",
+            JSON.stringify(userData),
+          );
+          localStorage.setItem("userEmail", user.email);
 
           // Redirect based on user role
-          if (userData.role === 'admin') {
+          if (userData.role === "admin") {
             window.location.href = "../Adminside/AdminDashboard.html";
           } else {
             window.location.href = "MainPage.html";
           }
-
         } catch (error) {
           console.error("Login error:", error);
-          alert("Login failed: " + error.message);
+          showLoginError();
         }
       });
+      function initLogin() {
+        const loginForm = document.getElementById("loginForm");
+        if (!loginForm) return;
+
+        const loginEmail = document.getElementById("text");
+        const loginPassword = document.getElementById("password");
+
+        loginForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          let valid = true;
+
+          // Email validation
+          if (!loginEmail.value.trim()) {
+            setError(loginEmail, "Email is required.");
+            valid = false;
+          } else if (!validateEmail(loginEmail.value.trim())) {
+            setError(loginEmail, "Please enter a valid email address.");
+            valid = false;
+          } else {
+            clearError(loginEmail);
+          }
+
+          // Password validation
+          if (!loginPassword.value.trim()) {
+            setError(loginPassword, "Password is required.");
+            valid = false;
+            // } else if (loginPassword.value.length < 6) {
+            //     setError(loginPassword, "Password must be at least 6 characters.");
+            //     valid = false;
+          } else {
+            clearError(loginPassword);
+          }
+        });
+      }
     </script>
     <!--<script type="module" src="../js/login.js"></script>-->
+
+    <!-- Google api -->
+ <script>
+       
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+
+// Hide Google Translate banner whenever it appears
+function hideGoogleTranslateBanner() {
+    // Remove the top offset Google adds to body
+    document.body.style.top = '0px';
+    
+    // Hide the banner frame
+    const banner = document.querySelector('.goog-te-banner-frame');
+    if (banner) {
+        banner.style.display = 'none';
+    }
+
+    // Also target the iframe by id
+    const bannerById = document.getElementById(':1.container');
+    if (bannerById) {
+        bannerById.style.display = 'none';
+    }
+}
+
+// Run on page load
+hideGoogleTranslateBanner();
+
+// Watch for DOM changes (when Google injects the banner after language select)
+const observer = new MutationObserver(function(mutations) {
+    hideGoogleTranslateBanner();
+});
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['style']
+});
+
+
+</script>
+<script type="text/javascript">
+function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+    );
+}
+</script>
+
+<script type="text/javascript"
+src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+<!-- The End of google api -->
   </body>
 </html>
