@@ -6,6 +6,7 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const cors = require("cors");
 const path = require("path");
+const ROOT = path.join(__dirname, "..", "UrbanTrack", "pages");
 const MongoStore = require("connect-mongo");
 const bcrypt = require("bcryptjs");
 const admin = require("firebase-admin");
@@ -85,35 +86,28 @@ app.use(cors({
     ],
     credentials: true
 }));
-app.use(express.static("UrbanTrack"));
-
-
 
 // Serve static files
-app.use(
-    express.static(
-        path.join(__dirname, "..", "UrbanTrack")
-    )
-);
+app.use(express.static(path.join(__dirname, "..", "UrbanTrack")));
 
 // MAINPAGE
 app.get("/homePage", (req, res) => {
-    res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "MainPage.html"));
+    res.sendFile(path.join(ROOT, "MainPage.html"));
 });
-
 
 // LOGIN
 app.get("/login", (req, res) => {
-    res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "login.html"));
+    res.sendFile(path.join(ROOT, "login.html"));
 });
 
-
+// DASHBOARD
 app.get("/dashboard", (req, res) => {
-    res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "UserDashboard.html"));
+    res.sendFile(path.join(ROOT, "UserDashboard.html"));
 });
 
+// SETTINGS
 app.get("/settings", (req, res) => {
-    res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "UserSettings.html"));
+    res.sendFile(path.join(ROOT, "UserSettings.html"));
 });
 
 /*app.get("/", (req, res) => {
