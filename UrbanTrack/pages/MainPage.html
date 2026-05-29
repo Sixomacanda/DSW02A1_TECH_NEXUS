@@ -522,61 +522,38 @@
 
     // ── 5. USER DISPLAY ──────────────────────────────────────────
     async function loadUser() {
-
       try {
+        const res = await fetch(
+          "https://dsw02a1-tech-nexus-2.onrender.com/auth/user",
+          { credentials: "include" }
+        );
 
-        const response = await fetch("/auth/user", {
-          credentials: "include"
-        });
+        const user = await res.json();
 
-        const user = await response.json();
-
-        if (!user) return;
-
-        const name =
-          user.name || user.email || "User";
-
-        const userNameDisplay =
-          document.getElementById("userNameDisplay");
-
-        const userAvatar =
-          document.getElementById("userAvatar");
-
-        if (userNameDisplay) {
-          userNameDisplay.textContent = name;
+        if (!user) {
+          document.getElementById("userNameDisplay").innerText = "Guest";
+          document.getElementById("userAvatar").innerText = "?";
+          return;
         }
 
-        if (userAvatar) {
+        // FULL NAME
+        document.getElementById("userNameDisplay").innerText = user.name;
 
-          // GOOGLE PROFILE IMAGE
-          if (user.picture) {
+        // INITIALS FOR AVATAR
+        const initials = user.name
+          .split(" ")
+          .map(n => n[0])
+          .join("")
+          .toUpperCase();
 
-            userAvatar.innerHTML = `
-          <img
-            src="${user.picture}"
-            alt="Profile"
-            style="
-              width:100%;
-              height:100%;
-              border-radius:50%;
-              object-fit:cover;
-            "
-          >
-        `;
-
-          } else {
-
-            // LOCAL LOGIN INITIALS
-            userAvatar.textContent =
-              getInitials(name);
-          }
-        }
+        document.getElementById("userAvatar").innerText = initials;
 
       } catch (err) {
-
-        console.error("User load error:", err);
+        console.error("User load failed", err);
       }
     }
+
+    loadUser();
 
     function doLogout() {
       const confirmLogout = confirm("Are you sure you want to logout?");
@@ -585,8 +562,6 @@
         window.location.href = "/logout"; // always call backend logout
       }
     }
-
-
 
 
     // window.toggleMobileMenu = function() {
@@ -959,77 +934,86 @@
     defer></script>
   <!-- Google api -->
   <script>
+  
+  async function checkUser() {
 
-    fetch("/auth/user", {
-      credentials: "include"
-    })
-      .then(res => res.json())
-      .then(user => {
+      try {
+
+        const res = await fetch(
+          "https://dsw02a1-tech-nexus-2.onrender.com/auth/user",
+          {
+            credentials: "include"
+          }
+        );
+
+        const user = await res.json();
 
         if (user) {
 
+          // HIDE LOGIN BUTTON
+          const loginBtn =
+            document.getElementById("log");
+
+          if (loginBtn) {
+            loginBtn.style.display = "none";
+          }
+
+          // SHOW USER NAME
           const userName =
             document.getElementById("userNameDisplay");
-
-          const avatar =
-            document.getElementById("userAvatar");
 
           if (userName) {
             userName.textContent =
               user.name || "User";
           }
 
+          // SHOW AVATAR
+          const avatar =
+            document.getElementById("userAvatar");
+
           if (avatar) {
 
-            // GOOGLE PROFILE IMAGE
+            // GOOGLE USER IMAGE
             if (user.picture) {
 
               avatar.innerHTML = `
-          <img
-            src="${user.picture}"
-            alt="Profile"
-            style="
-              width:100%;
-              height:100%;
-              border-radius:50%;
-              object-fit:cover;
-            "
-          >
-        `;
+            <img
+              src="${user.picture}"
+              alt="Profile"
+              style="
+                width:100%;
+                height:100%;
+                border-radius:50%;
+                object-fit:cover;
+              "
+            >
+          `;
 
             } else {
 
-              // LOCAL LOGIN INITIAL
-              avatar.textContent =
-                user.name.charAt(0).toUpperCase();
+              // LOCAL LOGIN INITIALS
+              const initials = user.name
+                .split(" ")
+                .map(n => n[0])
+                .join("")
+                .toUpperCase();
+
+              avatar.textContent = initials;
             }
           }
 
-        } else {
-
-          console.log("No logged in user");
         }
 
-      })
-      .catch(err => {
-        console.error("Auth error:", err);
-      });
+      } catch (err) {
 
-    function doLogout() {
-
-      fetch("/logout", {
-        method: "GET",
-        credentials: "include"
-      })
-        .then(() => {
-
-          localStorage.removeItem(
-            "urbanTrack_currentUser"
-          );
-
-          location.href = "/login";
-        });
+        console.error(
+          "User check failed:",
+          err
+        );
+      }
     }
+
+    checkUser();
 
 
   </script>

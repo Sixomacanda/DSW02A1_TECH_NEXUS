@@ -10,3 +10,7 @@ UrbanTrack/google-auth-server/urban-track-91e53-firebase-adminsdk-*.json
 
 # Ignore dependency directories
 node_modules/
+google-auth-server/.env
+google-auth-server/.env
+UrbanTrack/google-auth-server/.env
+.env
