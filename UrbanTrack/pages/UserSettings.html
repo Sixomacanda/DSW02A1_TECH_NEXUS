@@ -459,6 +459,7 @@
           </div>
           <div class="card-body">
 
+            <!-- Avatar -->
             <div class="avatar-row">
               <div class="avatar-large" id="avatarDisplay">U</div>
               <div class="avatar-info">
@@ -467,6 +468,7 @@
               </div>
             </div>
 
+            <!-- Name field -->
             <div class="form-row single">
               <div class="field">
                 <label>Display Name</label>
@@ -474,17 +476,30 @@
                 <span class="field-hint-text">This is how your name appears on reports you submit.</span>
               </div>
             </div>
-
             <div class="save-row">
-              <button class="btn btn-primary" id="saveNameBtn" onclick="saveName()">Save Changes</button>
-              <button class="btn btn-ghost" onclick="discardProfile()">Discard</button>
-              <span class="saved-msg" id="nameSavedMsg">Name updated</span>
-              <span class="error-msg" id="nameErrorMsg">Failed to save</span>
+              <button id="saveNameBtn">Save Changes</button>
+              <span id="nameSavedMsg">Name updated</span>
+              <span id="nameErrorMsg">Failed to save</span>
+            </div>
+
+            <!-- Email field -->
+            <div class="form-row single">
+              <div class="field">
+                <label>Email</label>
+                <input type="email" id="displayEmail" placeholder="Your email" />
+                <span class="field-hint-text">This is the email linked to your account.</span>
+              </div>
+            </div>
+            <div class="save-row">
+              <button id="saveEmailBtn">Save Changes</button>
+              <span id="emailSavedMsg">Email updated</span>
+              <span id="emailErrorMsg">Failed to save</span>
             </div>
 
           </div>
         </div>
       </div>
+
 
       <!-- ══ CHANGE EMAIL ══ -->
       <div class="panel-section" id="section-email">
@@ -727,27 +742,54 @@
     });
 
     /* ── SAVE NAME ── */
-    window.saveName = async function () {
-      if (!currentUser) { showToast('Not signed in', 'danger'); return; }
-      const name = document.getElementById('displayName').value.trim();
-      if (!name) { document.getElementById('displayName').focus(); showToast('Name cannot be empty', 'danger'); return; }
-      const btn = document.getElementById('saveNameBtn');
-      btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Saving…';
+    window.saveEmail = async function () {
+      if (!currentUser) {
+        showToast('Not signed in', 'danger');
+        return;
+      }
+
+      const email = document.getElementById('displayEmail').value.trim();
+      if (!email) {
+        document.getElementById('displayEmail').focus();
+        showToast('Email cannot be empty', 'danger');
+        return;
+      }
+
+      const btn = document.getElementById('saveEmailBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spin"></span>Saving…';
+
       try {
-        await setDoc(doc(db, 'users', currentUser.uid),
-          { name, email: currentUser.email, updatedAt: new Date().toISOString() }, { merge: true });
+        // 1. Update Firebase Auth email
+        await updateEmail(currentUser, email);
+
+        // 2. Update Firestore user doc
+        await setDoc(doc(db, 'users', currentUser.uid), {
+          name: currentUser.displayName || '',
+          email,
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
+
+        // 3. Sync localStorage
         const stored = JSON.parse(localStorage.getItem('urbanTrack_currentUser') || '{}');
-        localStorage.setItem('urbanTrack_currentUser', JSON.stringify({ ...stored, name }));
-        window._origName = name;
-        refreshHeaderUI(name);
-        document.getElementById('avatarName').textContent = name;
-        flashMsg('nameSavedMsg'); showToast('Name updated', 'success');
+        localStorage.setItem('urbanTrack_currentUser', JSON.stringify({ ...stored, email }));
+
+        // 4. Update UI
+        window._origEmail = email;
+        document.getElementById('avatarEmail').textContent = email;
+
+        flashMsg('emailSavedMsg');
+        showToast('Email updated', 'success');
       } catch (e) {
-        console.error(e); flashMsg('nameErrorMsg'); showToast('Save failed: ' + (e.code || e.message), 'danger');
+        console.error(e);
+        flashMsg('emailErrorMsg');
+        showToast('Save failed: ' + (e.code || e.message), 'danger');
       } finally {
-        btn.disabled = false; btn.textContent = 'Save Changes';
+        btn.disabled = false;
+        btn.textContent = 'Save Changes';
       }
     };
+
 
     /* ── SAVE EMAIL ── */
     window.saveEmail = async function () {

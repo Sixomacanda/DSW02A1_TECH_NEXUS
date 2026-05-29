@@ -1,30 +1,30 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Override Save Name button
   const saveNameBtn = document.getElementById("saveNameBtn");
   if (saveNameBtn) {
     saveNameBtn.addEventListener("click", (e) => {
-      e.preventDefault(); // block default form submission
-      saveName();         // call your existing function
+      e.preventDefault();
+      saveName(); // call your function
     });
   }
 
-  // Override Save Email button
-  const saveEmailBtn = document.getElementById("saveEmailBtn");
-  if (saveEmailBtn) {
-    saveEmailBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      saveEmail();
-    });
-  }
 
-  // Override Delete Account confirm button
-  const deleteConfirmBtn = document.getElementById("deleteConfirmBtn");
-  if (deleteConfirmBtn) {
-    deleteConfirmBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      deleteAccount();
-    });
-  }
+// Override Save Email button
+const saveEmailBtn = document.getElementById("saveEmailBtn");
+if (saveEmailBtn) {
+  saveEmailBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    saveEmail();
+  });
+}
+
+// Override Delete Account confirm button
+const deleteConfirmBtn = document.getElementById("deleteConfirmBtn");
+if (deleteConfirmBtn) {
+  deleteConfirmBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    deleteAccount();
+  });
+}
 });
 
 
