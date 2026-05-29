@@ -359,19 +359,6 @@
 
     .modal-title {
       color: #ef4444;
-    }*/
-
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-overlay.open {
-      display: flex;
     }
 
 
@@ -505,12 +492,11 @@
               </div>
             </div>
             <div class="save-row">
-              <button id="saveNameBtn" type="button">Save Changes</button>
-              <button id="saveEmailBtn" type="button">Save Changes</button>
-              <button id="deleteConfirmBtn" type="button">Delete Account</button>
-              <button id="discardProfileBtn" type="button">Discard</button>
+              <button class="btn btn-primary" id="saveNameBtn" onclick="saveName()">Save Changes</button>
+              <button class="btn btn-ghost" onclick="discardProfile()">Discard</button>
+              <span class="saved-msg" id="nameSavedMsg">Name updated</span>
+              <span class="error-msg" id="nameErrorMsg">Failed to save</span>
             </div>
-
           </div>
         </div>
       </div>
