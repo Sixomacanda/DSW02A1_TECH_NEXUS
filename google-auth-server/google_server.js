@@ -6,7 +6,7 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 app.post("/login", async (req, res) => {
     try {
