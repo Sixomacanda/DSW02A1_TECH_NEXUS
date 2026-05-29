@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>UrbanTrack — Report an Issue</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/Styles/MainPage.css">
+  <link rel="stylesheet" href="../Styles/MainPage.css">
 </head>
 
 <body>
@@ -22,9 +22,9 @@
         <div id="google_translate_element"></div>
       </li>
 
-      <li><a href="/dashboard">Dashboard</a></li>
-      <li><a href="/settings">Settings</a></li>
-      <li><a href="/logout" onclick="doLogout()">Logout</a></li>
+      <li><a href="UserDashboard.html">Dashboard</a></li>
+      <li><a href="UserSettings.html">Settings</a></li>
+      <li><a href="login.html" onclick="doLogout()">Logout</a></li>
       <div class="nav-actions">
         <div class="user-chip" id="userChip">
           <div class="avatar" id="userAvatar">?</div>
@@ -560,7 +560,7 @@
       const confirmLogout = confirm("Are you sure you want to logout?");
       if (confirmLogout) {
         localStorage.removeItem("urbanTrack_currentUser");
-        window.location.href = "/logout"; // always call backend logout
+        window.location.href = "../login.html";
       }
     }
 
@@ -964,7 +964,7 @@
 
     async function logout() {
       await fetch("/logout");
-      window.location.href = "/login";
+      window.location.href = "../pages/login.html";
     }
 
     checkUser();

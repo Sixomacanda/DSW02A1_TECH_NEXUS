@@ -202,7 +202,7 @@
         if (userData.role === "admin") {
           window.location.href = "../Adminside/AdminDashboard.html";
         } else {
-          window.location.href = "MainPage.html";
+          window.location.href = "../pages/MainPage.html";
         }
       } catch (error) {
         console.error("Login error:", error);
@@ -290,6 +290,30 @@
     });
 
 
+  </script>
+  <script>
+    async function loadUser() {
+      const res = await fetch("/auth/user", {
+        credentials: "include"
+      });
+
+      const user = await res.json();
+
+      const authSection = document.getElementById("authSection");
+
+      if (user) {
+        authSection.innerHTML = `
+      👋 ${user.name}
+      <a href="/logout">Logout</a>
+    `;
+      } else {
+        authSection.innerHTML = `
+      <a href="/login">Login</a>
+    `;
+      }
+    }
+
+    loadUser();
   </script>
   <script type="text/javascript">
     function googleTranslateElementInit() {

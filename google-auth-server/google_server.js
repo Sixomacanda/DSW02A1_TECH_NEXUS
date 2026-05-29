@@ -10,6 +10,8 @@ const ROOT = path.join(__dirname, "..", "UrbanTrack", "pages");
 const MongoStore = require("connect-mongo");
 const bcrypt = require("bcryptjs");
 const admin = require("firebase-admin");
+const app = express();
+
 
 const serviceAccount = JSON.parse(
     process.env.FIREBASE_SERVICE_ACCOUNT
@@ -21,11 +23,9 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-const app = express();
 
 app.set("trust proxy", 1);
 
-app.use(express.json());;
 
 app.post("/login", async (req, res) => {
     try {
@@ -156,8 +156,15 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 // Google login
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5501/UrbanTrack/pages/MainPage.html";
-const FRONTEND_LOGIN_URL = process.env.FRONTEND_LOGIN_URL || "http://localhost:5501/UrbanTrack/pages/login.html";
+const isProduction = process.env.NODE_ENV === "production";
+
+const FRONTEND_URL = isProduction
+    ? "https://dsw02a1-tech-nexus-2.onrender.com/pages/MainPage.html"
+    : "http://127.0.0.1:5501/UrbanTrack/pages/MainPage.html";
+
+const FRONTEND_LOGIN_URL = isProduction
+    ? "https://dsw02a1-tech-nexus-2.onrender.com/pages/login.html"
+    : "http://127.0.0.1:5501/UrbanTrack/pages/login.html";
 
 // START GOOGLE LOGIN
 app.get(
