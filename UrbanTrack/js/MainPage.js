@@ -396,6 +396,19 @@ function initializeReportMap() {
           };
           window._reportMap.setCenter(userLoc);
           window._reportMarker.setPosition(userLoc);
+          // apply a polished blue circle icon for the user's current location
+          try {
+            window._reportMarker.setIcon({
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 9,
+              fillColor: "#38bdf8",
+              fillOpacity: 1,
+              strokeColor: "#ffffff",
+              strokeWeight: 2,
+            });
+          } catch (e) {
+            // ignore if API not available
+          }
           window.updateCoords(userLoc.lat, userLoc.lng);
         },
         () => {
