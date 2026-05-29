@@ -179,54 +179,52 @@ app.get(
 
 // GOOGLE CALLBACK
 app.get(
-    "/auth/google/callback",
-    passport.authenticate("google", {
-        failureRedirect: FRONTEND_LOGIN_URL,
-    }),
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: FRONTEND_LOGIN_URL }),
+  async (req, res) => {
+    try {
+      if (req.user) {
+        const googleUser = {
+          name: req.user.displayName,
+          email: req.user.emails[0]?.value,
+          id: req.user.id,
+          picture: req.user.photos[0]?.value,
+          role: "user"
+        };
 
-    async function (req, res) {
-        try {
-            const googleUser = {
-                name: req.user.displayName,
-                email: req.user.emails[0]?.value,
-                id: req.user.id,
-                picture: req.user.photos[0]?.value,
-                role: "user"
-            };
-
-            // SAVE USER TO FIRESTORE
-            const userRef = db.collection("users").doc(googleUser.email);
-
-            const existingUser = await userRef.get();
-
-            if (!existingUser.exists) {
-                await userRef.set({
-                    name: googleUser.name,
-                    email: googleUser.email,
-                    googleId: googleUser.id,
-                    picture: googleUser.picture,
-                    createdAt: new Date()
-                });
-            }
-
-            // SESSION (FIXED)
-            req.session.user = googleUser;
-
-            req.session.save((err) => {
-                if (err) {
-                    console.error("SESSION SAVE ERROR:", err);
-                    return res.redirect(FRONTEND_LOGIN_URL);
-                }
-
-                return res.redirect(FRONTEND_URL);
-            });
-
-        } catch (err) {
-            console.error("GOOGLE CALLBACK ERROR:", err);
-            return res.redirect(FRONTEND_LOGIN_URL);
+        // Save or update user in Firestore
+        const userRef = db.collection("users").doc(googleUser.email);
+        const existingUser = await userRef.get();
+        if (!existingUser.exists) {
+          await userRef.set({
+            name: googleUser.name,
+            email: googleUser.email,
+            googleId: googleUser.id,
+            picture: googleUser.picture,
+            createdAt: new Date()
+          });
         }
+
+        // Persist session
+        req.session.user = googleUser;
+        req.session.save((err) => {
+          if (err) {
+            console.error("SESSION SAVE ERROR:", err);
+            return res.redirect(FRONTEND_LOGIN_URL);
+          }
+          // ✅ Redirect to MainPage after session is saved
+          return res.redirect(FRONTEND_URL);
+        });
+      } else {
+        res.redirect(FRONTEND_LOGIN_URL);
+      }
+    } catch (err) {
+      console.error("GOOGLE CALLBACK ERROR:", err);
+      res.redirect(FRONTEND_LOGIN_URL);
     }
+  }
 );
+
 // Get user session
 app.get("/auth/user", (req, res) => {
     res.json(req.session.user || null);
