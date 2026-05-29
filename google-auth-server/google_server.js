@@ -23,10 +23,6 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-
-app.set("trust proxy", 1);
-
-
 app.post("/login", async (req, res) => {
     try {
 
@@ -118,6 +114,12 @@ app.get("/settings", (req, res) => {
 
 
 // Session setup
+app.set("trust proxy", 1);
+
+app.get("/test-session", (req, res) => {
+    res.json(req.session.user || "NO SESSION");
+});
+
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -128,8 +130,9 @@ app.use(session({
     }),
     cookie: {
         maxAge: 1000 * 60 * 60 * 24,
-        secure: false,
-        sameSite: "lax"
+        secure: true,          // FORCE HTTPS on Render
+        httpOnly: true,
+        sameSite: "none"       // REQUIRED for OAuth
     }
 }));
 
@@ -226,7 +229,7 @@ app.get(
 );
 // Get user session
 app.get("/auth/user", (req, res) => {
-  res.json(req.session.user || null);
+    res.json(req.session.user || null);
 });
 
 
