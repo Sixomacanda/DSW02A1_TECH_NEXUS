@@ -937,7 +937,7 @@
   <script>
     async function checkUser() {
       try {
-        const res = await fetch("/auth/user", {
+        const res = await fetch("https://dsw02a1-tech-nexus-2.onrender.com/auth/user", {
           credentials: "include"
         });
 
@@ -945,26 +945,22 @@
 
         const authSection = document.getElementById("authSection");
 
-        if (user) {
+        if (user && user.name) {{
           authSection.innerHTML = `
-                <div style="color:white;">
-                    👋 ${user.name}
-                    <button onclick="logout()">Logout</button>
-                </div>
-            `;
+        <div style="color:white;">
+          👋 ${user.name}
+          <button onclick="logout()">Logout</button>
+        </div>
+      `;
         } else {
           authSection.innerHTML = `
-                <a href="/login" style="color:white;">Login</a>
-            `;
+        <a href="/login" style="color:white;">Login</a>
+      `;
         }
+
       } catch (err) {
         console.error(err);
       }
-    }
-
-    async function logout() {
-      await fetch("/logout");
-      window.location.href = "../pages/login.html";
     }
 
     checkUser();
