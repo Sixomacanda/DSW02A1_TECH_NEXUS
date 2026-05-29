@@ -86,27 +86,17 @@ app.get(
 );
 
 // google callback
-app.get(
-    "/auth/google/callback",
-    passport.authenticate("google", {
-        failureRedirect: FRONTEND_LOGIN_URL,
-    }),
-    (req, res) => {
+app.get("/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
 
-        const googleUser = {
-            name: req.user.displayName,
-            email: req.user.emails?.[0]?.value,
-            id: req.user.id,
-            picture: req.user.photos?.[0]?.value,
-            role: "user"
-        };
-
-        req.session.user = googleUser;
-
-        req.session.save(() => {
-            return res.redirect(FRONTEND_URL);
-        });
-    }
+app.get("/auth/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/login"
+  }),
+  (req, res) => {
+    res.redirect("/homePage.html");
+  }
 );
 
 // get session user
