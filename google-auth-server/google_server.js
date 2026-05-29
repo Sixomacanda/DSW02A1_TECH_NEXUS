@@ -178,13 +178,11 @@ app.get(
 app.get(
     "/auth/google/callback",
     passport.authenticate("google", {
-        failureRedirect: FRONTEND_URL,
+        failureRedirect: FRONTEND_LOGIN_URL,
     }),
 
     async function (req, res) {
-
         try {
-
             const googleUser = {
                 name: req.user.displayName,
                 email: req.user.emails[0]?.value,
@@ -194,15 +192,11 @@ app.get(
             };
 
             // SAVE USER TO FIRESTORE
-            const userRef = db
-                .collection("users")
-                .doc(googleUser.email);
+            const userRef = db.collection("users").doc(googleUser.email);
 
-            const existingUser =
-                await userRef.get();
+            const existingUser = await userRef.get();
 
             if (!existingUser.exists) {
-
                 await userRef.set({
                     name: googleUser.name,
                     email: googleUser.email,
@@ -212,17 +206,21 @@ app.get(
                 });
             }
 
-            // SESSION
+            // SESSION (FIXED)
             req.session.user = googleUser;
 
-            // REDIRECT
-            res.redirect(FRONTEND_URL);
+            req.session.save((err) => {
+                if (err) {
+                    console.error("SESSION SAVE ERROR:", err);
+                    return res.redirect(FRONTEND_LOGIN_URL);
+                }
+
+                return res.redirect(FRONTEND_URL);
+            });
 
         } catch (err) {
-
-            console.error(FRONTEND_URL);
-
-            res.redirect(FRONTEND_LOGIN_URL);
+            console.error("GOOGLE CALLBACK ERROR:", err);
+            return res.redirect(FRONTEND_LOGIN_URL);
         }
     }
 );
