@@ -161,7 +161,6 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 // Google login
-const isProduction = process.env.NODE_ENV === "production";
 
 const FRONTEND_URL = isProduction
     ? "https://dsw02a1-tech-nexus-2.onrender.com/pages/MainPage.html"
