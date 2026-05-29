@@ -120,6 +120,7 @@ app.get("/test-session", (req, res) => {
     res.json(req.session.user || "NO SESSION");
 });
 
+
 const isProduction = process.env.NODE_ENV === "production";
 
 app.use(session({
@@ -132,10 +133,11 @@ app.use(session({
   }),
   cookie: {
     maxAge: 1000 * 60 * 60 * 24,
-    secure: isProduction,          // true only in production
-    sameSite: isProduction ? "none" : "lax"
+    secure: isProduction,                     // true only in production (HTTPS)
+    sameSite: isProduction ? "none" : "lax"   // "none" for Google OAuth, "lax" locally
   }
 }));
+
 
 
 console.log("CLIENT ID:", process.env.GOOGLE_CLIENT_ID);
