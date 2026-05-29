@@ -120,21 +120,23 @@ app.get("/test-session", (req, res) => {
     res.json(req.session.user || "NO SESSION");
 });
 
+const isProduction = process.env.NODE_ENV === "production";
+
 app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URL,
-        collectionName: "sessions"
-    }),
-    cookie: {
-        maxAge: 1000 * 60 * 60 * 24,
-        secure: true,          // FORCE HTTPS on Render
-        httpOnly: true,
-        sameSite: "none"       // REQUIRED for OAuth
-    }
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URL,
+    collectionName: "sessions"
+  }),
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24,
+    secure: isProduction,          // true only in production
+    sameSite: isProduction ? "none" : "lax"
+  }
 }));
+
 
 console.log("CLIENT ID:", process.env.GOOGLE_CLIENT_ID);
 
@@ -178,56 +180,55 @@ app.get(
 );
 
 // GOOGLE CALLBACK
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: FRONTEND_LOGIN_URL }),
-  async (req, res) => {
-    try {
-      if (req.user) {
-        const googleUser = {
-          name: req.user.displayName,
-          email: req.user.emails[0]?.value,
-          id: req.user.id,
-          picture: req.user.photos[0]?.value,
-          role: "user"
-        };
+app.get("/auth/google/callback",
+    passport.authenticate("google", { failureRedirect: FRONTEND_LOGIN_URL }),
+    async (req, res) => {
+        try {
+            if (req.user) {
+                const googleUser = {
+                    name: req.user.displayName,
+                    email: req.user.emails[0]?.value,
+                    id: req.user.id,
+                    picture: req.user.photos[0]?.value,
+                    role: "user"
+                };
 
-        // Save or update user in Firestore
-        const userRef = db.collection("users").doc(googleUser.email);
-        const existingUser = await userRef.get();
-        if (!existingUser.exists) {
-          await userRef.set({
-            name: googleUser.name,
-            email: googleUser.email,
-            googleId: googleUser.id,
-            picture: googleUser.picture,
-            createdAt: new Date()
-          });
+                // Save to Firestore
+                const userRef = db.collection("users").doc(googleUser.email);
+                const existingUser = await userRef.get();
+                if (!existingUser.exists) {
+                    await userRef.set({
+                        name: googleUser.name,
+                        email: googleUser.email,
+                        googleId: googleUser.id,
+                        picture: googleUser.picture,
+                        createdAt: new Date()
+                    });
+                }
+
+                // Save session
+                req.session.user = googleUser;
+                req.session.save((err) => {
+                    if (err) {
+                        console.error("SESSION SAVE ERROR:", err);
+                        return res.redirect(FRONTEND_LOGIN_URL);
+                    }
+                    return res.redirect(FRONTEND_URL); // MainPage.html
+                });
+            } else {
+                res.redirect(FRONTEND_LOGIN_URL);
+            }
+        } catch (err) {
+            console.error("GOOGLE CALLBACK ERROR:", err);
+            res.redirect(FRONTEND_LOGIN_URL);
         }
-
-        // Persist session
-        req.session.user = googleUser;
-        req.session.save((err) => {
-          if (err) {
-            console.error("SESSION SAVE ERROR:", err);
-            return res.redirect(FRONTEND_LOGIN_URL);
-          }
-          // ✅ Redirect to MainPage after session is saved
-          return res.redirect(FRONTEND_URL);
-        });
-      } else {
-        res.redirect(FRONTEND_LOGIN_URL);
-      }
-    } catch (err) {
-      console.error("GOOGLE CALLBACK ERROR:", err);
-      res.redirect(FRONTEND_LOGIN_URL);
     }
-  }
 );
+
 
 // Get user session
 app.get("/auth/user", (req, res) => {
-    res.json(req.session.user || null);
+  res.json(req.session.user || null);
 });
 
 
