@@ -85,6 +85,12 @@
       getDoc,
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+    const BASE_URL =
+      window.location.hostname === "127.0.0.1" ||
+        window.location.hostname === "localhost"
+        ? "http://127.0.0.1:5501/UrbanTrack"
+        : "https://dsw02a1-tech-nexus-2.onrender.com";
+
     const firebaseConfig = {
       apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
       authDomain: "urban-track-91e53.firebaseapp.com",
@@ -97,6 +103,9 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+
+    document.getElementById("google-login-btn").href =
+      `${BASE_URL}/auth/google`;
 
     // Password Visibility Toggle
     const passwordGroup = document.querySelector(".password-group");
@@ -202,7 +211,7 @@
         if (userData.role === "admin") {
           window.location.href = "../Adminside/AdminDashboard.html";
         } else {
-          window.location.href = "../pages/MainPage.html";
+          window.location.href = `${BASE_URL}/homePage`;;
         }
       } catch (error) {
         console.error("Login error:", error);
@@ -242,6 +251,13 @@
           clearError(loginPassword);
         }
       });
+    }
+    async function logout() {
+      await fetch(`${BASE_URL}/logout`, {
+        credentials: "include"
+      });
+
+      window.location.href = `${BASE_URL}/login`;
     }
   </script>
   <!--<script type="module" src="../js/login.js"></script>-->
@@ -292,45 +308,28 @@
 
   </script>
   <script>
-    const email = req.user.emails?.[0]?.value;
 
-    if (!email) {
-      throw new Error("Google email not found");
-    }
+    async function checkAuth() {
+      try {
+        const res = await fetch(`${BASE_URL}/auth/user`, {
+          credentials: "include"
+        });
 
-    const userRef = db.collection("users").doc(email);
+        const user = await res.json();
 
-    (async function checkAuth() {
-      const res = await fetch("/auth/user", { credentials: "include" });
-      const user = await res.json();
-      if (user) {
-        window.location.href = "../pages/MainPage.html";
-      }
-    })();
+        const isHomePage = window.location.pathname.includes("homePage");
 
+        if (user && user.email && !isHomePage) {
+          window.location.href = `${BASE_URL}/homePage`;
+        }
 
-    async function loadUser() {
-      const res = await fetch("/auth/user", {
-        credentials: "include"
-      });
-
-      const user = await res.json();
-
-      const authSection = document.getElementById("authSection");
-
-      if (user) {
-        authSection.innerHTML = `
-      👋 ${user.name}
-      <a href="/logout">Logout</a>
-    `;
-      } else {
-        authSection.innerHTML = `
-      <a href="/login">Login</a>
-    `;
+      } catch (err) {
+        console.log("auth check failed", err);
       }
     }
 
-    loadUser();
+    checkAuth();
+
   </script>
   <script type="text/javascript">
     function googleTranslateElementInit() {

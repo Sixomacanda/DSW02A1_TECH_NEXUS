@@ -6,120 +6,27 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const cors = require("cors");
 const path = require("path");
-const ROOT = path.join(__dirname, "..", "UrbanTrack", "pages");
 const MongoStore = require("connect-mongo");
-const bcrypt = require("bcryptjs");
-const admin = require("firebase-admin");
+
 const app = express();
 
+// paths
+const ROOT = path.join(__dirname, "..", "UrbanTrack", "pages");
 
-const serviceAccount = JSON.parse(
-    process.env.FIREBASE_SERVICE_ACCOUNT
-);
-
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-});
-
-const db = admin.firestore();
-
-app.post("/login", async (req, res) => {
-    try {
-
-        const { email, password } = req.body;
-
-        const userDoc = await db
-            .collection("users")
-            .doc(email)
-            .get();
-
-        if (!userDoc.exists) {
-            return res.status(401).json({
-                error: "Invalid credentials"
-            });
-        }
-
-        const user = userDoc.data();
-
-        const match = await bcrypt.compare(
-            password,
-            user.passwordHash
-        );
-
-        if (!match) {
-            return res.status(401).json({
-                error: "Invalid credentials"
-            });
-        }
-
-        req.session.user = {
-            uid: email,
-            email: user.email,
-            name: user.name
-        };
-
-        res.json({
-            success: true,
-            user: req.session.user
-        });
-
-    } catch (err) {
-
-        console.error(err);
-
-        res.status(500).json({
-            error: "Server error"
-        });
-    }
-});
-
-
-// IMPORTANT: strict CORS for production
+// cors
 app.use(cors({
     origin: [
-        "http://localhost:5501",
+        "http://127.0.0.1:5501",
         "https://dsw02a1-tech-nexus-2.onrender.com"
     ],
     credentials: true
-}));
+}));;
 
-// Serve static files
+// static files
 app.use(express.static(path.join(__dirname, "..", "UrbanTrack")));
 
-// MAINPAGE
-app.get("/homePage", (req, res) => {
-    res.sendFile(path.join(ROOT, "MainPage.html"));
-});
-
-// LOGIN
-app.get("/login", (req, res) => {
-    res.sendFile(path.join(ROOT, "login.html"));
-});
-
-// DASHBOARD
-app.get("/dashboard", (req, res) => {
-    res.sendFile(path.join(ROOT, "UserDashboard.html"));
-});
-
-// SETTINGS
-app.get("/settings", (req, res) => {
-    res.sendFile(path.join(ROOT, "UserSettings.html"));
-});
-
-/*app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "UrbanTrack", "pages", "homePage.html"));
-});*/
-
-
-
-
-// Session setup
+// session setup
 app.set("trust proxy", 1);
-
-app.get("/test-session", (req, res) => {
-    res.json(req.session.user || "NO SESSION");
-});
-
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -130,21 +37,16 @@ app.use(session({
         collectionName: "sessions"
     }),
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24,
-        secure: isProduction,                     // true only in production
-        sameSite: isProduction ? "none" : "lax"   // "none" for Google OAuth, "lax" locally
+        secure: true,   // on render
+        sameSite: "none"
     }
 }));
 
-
-
-
-console.log("CLIENT ID:", process.env.GOOGLE_CLIENT_ID);
-
+// passport init
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Google Strategy (FIXED - no env risk)
+// google strategy
 passport.use(
     new GoogleStrategy(
         {
@@ -152,22 +54,30 @@ passport.use(
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             callbackURL: "https://dsw02a1-tech-nexus-2.onrender.com/auth/google/callback"
         },
-        function (accessToken, refreshToken, profile, done) {
+        (accessToken, refreshToken, profile, done) => {
             return done(null, profile);
         }
     )
 );
 
+// serialize user
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
-// Google login
-const BASE_URL = process.env.BASE_URL;
+// pages
+app.get("/homePage", (req, res) => {
+    res.sendFile(path.join(ROOT, "MainPage.html"));
+});
 
-const FRONTEND_URL = `${BASE_URL}/pages/MainPage.html`;
-const FRONTEND_LOGIN_URL = `${BASE_URL}/pages/login.html`;
+app.get("/login", (req, res) => {
+    res.sendFile(path.join(ROOT, "login.html"));
+});
 
-// START GOOGLE LOGIN
+app.get("/dashboard", (req, res) => {
+    res.sendFile(path.join(ROOT, "UserDashboard.html"));
+});
+
+// google login
 app.get(
     "/auth/google",
     passport.authenticate("google", {
@@ -175,57 +85,45 @@ app.get(
     })
 );
 
-// GOOGLE CALLBACK
+// google callback
 app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", {
-    failureRedirect: FRONTEND_LOGIN_URL,
-  }),
-  (req, res) => {
+    "/auth/google/callback",
+    passport.authenticate("google", {
+        failureRedirect: FRONTEND_LOGIN_URL,
+    }),
+    (req, res) => {
 
-    const googleUser = {
-      name: req.user.displayName,
-      email: req.user.emails?.[0]?.value,
-      id: req.user.id,
-      picture: req.user.photos?.[0]?.value,
-      role: "user"
-    };
+        const googleUser = {
+            name: req.user.displayName,
+            email: req.user.emails?.[0]?.value,
+            id: req.user.id,
+            picture: req.user.photos?.[0]?.value,
+            role: "user"
+        };
 
-    req.session.user = googleUser;
+        req.session.user = googleUser;
 
-    req.session.save(() => {
-      return res.redirect(FRONTEND_URL);
-    });
-  }
+        req.session.save(() => {
+            return res.redirect(FRONTEND_URL);
+        });
+    }
 );
 
-// Get user session
+// get session user
 app.get("/auth/user", (req, res) => {
     res.json(req.session.user || null);
 });
 
-
-// LOGOUT ROUTE
+// logout
 app.get("/logout", (req, res) => {
-    if (req.session) {
-        req.session.destroy(() => {
-            res.redirect("/login" || "http://127.0.0.1:5501/UrbanTrack/pages/login.html"); // always go to login page
-        });
-    } else {
-        res.redirect("/login" || "http://127.0.0.1:5501/UrbanTrack/pages/login.html");
-    }
+    req.session.destroy(() => {
+        res.redirect("/login");
+    });
 });
 
-
+// start server
 const PORT = process.env.PORT || 3000;
 
-console.log("CURRENT DIR:", __dirname);
-
-console.log(
-    "MAIN PAGE PATH:",
-    path.resolve("../UrbanTrack/pages/MainPage.html")
-);
-
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`server running on port ${PORT}`);
 });
