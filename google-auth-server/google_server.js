@@ -54,8 +54,7 @@ app.get("/settings", (req, res) => {
 });*/
 
 
-// USER SETTINGS ROUTE
-app.set("trust proxy", 1);
+
 
 // Session setup
 app.use(session({
