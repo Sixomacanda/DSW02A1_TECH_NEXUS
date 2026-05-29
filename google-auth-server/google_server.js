@@ -124,19 +124,20 @@ app.get("/test-session", (req, res) => {
 const isProduction = process.env.NODE_ENV === "production";
 
 app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGO_URL,
-    collectionName: "sessions"
-  }),
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24,
-    secure: isProduction,                     // true only in production (HTTPS)
-    sameSite: isProduction ? "none" : "lax"   // "none" for Google OAuth, "lax" locally
-  }
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URL,
+        collectionName: "sessions"
+    }),
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24,
+        secure: isProduction,                     // true only in production
+        sameSite: isProduction ? "none" : "lax"   // "none" for Google OAuth, "lax" locally
+    }
 }));
+
 
 
 
@@ -229,7 +230,7 @@ app.get("/auth/google/callback",
 
 // Get user session
 app.get("/auth/user", (req, res) => {
-  res.json(req.session.user || null);
+    res.json(req.session.user || null);
 });
 
 

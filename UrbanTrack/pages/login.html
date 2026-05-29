@@ -299,15 +299,15 @@
     }
 
     const userRef = db.collection("users").doc(email);
-    
+
     (async function checkAuth() {
       const res = await fetch("/auth/user", { credentials: "include" });
       const user = await res.json();
-
       if (user) {
         window.location.href = "../pages/MainPage.html";
       }
     })();
+
 
     async function loadUser() {
       const res = await fetch("/auth/user", {
