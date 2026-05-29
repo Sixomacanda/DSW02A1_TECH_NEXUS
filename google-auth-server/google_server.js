@@ -36,7 +36,7 @@ app.get("/homePage", (req, res) => {
 
 //HOMEPAGE
 app.get("/home", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "UrbanTrack", "homePage.html"));
+  res.sendFile(path.join(__dirname, "..",  "homePage.html"));
 });
 
 
