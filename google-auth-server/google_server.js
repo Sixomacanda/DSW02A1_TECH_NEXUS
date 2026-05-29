@@ -1,42 +1,61 @@
-const db = getFirestore();
 const admin = require("firebase-admin");
+
 admin.initializeApp({
     credential: admin.credential.applicationDefault()
 });
+
 const db = admin.firestore();
 
 const bcrypt = require("bcrypt");
 
 app.post("/login", async (req, res) => {
-    const { email, password } = req.body;
+    try {
 
-    const userDoc = await db.collection("users").doc(email).get();
-    if (!userDoc.exists) {
-        return res.status(401).json({ error: "Invalid credentials" });
+        const { email, password } = req.body;
+
+        const userDoc = await db
+            .collection("users")
+            .doc(email)
+            .get();
+
+        if (!userDoc.exists) {
+            return res.status(401).json({
+                error: "Invalid credentials"
+            });
+        }
+
+        const user = userDoc.data();
+
+        const match = await bcrypt.compare(
+            password,
+            user.passwordHash
+        );
+
+        if (!match) {
+            return res.status(401).json({
+                error: "Invalid credentials"
+            });
+        }
+
+        req.session.user = {
+            uid: email,
+            email: user.email,
+            name: user.name
+        };
+
+        res.json({
+            success: true,
+            user: req.session.user
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+            error: "Server error"
+        });
     }
-
-    const user = userDoc.data();
-    const match = await bcrypt.compare(password, user.passwordHash);
-    if (!match) return res.status(401).json({ error: "Invalid credentials" });
-
-    req.session.user = { uid: email, email: user.email, name: user.name };
-    res.json({ success: true, user: req.session.user });
-});
-
-
-app.post("/login", async (req, res) => {
-    const { email, password } = req.body;
-
-    const userDoc = await db.collection("users").doc(email).get();
-    if (!userDoc.exists()) {
-        return res.status(401).json({ error: "Invalid credentials" });
-    }
-
-    const user = userDoc.data();
-    // TODO: verify password with bcrypt if you store hashed passwords
-
-    req.session.user = { uid: email, email: user.email, name: user.name };
-    res.json({ success: true, user: req.session.user });
 });
 
 
@@ -151,35 +170,52 @@ app.get(
 // GOOGLE CALLBACK
 app.get(
     "/auth/google/callback",
-    function (req, res, next) {
-        console.log("Google callback received, query:", req.query);
-        next();
-    },
     passport.authenticate("google", {
         failureRedirect: FRONTEND_LOGIN_URL,
     }),
-    function (req, res) {
-        console.log("Google auth successful");
 
-        if (req.user) {
-            const userData = JSON.stringify({
+    async function (req, res) {
+
+        try {
+
+            const googleUser = {
                 name: req.user.displayName,
                 email: req.user.emails[0]?.value,
                 id: req.user.id,
                 picture: req.user.photos[0]?.value,
                 role: "user"
-            });
+            };
 
-            // Upsert user into Firestore-like JS DB in backend is not possible here.
-            // Instead, we store minimal user data in a localStorage-ready query param
-            // and let the frontend write to Firestore.
-            res.redirect(
-                FRONTEND_URL +
-                "?googleUser=" +
-                encodeURIComponent(userData)
-            );
-        } else {
+            // SAVE USER TO FIRESTORE
+            const userRef = db
+                .collection("users")
+                .doc(googleUser.email);
+
+            const existingUser =
+                await userRef.get();
+
+            if (!existingUser.exists) {
+
+                await userRef.set({
+                    name: googleUser.name,
+                    email: googleUser.email,
+                    googleId: googleUser.id,
+                    picture: googleUser.picture,
+                    createdAt: new Date()
+                });
+            }
+
+            // SESSION
+            req.session.user = googleUser;
+
+            // REDIRECT
             res.redirect(FRONTEND_URL);
+
+        } catch (err) {
+
+            console.error(err);
+
+            res.redirect(FRONTEND_LOGIN_URL);
         }
     }
 );

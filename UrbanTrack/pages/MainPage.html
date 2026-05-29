@@ -521,14 +521,61 @@
     };
 
     // ── 5. USER DISPLAY ──────────────────────────────────────────
-    function loadUser() {
-      const u = JSON.parse(
-        localStorage.getItem("urbanTrack_currentUser") || "null",
-      );
-      if (!u) return;
-      const name = u.name || u.email || "User";
-      document.getElementById("userNameDisplay").textContent = name;
-      document.getElementById("userAvatar").textContent = getInitials(name);
+    async function loadUser() {
+
+      try {
+
+        const response = await fetch("/auth/user", {
+          credentials: "include"
+        });
+
+        const user = await response.json();
+
+        if (!user) return;
+
+        const name =
+          user.name || user.email || "User";
+
+        const userNameDisplay =
+          document.getElementById("userNameDisplay");
+
+        const userAvatar =
+          document.getElementById("userAvatar");
+
+        if (userNameDisplay) {
+          userNameDisplay.textContent = name;
+        }
+
+        if (userAvatar) {
+
+          // GOOGLE PROFILE IMAGE
+          if (user.picture) {
+
+            userAvatar.innerHTML = `
+          <img
+            src="${user.picture}"
+            alt="Profile"
+            style="
+              width:100%;
+              height:100%;
+              border-radius:50%;
+              object-fit:cover;
+            "
+          >
+        `;
+
+          } else {
+
+            // LOCAL LOGIN INITIALS
+            userAvatar.textContent =
+              getInitials(name);
+          }
+        }
+
+      } catch (err) {
+
+        console.error("User load error:", err);
+      }
     }
 
     function doLogout() {
@@ -884,10 +931,6 @@
           buildMap(defaultCentre);
         }
       });
-    function doLogout() {
-      localStorage.removeItem("urbanTrack_currentUser");
-      location.href = "../../homePage.html";
-    }
 
 
 
@@ -917,50 +960,76 @@
   <!-- Google api -->
   <script>
 
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement(
-        { pageLanguage: 'en' },
-        'google_translate_element'
-      );
-    }
+    fetch("/auth/user", {
+      credentials: "include"
+    })
+      .then(res => res.json())
+      .then(user => {
+
+        if (user) {
+
+          const userName =
+            document.getElementById("userNameDisplay");
+
+          const avatar =
+            document.getElementById("userAvatar");
+
+          if (userName) {
+            userName.textContent =
+              user.name || "User";
+          }
+
+          if (avatar) {
+
+            // GOOGLE PROFILE IMAGE
+            if (user.picture) {
+
+              avatar.innerHTML = `
+          <img
+            src="${user.picture}"
+            alt="Profile"
+            style="
+              width:100%;
+              height:100%;
+              border-radius:50%;
+              object-fit:cover;
+            "
+          >
+        `;
+
+            } else {
+
+              // LOCAL LOGIN INITIAL
+              avatar.textContent =
+                user.name.charAt(0).toUpperCase();
+            }
+          }
+
+        } else {
+
+          console.log("No logged in user");
+        }
+
+      })
+      .catch(err => {
+        console.error("Auth error:", err);
+      });
 
     function doLogout() {
-      localStorage.removeItem("urbanTrack_currentUser");
-      location.href = "../../homePage.html";
+
+      fetch("/logout", {
+        method: "GET",
+        credentials: "include"
+      })
+        .then(() => {
+
+          localStorage.removeItem(
+            "urbanTrack_currentUser"
+          );
+
+          location.href = "/login";
+        });
     }
-
-    // Hide Google Translate banner whenever it appears
-    function hideGoogleTranslateBanner() {
-      // Remove the top offset Google adds to body
-      document.body.style.top = '0px';
-
-      // Hide the banner frame
-      const banner = document.querySelector('.goog-te-banner-frame');
-      if (banner) {
-        banner.style.display = 'none';
-      }
-
-      // Also target the iframe by id
-      const bannerById = document.getElementById(':1.container');
-      if (bannerById) {
-        bannerById.style.display = 'none';
-      }
-    }
-
-    // Run on page load
-    hideGoogleTranslateBanner();
-
-    // Watch for DOM changes (when Google injects the banner after language select)
-    const observer = new MutationObserver(function (mutations) {
-      hideGoogleTranslateBanner();
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ['style']
-    });
 
 
   </script>
