@@ -209,7 +209,7 @@ app.get(
             req.session.user = googleUser;
 
             // REDIRECT
-            res.redirect(FRONTEND_URL);
+            res.redirect("/homePage");
 
         } catch (err) {
 
