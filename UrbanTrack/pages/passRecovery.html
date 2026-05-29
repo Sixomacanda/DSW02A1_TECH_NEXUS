@@ -24,8 +24,8 @@
         <div class="logo">Urban Track</div>
 
         <ul class="nav-links">
-           <!-- google api -->
-        <li><div id="google_translate_element"></div></li>
+          <!-- google api -->
+          <li><div id="google_translate_element"></div></li>
           <li><a href="../../homePage.html">Home</a></li>
           <li><a href="login.html">Login</a></li>
           <li><a href="signUpPage.html">Sign Up</a></li>
@@ -48,7 +48,8 @@
 
           <h1 class="card-title">Password Recovery</h1>
           <p class="card-sub">
-            Enter your email address to receive an OTP to reset your password.
+            Enter your email address to receive a one-time code to reset your
+            password.
           </p>
 
           <form action="/recover" method="POST" novalidate class="reset-form">
@@ -71,14 +72,12 @@
                 type="button"
                 onclick="resetPassword()"
               >
-                Send OTP
+                Send Reset Code
               </button>
             </div>
 
             <div class="step step-otp">
-              <p class="card-sub">
-                Enter the OTP sent to your email to continue.
-              </p>
+              <p class="card-sub">Enter the 6-digit code sent to your email.</p>
 
               <div class="field">
                 <label>OTP Code</label>
@@ -231,23 +230,14 @@
             "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U"
           }
         });*/
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-      import {
-        getAuth,
-        sendPasswordResetEmail,
-      } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-
-      const firebaseConfig = {
-        apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
-        authDomain: "urban-track-91e53.firebaseapp.com",
-        projectId: "urban-track-91e53",
-        storageBucket: "urban-track-91e53.firebasestorage.app",
-        messagingSenderId: "519209303536",
-        appId: "1:519209303536:web:c212eb58eb836e27047135",
+      // Fix: Define showToast so it can be called throughout the script
+      window.showToast = function (message, type = "success") {
+        const toast = document.getElementById("toast");
+        if (!toast) return;
+        toast.textContent = message;
+        toast.className = `toast show ${type}`;
+        setTimeout(() => toast.classList.remove("show"), 3500);
       };
-
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
 
       function showStep(step) {
         document.querySelectorAll(".step").forEach((section) => {
@@ -368,32 +358,57 @@
         });
       });
 
-      window.resetPassword = function () {
+      window.resetPassword = async function () {
         const email = document.getElementById("email").value.trim();
         const error = document.querySelector(".step-email .hint");
+        const btn = document.getElementById("resetBtn");
 
         if (!email) {
-          error.textContent = "Please enter your email address.";
+          if (error) error.textContent = "Please enter your email address.";
           return;
         }
 
-        error.textContent = "";
+        if (error) error.textContent = "";
+        btn.disabled = true;
+        btn.textContent = "Sending...";
 
-        sendPasswordResetEmail(auth, email)
-          .then(() => {
-            alert("OTP sent to your email.");
-            showOtpStep();
-          })
-          .catch((error) => {
-            error.textContent = error.message;
-          });
+        try {
+          const response = await fetch(
+            "http://localhost:3000/api/email/password-otp",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email }),
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.error || "Failed to send reset code.");
+          }
+
+          window.recoveryEmail = email;
+          showToast("A 6-digit code has been sent to your email.");
+          showOtpStep();
+        } catch (err) {
+          const message = err?.message || "Unable to send reset code.";
+          if (error) error.textContent = message;
+          console.error("Password reset error:", err);
+          alert(message);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Send Reset Code";
+        }
       };
 
-      window.verifyOtp = function () {
+      window.verifyOtp = async function () {
+        const otpRow = document.querySelector(".otp-row");
         const otp = Array.from(document.querySelectorAll(".otp-box"))
           .map((box) => box.value.trim())
           .join("");
         const error = document.querySelector(".step-otp .hint");
+        const btn = document.getElementById("verifyBtn");
 
         if (otp.length !== 6) {
           error.textContent = "Please enter the 6-digit code.";
@@ -401,18 +416,77 @@
         }
 
         error.textContent = "";
-        showPasswordStep();
+        btn.disabled = true;
+
+        try {
+          const response = await fetch(
+            "http://localhost:3000/api/email/verify-password-otp",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email: window.recoveryEmail, otp: otp }),
+            },
+          );
+
+          const data = await response.json();
+          if (response.ok) {
+            window.recoveryOtp = otp;
+            showToast("Code verified! Set your new password.");
+            showPasswordStep();
+          } else {
+            throw new Error(data.error || "Invalid code.");
+          }
+        } catch (err) {
+          showToast(err.message, "danger");
+          if (error) error.textContent = err.message;
+        } finally {
+          btn.disabled = false;
+        }
       };
 
-      window.saveNewPassword = function () {
+      window.saveNewPassword = async function () {
         if (!validateNewPasswordFields(true)) {
           return;
         }
 
-        alert(
-          "Password reset successfully. Please log in with your new password.",
-        );
-        window.location.href = "login.html";
+        const btn = document.getElementById("resetPasswordBtn");
+        const password = newPasswordInput.value;
+
+        btn.disabled = true;
+        btn.textContent = "Resetting...";
+
+        try {
+          const response = await fetch(
+            "http://localhost:3000/api/email/reset-password",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: window.recoveryEmail,
+                otp: window.recoveryOtp,
+                password,
+              }),
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.error || "Password reset failed.");
+          }
+
+          alert(
+            "Password reset successfully. Please log in with your new password.",
+          );
+          window.location.href = "login.html";
+        } catch (err) {
+          const message = err?.message || "Failed to reset password.";
+          showToast(message, "danger");
+          if (passwordError) passwordError.textContent = message;
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Reset Password";
+        }
       };
       function setupPasswordToggles() {
         const passwordGroups = document.querySelectorAll(".password-group");
@@ -444,62 +518,60 @@
       }
     </script>
     <!-- Google api -->
- <script>
-       
-function googleTranslateElementInit() {
-    new google.translate.TranslateElement(
-        { pageLanguage: 'en' },
-        'google_translate_element'
-    );
-}
+    <script>
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          { pageLanguage: "en" },
+          "google_translate_element",
+        );
+      }
 
-// Hide Google Translate banner whenever it appears
-function hideGoogleTranslateBanner() {
-    // Remove the top offset Google adds to body
-    document.body.style.top = '0px';
-    
-    // Hide the banner frame
-    const banner = document.querySelector('.goog-te-banner-frame');
-    if (banner) {
-        banner.style.display = 'none';
-    }
+      // Hide Google Translate banner whenever it appears
+      function hideGoogleTranslateBanner() {
+        // Remove the top offset Google adds to body
+        document.body.style.top = "0px";
 
-    // Also target the iframe by id
-    const bannerById = document.getElementById(':1.container');
-    if (bannerById) {
-        bannerById.style.display = 'none';
-    }
-}
+        // Hide the banner frame
+        const banner = document.querySelector(".goog-te-banner-frame");
+        if (banner) {
+          banner.style.display = "none";
+        }
 
-// Run on page load
-hideGoogleTranslateBanner();
+        // Also target the iframe by id
+        const bannerById = document.getElementById(":1.container");
+        if (bannerById) {
+          bannerById.style.display = "none";
+        }
+      }
 
-// Watch for DOM changes (when Google injects the banner after language select)
-const observer = new MutationObserver(function(mutations) {
-    hideGoogleTranslateBanner();
-});
+      // Run on page load
+      hideGoogleTranslateBanner();
 
-observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ['style']
-});
+      // Watch for DOM changes (when Google injects the banner after language select)
+      const observer = new MutationObserver(function (mutations) {
+        hideGoogleTranslateBanner();
+      });
 
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["style"],
+      });
+    </script>
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          { pageLanguage: "en" },
+          "google_translate_element",
+        );
+      }
+    </script>
 
-</script>
-<script type="text/javascript">
-function googleTranslateElementInit() {
-    new google.translate.TranslateElement(
-        { pageLanguage: 'en' },
-        'google_translate_element'
-    );
-}
-</script>
-
-<script type="text/javascript"
-src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
-</script>
-<!-- The End of google api -->
+    <script
+      type="text/javascript"
+      src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+    ></script>
+    <!-- The End of google api -->
   </body>
 </html>

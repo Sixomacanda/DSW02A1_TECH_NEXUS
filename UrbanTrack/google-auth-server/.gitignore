@@ -1,5 +1,6 @@
 # Ignore local environment files
 .env
+.env.local
 
 # Ignore Firebase Admin service account credentials
 urban-track-91e53-firebase-adminsdk-*.json

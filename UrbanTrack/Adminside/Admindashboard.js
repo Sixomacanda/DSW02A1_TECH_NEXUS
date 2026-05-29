@@ -151,7 +151,30 @@ window.handleSearch = function(q) {
 // ── UPDATE STATUS — UNTOUCHED from original ──
 window.updateStatus = async function(id, newStatus) {
   try {
+    const report = allReports.find(r => r.id === id);
     await updateDoc(doc(db, "reports", id), { status: newStatus });
+    if (
+      report &&
+      report.status !== newStatus &&
+      report.notifyByEmail !== false &&
+      report.reporterEmail &&
+      report.reporterEmail !== "N/A" &&
+      ["in-progress", "resolved"].includes(newStatus)
+    ) {
+      fetch("http://localhost:3000/api/email/report-status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: report.reporterEmail,
+          name: report.reporterName,
+          ref: report.ref || id,
+          title: report.title,
+          status: newStatus,
+        }),
+      }).catch((emailError) => {
+        console.warn("Status notification email skipped:", emailError);
+      });
+    }
     showToast(`Status updated to ${newStatus}`, "success");
     loadDashboardData();
   } catch (e) {
