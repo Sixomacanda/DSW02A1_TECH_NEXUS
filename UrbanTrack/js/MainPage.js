@@ -357,14 +357,30 @@ function initializeReportMap() {
   const defaultCenter = { lat: -26.192307, lng: 28.056076 };
 
   try {
-    // Create map
+    // Create map with dark theme and no default zoom (we use custom controls)
     window._reportMap = new google.maps.Map(mapElement, {
       center: defaultCenter,
       zoom: 15,
       mapTypeControl: false,
       streetViewControl: false,
       fullscreenControl: false,
+      zoomControl: false,
+      gestureHandling: 'auto',
+      styles: [
+        { elementType: "geometry", stylers: [{ color: "#1e3a8a" }] },
+        { elementType: "labels.text.fill", stylers: [{ color: "#93c5fd" }] },
+        { elementType: "labels.text.stroke", stylers: [{ color: "#0f172a" }] },
+        { featureType: "road", elementType: "geometry", stylers: [{ color: "#0f172a" }] },
+        { featureType: "water", elementType: "geometry", stylers: [{ color: "#0ea5e9" }] },
+        { featureType: "poi", stylers: [{ visibility: "off" }] },
+      ],
     });
+
+    // show the map controls once the map is initialized
+    const locateBtn = document.getElementById("locateBtn");
+    const zoomControls = document.getElementById("zoomControls");
+    if (locateBtn) locateBtn.style.display = "flex";
+    if (zoomControls) zoomControls.style.display = "flex";
 
     // Create draggable marker
     window._reportMarker = new google.maps.Marker({
@@ -372,6 +388,14 @@ function initializeReportMap() {
       map: window._reportMap,
       title: "Issue location",
       draggable: true,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 8,
+        fillColor: "#38bdf8",
+        fillOpacity: 1,
+        strokeColor: "#ffffff",
+        strokeWeight: 2,
+      },
     });
 
     // Update coordinates on marker drag
@@ -385,6 +409,24 @@ function initializeReportMap() {
       window._reportMarker.setPosition(event.latLng);
       window.updateCoords(event.latLng.lat(), event.latLng.lng());
     });
+
+    // Custom zoom controls (replace default zoom UI to avoid overlap)
+    const zoomInBtn = document.getElementById("zoomInBtn");
+    const zoomOutBtn = document.getElementById("zoomOutBtn");
+    if (zoomInBtn) {
+      zoomInBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const z = window._reportMap.getZoom() || 15;
+        window._reportMap.setZoom(Math.min(z + 1, 21));
+      });
+    }
+    if (zoomOutBtn) {
+      zoomOutBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const z = window._reportMap.getZoom() || 15;
+        window._reportMap.setZoom(Math.max(z - 1, 1));
+      });
+    }
 
     // Get user's location
     if (navigator.geolocation) {
@@ -415,6 +457,81 @@ function initializeReportMap() {
           console.log("Using default location");
           window.updateCoords(defaultCenter.lat, defaultCenter.lng);
         }
+      );
+    }
+
+    // wire locate button (top-right) to recentre map on user's current position
+    const locateBtn = document.getElementById("locateBtn");
+    if (locateBtn) {
+      locateBtn.addEventListener("click", () => {
+        if (!window._reportMap) {
+          initializeReportMap();
+          // give map a moment to initialize
+          setTimeout(() => doLocate(true), 800);
+        } else {
+          showToast("Moving back to your current location...");
+          doLocate();
+        }
+      });
+    }
+
+    // helper to find and display user location; if animate=true allow for map initialisation wait
+    function doLocate(animateFirstLoad = false) {
+      if (!navigator.geolocation) {
+        showToast("Geolocation is not supported by your browser.", true);
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (p) => {
+          const lat = p.coords.latitude;
+          const lng = p.coords.longitude;
+          const userLatLng = { lat, lng };
+
+          // create or move a dedicated user location marker (non-draggable)
+          if (!window._userLocationMarker) {
+            try {
+              window._userLocationMarker = new google.maps.Marker({
+                position: userLatLng,
+                map: window._reportMap,
+                clickable: false,
+                title: "Your location",
+                zIndex: 999,
+                icon: {
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: 7,
+                  fillColor: "#0ea5e9",
+                  fillOpacity: 1,
+                  strokeColor: "#ffffff",
+                  strokeWeight: 2,
+                },
+              });
+            } catch (e) {
+              // fallback: create simple marker
+              window._userLocationMarker = new google.maps.Marker({
+                position: userLatLng,
+                map: window._reportMap,
+                clickable: false,
+                title: "Your location",
+              });
+            }
+          } else {
+            window._userLocationMarker.setPosition(userLatLng);
+          }
+
+          // animate map to user
+          window._reportMap.panTo(userLatLng);
+          window._reportMap.setZoom(15);
+          // move the report pin back to the user's current location
+          if (window._reportMarker) {
+            window._reportMarker.setPosition(userLatLng);
+            window.updateCoords(lat, lng);
+          }
+          showToast("Returned to your current location.");
+        },
+        (err) => {
+          console.warn("Locate failed:", err);
+          showToast("Unable to get your location.", true);
+        },
       );
     }
 
