@@ -359,7 +359,21 @@
 
     .modal-title {
       color: #ef4444;
+    }*/
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
     }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
 
     /* ── error msg (for .error-msg used in HTML that we map to .flash) ── */
     .error-msg {
@@ -491,9 +505,10 @@
               </div>
             </div>
             <div class="save-row">
-              <button id="saveEmailBtn">Save Changes</button>
-              <span id="emailSavedMsg">Email updated</span>
-              <span id="emailErrorMsg">Failed to save</span>
+              <button id="saveNameBtn" type="button">Save Changes</button>
+              <button id="saveEmailBtn" type="button">Save Changes</button>
+              <button id="deleteConfirmBtn" type="button">Delete Account</button>
+              <button id="discardProfileBtn" type="button">Discard</button>
             </div>
 
           </div>
