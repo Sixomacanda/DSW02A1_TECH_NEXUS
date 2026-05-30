@@ -2,6 +2,7 @@
   "dependencies": {
     "aws-ssl-profiles": "^1.1.2",
     "denque": "^2.1.0",
+    "express": "^5.2.1",
     "generate-function": "^2.3.1",
     "iconv-lite": "^0.7.2",
     "is-property": "^1.0.2",
