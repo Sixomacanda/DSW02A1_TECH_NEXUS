@@ -92,6 +92,9 @@ app.get("/signUpPage", (req, res) => {
     res.sendFile(path.join(PAGES, "signUpPage.html"));
 });
 
+app.get("/test", (req, res) => {
+    res.send("SERVER IS UPDATED");
+});
 
 // google login
 
