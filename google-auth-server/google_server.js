@@ -73,7 +73,7 @@ app.get("/homePage", (req, res) => {
 });
 
 app.get("/mainPage", (req, res) => {
-    res.sendFile(path.join(PAGES, "MainPage.html"));
+    res.sendFile(path.join(ROOT, "MainPage.html"));
 });
 
 app.get("/login", (req, res) => {
@@ -89,11 +89,17 @@ app.get("/settings", (req, res) => {
 });
 
 app.get("/signUpPage", (req, res) => {
-    res.sendFile(path.join(PAGES, "signUpPage.html"));
+    res.sendFile(path.joing(PAGES, "signUpPage.html"));
 });
 
 app.get("/test", (req, res) => {
     res.send("SERVER IS UPDATED");
+});
+app.get("/debug", (req, res) => {
+  res.send("DEBUG ROUTE WORKS");
+});
+app.get("/main", (req, res) => {
+  res.send("MainPage.html");
 });
 
 // google login
