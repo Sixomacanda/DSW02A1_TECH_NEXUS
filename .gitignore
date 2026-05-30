@@ -1,5 +1,11 @@
-.env
-**/.env
+# Environment Variables
+.env*
+**/.env*
+# Dependencies
 node_modules/
-.env.local
+
+# Firebase keys
+*.json
+!package.json
+!composer.json
 .DS_Store

@@ -172,6 +172,10 @@ form#signupForm {
   margin-bottom: 18px;
 }
 
+.form-group.hidden {
+  display: none;
+}
+
 .form-group label {
   font-size: 14px;
   display: block;
@@ -257,6 +261,38 @@ form#signupForm {
 .btn:hover {
   transform: scale(1.05);
   box-shadow: 0 0 15px #38bdf8;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  margin-bottom: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+}
+
+.signup-otp-panel {
+  display: none;
+}
+
+.signup-otp-panel.active {
+  display: block;
+}
+
+.signup-otp-panel p {
+  color: #dbeafe;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+
+.signup-otp-panel strong {
+  color: #38bdf8;
 }
 
 .btn.google-btn {
