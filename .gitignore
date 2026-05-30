@@ -1,9 +1,6 @@
 # Environment Variables
-.env
-**/.env
-.env.local
-.env.*.local
-
+.env*
+**/.env*
 # Dependencies
 node_modules/
 
@@ -11,3 +8,4 @@ node_modules/
 *.json
 !package.json
 !composer.json
+.DS_Store

@@ -187,7 +187,7 @@
 <nav class="navbar">
   <div class="logo">Urban Track</div>
   <ul class="nav-links" id="navLinks">
-    <li><a href="MainPage.html.html">Home</a></li>
+    <li><a href="MainPage.html">Home</a></li>
     <li><a href="UserDashboard.html">Dashboard</a></li>
     <li><a href="#" onclick="doLogout()">Logout</a></li>
   </ul>
@@ -342,7 +342,7 @@
         </div>
         <div class="card-body">
           <ul class="danger-list">
-            <li>Your profile and all personal information will be permanently removed from the database</li>
+            <li>Your profile and all personal information will be permanently deleted</li>
             <li>All reports and comments you have submitted will be deleted</li>
             <li>Your upvotes will be removed from all community issues</li>
             <li>This cannot be undone — there is no recovery option</li>
@@ -367,7 +367,7 @@
       <strong style="color:#ef4444">This cannot be undone.</strong>
     </div>
     <div class="modal-confirm-field">
-      <label>Type DELETE to confirm</label>
+      <label>Type DELETE to confirm (case-insensitive)</label>
       <input type="text" id="deleteConfirmInput" placeholder="Type DELETE here"
         oninput="checkDeleteConfirm()" />
     </div>
@@ -435,7 +435,7 @@ function doLogout() {
   }
   function checkDeleteConfirm() {
     document.getElementById('deleteConfirmBtn').disabled =
-      document.getElementById('deleteConfirmInput').value !== 'DELETE';
+      document.getElementById('deleteConfirmInput').value.trim().toUpperCase() !== 'DELETE';
   }
 
   let _origName = '';
@@ -630,6 +630,5 @@ function doLogout() {
   };
 </script>
 
-<script src="../js/UserSettings.js"></script>
 </body>
 </html>

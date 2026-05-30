@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UrbanTrack - Community Feed</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../Styles/feedPage.css">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">Urban Track</a>
+    <div class="nav-actions">
+      <div class="user-chip" id="userChip">
+        <div class="avatar" id="userAvatar">?</div>
+      </div>
+      <a href="UrbanTrack/pages/submitReport.html" class="icon-btn" title="Submit Report">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </a>
+      <a href="UrbanTrack/pages/userDashboard.html" class="icon-btn" title="My Dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+      </a>
+      <button class="btn-logout" id="logoutBtn">Home</button>
+    </div>
+  </nav>
+
+  <div class="page-shell">
+
+    <div class="page-header">
+      <div class="page-badge">Live Community Feed</div>
+      <h1 class="page-title">Community Issues</h1>
+      <p class="page-subtitle">Browse, upvote and track issues reported in your area</p>
+    </div>
+
+    <div class="content-grid">
+
+      <!-- Main Feed -->
+      <div>
+        <div class="filter-bar">
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search issues..." />
+          </div>
+          <select class="filter-select" id="categoryFilter">
+            <option value="">All Categories</option>
+            <option value="Pothole">Pothole</option>
+            <option value="Streetlight">Streetlight</option>
+            <option value="Drain">Drain</option>
+            <option value="Vandalism">Vandalism</option>
+            <option value="Dumping">Illegal Dumping</option>
+            <option value="Tree">Fallen Tree</option>
+            <option value="Other">Other</option>
+          </select>
+          <select class="filter-select" id="statusFilter">
+            <option value="">All Statuses</option>
+            <option value="pending">Pending</option>
+            <option value="in-progress">In Progress</option>
+            <option value="resolved">Resolved</option>
+          </select>
+          <button class="sort-btn active" id="sortRecent">Newest</button>
+          <button class="sort-btn" id="sortTop">Top Voted</button>
+        </div>
+
+        <!-- Skeletons -->
+        <div class="feed-loader" id="feedLoader">
+          <div class="skeleton"><div class="skel-block skel-upvote"></div><div class="skel-body"><div class="skel-block skel-title"></div><div class="skel-block skel-desc"></div><div class="skel-block skel-desc2"></div><div class="skel-block skel-meta"></div></div></div>
+          <div class="skeleton"><div class="skel-block skel-upvote"></div><div class="skel-body"><div class="skel-block skel-title"></div><div class="skel-block skel-desc"></div><div class="skel-block skel-desc2"></div><div class="skel-block skel-meta"></div></div></div>
+          <div class="skeleton"><div class="skel-block skel-upvote"></div><div class="skel-body"><div class="skel-block skel-title"></div><div class="skel-block skel-desc"></div><div class="skel-block skel-desc2"></div><div class="skel-block skel-meta"></div></div></div>
+        </div>
+
+        <div class="issues-list" id="issuesList" style="display:none;"></div>
+
+        <div class="feed-empty" id="feedEmpty">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <p>No issues found matching your filters.</p>
+        </div>
+
+        <div class="load-more-wrap" id="loadMoreWrap" style="display:none;">
+          <button class="btn-ghost" id="loadMoreBtn">Load more issues</button>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+
+        <div class="sidebar-card">
+          <div class="sidebar-title">Community Stats</div>
+          <div class="stats-grid">
+            <div class="stat-item"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Total</div></div>
+            <div class="stat-item"><div class="stat-num" id="statPending">—</div><div class="stat-label">Pending</div></div>
+            <div class="stat-item"><div class="stat-num" id="statProgress">—</div><div class="stat-label">In Progress</div></div>
+            <div class="stat-item"><div class="stat-num" id="statResolved">—</div><div class="stat-label">Resolved</div></div>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-title">By Category</div>
+          <div id="catBreakdown">
+            <div style="font-size:0.8rem; color:var(--text-muted); opacity:0.5;">Loading...</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Firebase -->
+  <script type="module">
+    // ── REPLACE with your Firebase config ──
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getAuth,
+    onAuthStateChanged,
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import {
+    getFirestore,
+    collection,
+    query,
+    where,
+    getDocs,
+    doc,
+    getDoc,
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
+    authDomain: "urban-track-91e53.firebaseapp.com",
+    projectId: "urban-track-91e53",
+    storageBucket: "urban-track-91e53.firebasestorage.app",
+    messagingSenderId: "519209303536",
+    appId: "1:519209303536:web:c212eb58eb836e27047135",
+  };
+
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    // State
+    let currentUser = null;
+    let allIssues   = [];
+    let lastDoc     = null;
+    let sortMode    = 'recent';
+    const PAGE_SIZE = 10;
+
+    // DOM
+    const issuesList     = document.getElementById('issuesList');
+    const feedLoader     = document.getElementById('feedLoader');
+    const feedEmpty      = document.getElementById('feedEmpty');
+    const loadMoreWrap   = document.getElementById('loadMoreWrap');
+    const searchInput    = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const statusFilter   = document.getElementById('statusFilter');
+    const sortRecent     = document.getElementById('sortRecent');
+    const sortTop        = document.getElementById('sortTop');
+    const toastEl        = document.getElementById('toast');
+
+    // Toast
+    function showToast(msg, isError = false) {
+      toastEl.textContent = msg;
+      toastEl.className = 'toast show' + (isError ? ' error' : '');
+      setTimeout(() => toastEl.className = 'toast', 2800);
+    }
+
+    function loadUserDisplay() {
+      const storedUser = JSON.parse(localStorage.getItem('urbanTrack_currentUser') || 'null');
+      const name = storedUser?.name || currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User';
+      const initials = (name || 'U')
+        .split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+      const avatar = document.getElementById('userAvatar');
+      const nameLabel = document.getElementById('userName');
+      if (avatar) avatar.textContent = initials;
+      if (nameLabel) nameLabel.textContent = name;
+    }
+
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'urbanTrack_currentUser') {
+        loadUserDisplay();
+      }
+    });
+
+    window.addEventListener('focus', () => {
+      loadUserDisplay();
+    });
+
+    // Auth guard
+    onAuthStateChanged(auth, user => {
+      if (!user) { window.location.href = 'UrbanTrack/pages/login.html'; return; }
+      currentUser = user;
+      const storedUser = JSON.parse(localStorage.getItem('urbanTrack_currentUser') || 'null');
+      const name = storedUser?.name || user.displayName || user.email.split('@')[0];
+      const initials = (name || 'U')
+        .split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+      document.getElementById('userAvatar').textContent = initials;
+      document.getElementById('userName').textContent = name;
+      loadIssues();
+      loadStats();
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await signOut(auth);
+      window.location.href = 'UrbanTrack/pages/login.html';
+    });
+
+    // Load issues (real-time listener)
+    let unsubscribe = null;
+
+    function loadIssues() {
+      if (unsubscribe) unsubscribe();
+      feedLoader.style.display  = 'flex';
+      issuesList.style.display  = 'none';
+      feedEmpty.style.display   = 'none';
+      allIssues = [];
+
+      const orderField = sortMode === 'top' ? 'upvotes' : 'createdAt';
+      const q = query(
+        collection(db, 'issues'),
+        orderBy(orderField, 'desc'),
+        limit(PAGE_SIZE)
+      );
+
+      unsubscribe = onSnapshot(q, snap => {
+        feedLoader.style.display = 'none';
+        allIssues = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        lastDoc = snap.docs[snap.docs.length - 1];
+        loadMoreWrap.style.display = snap.docs.length === PAGE_SIZE ? 'block' : 'none';
+        renderIssues();
+      }, err => {
+        feedLoader.style.display = 'none';
+        showToast('Failed to load issues.', true);
+        console.error(err);
+      });
+    }
+
+    // Load more (pagination)
+    document.getElementById('loadMoreBtn').addEventListener('click', async () => {
+      if (!lastDoc) return;
+      const orderField = sortMode === 'top' ? 'upvotes' : 'createdAt';
+      const q = query(
+        collection(db, 'issues'),
+        orderBy(orderField, 'desc'),
+        startAfter(lastDoc),
+        limit(PAGE_SIZE)
+      );
+      const snap = await getDocs(q);
+      const more = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      lastDoc = snap.docs[snap.docs.length - 1];
+      allIssues = [...allIssues, ...more];
+      if (snap.docs.length < PAGE_SIZE) loadMoreWrap.style.display = 'none';
+      renderIssues();
+    });
+
+    // Render filtered list
+    function renderIssues() {
+      const search   = searchInput.value.toLowerCase();
+      const category = categoryFilter.value;
+      const status   = statusFilter.value;
+
+      const filtered = allIssues.filter(issue => {
+        const matchSearch = !search ||
+          (issue.title || '').toLowerCase().includes(search) ||
+          (issue.description || '').toLowerCase().includes(search);
+        const matchCat    = !category || issue.category === category;
+        const matchStatus = !status   || issue.status === status;
+        return matchSearch && matchCat && matchStatus;
+      });
+
+      issuesList.innerHTML = '';
+
+      if (!filtered.length) {
+        issuesList.style.display = 'none';
+        feedEmpty.style.display  = 'block';
+        return;
+      }
+
+      feedEmpty.style.display  = 'none';
+      issuesList.style.display = 'flex';
+      filtered.forEach(issue => issuesList.appendChild(createCard(issue)));
+    }
+
+    // Build issue card element
+    function createCard(issue) {
+      const voted = Array.isArray(issue.upvotedBy) && issue.upvotedBy.includes(currentUser?.uid);
+      const count = issue.upvotes || 0;
+      const ts    = issue.createdAt?.toDate ? issue.createdAt.toDate() : new Date(issue.createdAt || Date.now());
+
+      const statusClass = { 'pending': 'status-pending', 'in-progress': 'status-progress', 'resolved': 'status-resolved' }[issue.status] || 'status-pending';
+      const statusLabel = { 'pending': 'Pending', 'in-progress': 'In Progress', 'resolved': 'Resolved' }[issue.status] || 'Pending';
+      const sevClass    = { 'low': 'sev-low', 'medium': 'sev-medium', 'high': 'sev-high' }[issue.severity] || 'sev-medium';
+
+      const card = document.createElement('div');
+      card.className = 'issue-card';
+      card.dataset.id = issue.id;
+
+      card.innerHTML = `
+        <div class="upvote-col">
+          <button class="upvote-btn ${voted ? 'voted' : ''}" data-id="${issue.id}" aria-label="Upvote this issue">
+            <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          </button>
+          <span class="upvote-count" id="count-${issue.id}">${count}</span>
+        </div>
+        <div class="issue-body">
+          <div class="issue-top">
+            <span class="issue-category">${issue.category || 'Other'}</span>
+            <span class="status-badge ${statusClass}">${statusLabel}</span>
+            <span class="severity-dot ${sevClass}" title="Severity: ${issue.severity || 'medium'}"></span>
+          </div>
+          <div class="issue-title">${issue.title || 'Untitled Issue'}</div>
+          <div class="issue-desc">${issue.description || 'No description provided.'}</div>
+          <div class="issue-meta">
+            <span>
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              ${issue.location || 'Location not specified'}
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              ${timeAgo(ts)}
+            </span>
+            ${issue.reportedBy ? `<span>by ${issue.reportedBy}</span>` : ''}
+          </div>
+        </div>
+        ${issue.photoURL ? `<img class="issue-photo" src="${issue.photoURL}" alt="Issue photo" loading="lazy" />` : ''}
+      `;
+
+      card.querySelector('.upvote-btn').addEventListener('click', e => {
+        e.stopPropagation();
+        handleUpvote(issue.id);
+      });
+
+      return card;
+    }
+
+    // Upvote toggle
+    async function handleUpvote(issueId) {
+      if (!currentUser) { showToast('Please log in to upvote.', true); return; }
+
+      const btn      = document.querySelector(`.upvote-btn[data-id="${issueId}"]`);
+      const countEl  = document.getElementById(`count-${issueId}`);
+      const isVoted  = btn.classList.contains('voted');
+      const current  = parseInt(countEl.textContent) || 0;
+
+      // Optimistic update
+      btn.classList.toggle('voted');
+      countEl.textContent = isVoted ? current - 1 : current + 1;
+      // Sync count colour
+      countEl.style.color = btn.classList.contains('voted') ? 'var(--accent-light)' : '';
+
+      try {
+        const issueRef = doc(db, 'issues', issueId);
+        const snap     = await getDoc(issueRef);
+        if (!snap.exists()) throw new Error('Issue not found');
+        const data    = snap.data();
+        const already = Array.isArray(data.upvotedBy) && data.upvotedBy.includes(currentUser.uid);
+
+        await updateDoc(issueRef, {
+          upvotes:   already ? (data.upvotes || 1) - 1 : (data.upvotes || 0) + 1,
+          upvotedBy: already ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+        });
+
+        showToast(already ? 'Upvote removed.' : 'Upvoted!');
+
+        // Sync local cache
+        const local = allIssues.find(i => i.id === issueId);
+        if (local) {
+          local.upvotes   = already ? (local.upvotes || 1) - 1 : (local.upvotes || 0) + 1;
+          local.upvotedBy = already
+            ? (local.upvotedBy || []).filter(u => u !== currentUser.uid)
+            : [...(local.upvotedBy || []), currentUser.uid];
+        }
+
+      } catch (err) {
+        // Revert on failure
+        btn.classList.toggle('voted');
+        countEl.textContent = current;
+        countEl.style.color = '';
+        showToast('Could not save upvote. Try again.', true);
+        console.error(err);
+      }
+    }
+
+    // Sidebar stats (real-time)
+    function loadStats() {
+      onSnapshot(collection(db, 'issues'), snap => {
+        const issues = snap.docs.map(d => d.data());
+        document.getElementById('statTotal').textContent    = issues.length;
+        document.getElementById('statPending').textContent  = issues.filter(i => i.status === 'pending').length;
+        document.getElementById('statProgress').textContent = issues.filter(i => i.status === 'in-progress').length;
+        document.getElementById('statResolved').textContent = issues.filter(i => i.status === 'resolved').length;
+
+        // Category breakdown
+        const cats = {};
+        issues.forEach(i => { const c = i.category || 'Other'; cats[c] = (cats[c] || 0) + 1; });
+        const sorted = Object.entries(cats).sort((a,b) => b[1]-a[1]).slice(0,6);
+        document.getElementById('catBreakdown').innerHTML = sorted.length
+          ? sorted.map(([name, c]) =>
+              `<div class="cat-row"><span class="cat-row-name">${name}</span><span class="cat-row-count">${c}</span></div>`
+            ).join('')
+          : '<div style="font-size:0.8rem;color:var(--text-muted);opacity:0.5;">No data yet.</div>';
+      });
+    }
+
+    // Filter events
+    searchInput.addEventListener('input', renderIssues);
+    categoryFilter.addEventListener('change', renderIssues);
+    statusFilter.addEventListener('change', renderIssues);
+
+    sortRecent.addEventListener('click', () => {
+      if (sortMode === 'recent') return;
+      sortMode = 'recent';
+      sortRecent.classList.add('active');
+      sortTop.classList.remove('active');
+      loadIssues();
+    });
+    sortTop.addEventListener('click', () => {
+      if (sortMode === 'top') return;
+      sortMode = 'top';
+      sortTop.classList.add('active');
+      sortRecent.classList.remove('active');
+      loadIssues();
+    });
+
+    // Utility
+    function timeAgo(date) {
+      const diff = Math.floor((Date.now() - date) / 1000);
+      if (diff < 60)    return 'just now';
+      if (diff < 3600)  return `${Math.floor(diff/60)}m ago`;
+      if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
+      return `${Math.floor(diff/86400)}d ago`;
+    }
+  </script>
+
+</body>
+</html>
