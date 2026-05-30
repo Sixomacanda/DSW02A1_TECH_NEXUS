@@ -7,42 +7,28 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const cors = require("cors");
 const path = require("path");
 const MongoStore = require("connect-mongo");
-const fs = require("fs");
 
 const app = express();
 
-/* =======================
-   PATHS (FIXED)
-======================= */
+//paths
+const ROOT = path.join(__dirname, "UrbanTrack");
+const PAGES = path.join(ROOT, "pages");
 
-// backend folder (google-auth-server)
-const ROOT = __dirname;
 
-// frontend folder (outside backend)
-const FRONTEND = path.join(__dirname, "../UrbanTrack");
+// static files
+app.use(express.static(ROOT));
 
-// pages folder inside frontend
-const PAGES = path.join(FRONTEND, "pages");
-
-console.log("Backend folder:", fs.readdirSync(__dirname));
-console.log("Frontend folder exists:", fs.existsSync(FRONTEND));
-
-/* =======================
-   STATIC FILES
-======================= */
-app.use(express.static(FRONTEND));
-
-/* =======================
-   CORS
-======================= */
+// cors
 app.use(cors({
-    origin: ["https://dsw02a1-tech-nexus-2.onrender.com"],
+    origin: [
+        "https://dsw02a1-tech-nexus-2.onrender.com"
+    ],
     credentials: true
-}));
+}));;
 
-/* =======================
-   SESSION
-======================= */
+
+
+// session setup
 app.set("trust proxy", 1);
 
 app.use(session({
@@ -54,66 +40,74 @@ app.use(session({
         collectionName: "sessions"
     }),
     cookie: {
-        secure: true,
+        secure: true,   // on render
         sameSite: "none"
     }
 }));
 
-/* =======================
-   PASSPORT
-======================= */
+// passport init
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(new GoogleStrategy(
-    {
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "https://dsw02a1-tech-nexus-2.onrender.com/auth/google/callback"
-    },
-    (accessToken, refreshToken, profile, done) => {
-        return done(null, profile);
-    }
-));
+// google strategy
+passport.use(
+    new GoogleStrategy(
+        {
+            clientID: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            callbackURL: "https://dsw02a1-tech-nexus-2.onrender.com/auth/google/callback"
+        },
+        (accessToken, refreshToken, profile, done) => {
+            return done(null, profile);
+        }
+    )
+);
 
+// serialize user
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
-/* =======================
-   ROUTES
-======================= */
+// pages
 
-// home page (if inside frontend root)
+// homePage.html is directly under UrbanTrack/
 app.get("/homePage", (req, res) => {
-    res.sendFile(path.join(FRONTEND, "homePage.html"));
+  res.sendFile(path.join(ROOT, "homePage.html"));
 });
 
-// pages inside /pages folder
+// MainPage.html is inside UrbanTrack/pages/
 app.get("/mainPage", (req, res) => {
-    res.sendFile(path.join(PAGES, "MainPage.html"));
+  res.sendFile(path.join(PAGES, "MainPage.html"));
 });
 
 app.get("/login", (req, res) => {
-    res.sendFile(path.join(PAGES, "login.html"));
+  res.sendFile(path.join(PAGES, "login.html"));
 });
 
 app.get("/dashboard", (req, res) => {
-    res.sendFile(path.join(PAGES, "UserDashboard.html"));
+  res.sendFile(path.join(PAGES, "UserDashboard.html"));
 });
 
 app.get("/settings", (req, res) => {
-    res.sendFile(path.join(PAGES, "UserSettings.html"));
+  res.sendFile(path.join(PAGES, "UserSettings.html"));
 });
 
 app.get("/signUpPage", (req, res) => {
-    res.sendFile(path.join(PAGES, "signUpPage.html"));
+  res.sendFile(path.join(PAGES, "signUpPage.html")); // fixed typo
 });
 
-/* =======================
-   GOOGLE AUTH
-======================= */
-app.get(
-    "/auth/google",
+
+// google login
+
+const FRONTEND_URL =
+    process.env.FRONTEND_URL ||
+    "https://dsw02a1-tech-nexus-2.onrender.com/MainPage";
+
+const FRONTEND_LOGIN_URL =
+    process.env.FRONTEND_LOGIN_URL ||
+    "https://dsw02a1-tech-nexus-2.onrender.com/login";
+
+// google callback
+app.get("/auth/google",
     passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
@@ -125,25 +119,20 @@ app.get(
     }
 );
 
-/* =======================
-   USER SESSION API
-======================= */
+
+// get session user
 app.get("/auth/user", (req, res) => {
     res.json(req.user || null);
 });
 
-/* =======================
-   LOGOUT
-======================= */
+// logout
 app.get("/logout", (req, res) => {
     req.session.destroy(() => {
         res.redirect("/login");
     });
 });
 
-/* =======================
-   START SERVER
-======================= */
+// start server
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
