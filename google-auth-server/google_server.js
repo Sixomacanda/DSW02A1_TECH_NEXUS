@@ -11,8 +11,6 @@ const MongoStore = require("connect-mongo");
 const app = express();
 
 //paths
-const ROOT = path.join(__dirname, "UrbanTrack");
-const PAGES = path.join(ROOT, "pages");
 
 
 
@@ -68,39 +66,35 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 // pages
+const ROOT = path.join(__dirname, "UrbanTrack");
+const PAGES = path.join(ROOT, "pages");
+
+// homePage.html is directly under UrbanTrack/
 app.get("/homePage", (req, res) => {
-    res.sendFile(path.join(ROOT, "homePage.html"));
+  res.sendFile(path.join(ROOT, "homePage.html"));
 });
 
+// MainPage.html is inside UrbanTrack/pages/
 app.get("/mainPage", (req, res) => {
-    res.sendFile(path.join(ROOT, "MainPage.html"));
+  res.sendFile(path.join(PAGES, "MainPage.html"));
 });
 
 app.get("/login", (req, res) => {
-    res.sendFile(path.join(PAGES, "login.html"));
+  res.sendFile(path.join(PAGES, "login.html"));
 });
 
 app.get("/dashboard", (req, res) => {
-    res.sendFile(path.join(PAGES, "UserDashboard.html"));
+  res.sendFile(path.join(PAGES, "UserDashboard.html"));
 });
 
 app.get("/settings", (req, res) => {
-    res.sendFile(path.join(PAGES, "UserSettings.html"));
+  res.sendFile(path.join(PAGES, "UserSettings.html"));
 });
 
 app.get("/signUpPage", (req, res) => {
-    res.sendFile(path.joing(PAGES, "signUpPage.html"));
+  res.sendFile(path.join(PAGES, "signUpPage.html")); // fixed typo
 });
 
-app.get("/test", (req, res) => {
-    res.send("SERVER IS UPDATED");
-});
-app.get("/debug", (req, res) => {
-  res.send("DEBUG ROUTE WORKS");
-});
-app.get("/main", (req, res) => {
-  res.send("MainPage.html");
-});
 
 // google login
 
