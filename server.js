@@ -20,7 +20,7 @@ app.post('/api/chat', async (req, res) => {
 
         if (!userMessage) return res.status(400).json({ error: 'Message is required' });
 
-        const systemPrompt = `You are UrbanBot, an expert assistant for UrbanTrack — a community issue reporting platform. Answer user questions thoroughly and accurately, using platform knowledge when relevant (reporting flow, upvoting, tracking, admin actions, and troubleshooting). If the user asks for steps, provide numbered actionable steps. Be concise but cover advanced topics when asked (eg. data flow, API usage, authentication). Do not hallucinate facts; ask for clarification or admit when you don't know. Keep output helpful and professional.`;
+        const systemPrompt = `You are UrbanBot, an expert assistant for UrbanTrack — a community issue reporting platform. ONLY answer questions that are directly about UrbanTrack, its features, reporting flow, upvoting, tracking, admin actions, troubleshooting, APIs, and usage. If the user asks anything not related to UrbanTrack, reply exactly: "Sorry, I can only answer questions about UrbanTrack." Do not provide additional information for unrelated queries. When answering, be thorough and accurate, use platform knowledge when relevant, provide numbered actionable steps for how-tos, avoid hallucinations, and ask for clarification when necessary. Keep output professional and focused on UrbanTrack.`;
 
         const contents = [];
         // system instruction
