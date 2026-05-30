@@ -9,7 +9,7 @@ app.use(express.static(path.join(__dirname)));
 
 // Home route
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "homePage.html"));
+  res.sendFile(path.join(__dirname, "homePage.html"));
 });
 
 // Chat API
