@@ -25,8 +25,8 @@
         <div id="google_translate_element"></div>
       </li>
 
-      <li><a href="../homePage.html">Home</a></li>
-      <li><a href="../pages/signUpPage.html" class="btn-primary">Sign Up</a></li>
+      <li><a href="/homePage">Home</a></li>
+      <li><a href="/signUpPage" class="btn-primary">Sign Up</a></li>
     </ul>
 
     <div class="menu-button">
@@ -66,8 +66,7 @@
           <i class="fa-brands fa-google"></i> Continue with Google
 
         </a>
-
-        Don't have an account? <a href="../pages/signUpPage.html">Sign up</a>
+        Don't have an account? <a href="/signUpPage.html">Sign up</a>
         </p>
       </div>
     </div>
@@ -86,11 +85,7 @@
       getDoc,
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const BASE_URL =
-      window.location.hostname === "127.0.0.1" ||
-        window.location.hostname === "localhost"
-        ? "http://127.0.0.1:5501/UrbanTrack"
-        : "https://dsw02a1-tech-nexus-2.onrender.com";
+    const BASE_URL = "https://dsw02a1-tech-nexus-2.onrender.com";
 
     const firebaseConfig = {
       apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
@@ -172,7 +167,7 @@
             }),
           );
           localStorage.setItem("userEmail", emailValue);
-          window.location.href = "../Adminside/AdminDashboard.html";
+          window.location.href = "/dashboard";
           return;
         }
 
@@ -212,7 +207,7 @@
         if (userData.role === "admin") {
           window.location.href = "../Adminside/AdminDashboard.html";
         } else {
-          window.location.href = `${BASE_URL}/homePage`;;
+          window.location.href = `${BASE_URL}/mainPage`;
         }
       } catch (error) {
         console.error("Login error:", error);
@@ -254,11 +249,11 @@
       });
     }
     async function logout() {
-      await fetch(`${BASE_URL}/logout`, {
+      await fetch("/logout", {
         credentials: "include"
       });
 
-      window.location.href = `${BASE_URL}/login`;
+      window.location.href = "{BASE_URL}/login";
     }
   </script>
   <!--<script type="module" src="../js/login.js"></script>-->
@@ -318,10 +313,10 @@
 
         const user = await res.json();
 
-        const isHomePage = window.location.pathname.includes("homePage");
+        const isMainPage = window.location.pathname.includes("mainPage");
 
-        if (user && user.email && !isHomePage) {
-          window.location.href = `${BASE_URL}/homePage`;
+        if (user && user.email && !isMainPage) {
+          window.location.href = `${BASE_URL}/mainPage`;
         }
 
       } catch (err) {

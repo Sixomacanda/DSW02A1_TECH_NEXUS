@@ -23,7 +23,7 @@
 
       <li><a href="/mainPage">Dashboard</a></li>
       <li><a href="/UserSettings">Settings</a></li>
-      <li><a href="login.html" onclick="doLogout()">Logout</a></li>
+      <li><a href="/login" onclick="doLogout()">Logout</a></li>
       <div class="nav-actions">
         <div class="user-chip" id="userChip">
           <div class="avatar" id="userAvatar">?</div>
@@ -559,7 +559,7 @@
       const confirmLogout = confirm("Are you sure you want to logout?");
       if (confirmLogout) {
         localStorage.removeItem("urbanTrack_currentUser");
-        window.location.href = "../login.html";
+        window.location.href = "/login";
       }
     }
 

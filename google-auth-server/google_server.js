@@ -10,15 +10,14 @@ const MongoStore = require("connect-mongo");
 
 const app = express();
 
-const ROOT = path.join(__dirname, "UrbanTrack", "pages");
+//paths
+const PAGES = path.join(__dirname, "UrbanTrack", "pages");
+const HOME_PAGE = path.join(__dirname);
 
-// paths
-//const ROOT = path.join(__dirname, "..", "UrbanTrack", "pages");
 
 // cors
 app.use(cors({
     origin: [
-        "http://127.0.0.1:5501",
         "https://dsw02a1-tech-nexus-2.onrender.com"
     ],
     credentials: true
@@ -67,17 +66,30 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 // pages
+app.get("/homePage", (req, res) => {
+    res.sendFile(path.join(PAGES, "homePage.html"));
+});
+
 app.get("/mainPage", (req, res) => {
-    res.sendFile(path.join(ROOT, "MainPage.html"));
+    res.sendFile(path.join(PAGES, "MainPage.html"));
 });
 
 app.get("/login", (req, res) => {
-    res.sendFile(path.join(ROOT, "login.html"));
+    res.sendFile(path.join(PAGES, "login.html"));
 });
 
 app.get("/dashboard", (req, res) => {
-    res.sendFile(path.join(ROOT, "UserDashboard.html"));
+    res.sendFile(path.join(PAGES, "UserDashboard.html"));
 });
+
+app.get("/settings", (req, res) => {
+    res.sendFile(path.join(PAGES, "UserSettings.html"));
+});
+
+app.get("/signUpPage", (req, res) => {
+    res.sendFile(path.join(PAGES, "signUpPage.html"));
+});
+
 
 // google login
 
@@ -91,15 +103,15 @@ const FRONTEND_LOGIN_URL =
 
 // google callback
 app.get("/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+    passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
 app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }),
-  (req, res) => {
-    res.redirect("/MainPage");
-  }
+    "/auth/google/callback",
+    passport.authenticate("google", { failureRedirect: "/login" }),
+    (req, res) => {
+        res.redirect("/MainPage");
+    }
 );
 
 
