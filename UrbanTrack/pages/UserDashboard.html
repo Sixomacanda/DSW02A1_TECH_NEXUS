@@ -219,9 +219,11 @@
         const nameEl  = document.getElementById("welcomeName");
         const emailEl = document.getElementById("useremail");
         const avEl    = document.getElementById("userAvatar");
+        const storedUser = JSON.parse(localStorage.getItem("urbanTrack_currentUser") || "null");
+        const name = storedUser?.name || user.displayName || user.email.split("@")[0];
         if (emailEl) emailEl.textContent = user.email;
-        if (nameEl)  nameEl.textContent  = "Welcome back, " + (user.displayName || user.email.split("@")[0]);
-        if (avEl)    avEl.textContent    = getInitials(user.displayName || user.email);
+        if (nameEl)  nameEl.textContent  = "Welcome back, " + name;
+        if (avEl)    avEl.textContent    = getInitials(name);
 
       } catch (error) {
         console.error(error);
