@@ -4,6 +4,7 @@ const path = require("path");
 const fs = require('fs');
 
 const app = express();
+const geminiApiKey = process.env.GEMINI_API_KEY;
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
@@ -20,6 +21,9 @@ app.post('/api/chat', async (req, res) => {
         const history = Array.isArray(req.body.history) ? req.body.history : [];
 
         if (!userMessage) return res.status(400).json({ error: 'Message is required' });
+        if (!geminiApiKey || geminiApiKey === 'replace_with_your_gemini_api_key') {
+            return res.status(500).json({ error: 'Missing GEMINI_API_KEY in the root .env file.' });
+        }
 
         const systemPrompt = `You are UrbanBot, an expert assistant for UrbanTrack — a community issue reporting platform. ONLY answer questions that are directly about UrbanTrack, its features, reporting flow, upvoting, tracking, admin actions, troubleshooting, APIs, and usage. If the user asks anything not related to UrbanTrack, reply exactly: "Sorry, I can only answer questions about UrbanTrack." Do not provide additional information for unrelated queries. When answering, be thorough and accurate, use platform knowledge when relevant, provide numbered actionable steps for how-tos, avoid hallucinations, and ask for clarification when necessary. Keep output professional and focused on UrbanTrack.`;
 
@@ -78,7 +82,7 @@ app.post('/api/chat', async (req, res) => {
         };
 
         const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`,
             {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

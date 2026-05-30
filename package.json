@@ -20,6 +20,7 @@
   },
   "scripts": {
     "start": "node google-auth-server/server.js",
+    "start:chatbot": "node server.js",
     "start:auth": "cd google-auth-server && npm start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
