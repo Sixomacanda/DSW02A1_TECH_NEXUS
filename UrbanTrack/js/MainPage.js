@@ -113,6 +113,9 @@ function isLoggedIn() {
 }
 
 function logout() {
+  const confirmLogout = confirm("Are you sure you want to log out?");
+  if (!confirmLogout) return;
+
   if (isGoogleUser()) {
     console.warn("Google-authenticated users remain logged in and logout is disabled.");
     return;
