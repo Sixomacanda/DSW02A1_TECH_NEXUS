@@ -640,6 +640,16 @@
         document.getElementById("userAvatar").textContent = getInitials(name);
       }
 
+      window.addEventListener('storage', (event) => {
+        if (event.key === 'urbanTrack_currentUser') {
+          loadUser();
+        }
+      });
+
+      window.addEventListener('focus', () => {
+        loadUser();
+      });
+
       window.doLogout = function () {
         const confirmLogout = confirm("Are you sure you want to log out?");
         if (!confirmLogout) return;
