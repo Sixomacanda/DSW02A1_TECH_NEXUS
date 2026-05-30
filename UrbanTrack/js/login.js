@@ -1,6 +1,7 @@
 
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
@@ -22,18 +23,32 @@ document.getElementById("log").addEventListener("click", function(e){
   const password = document.getElementById("password").value;
 
   signInWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
+  .then(async (userCredential) => {
 
     const user = userCredential.user;
+    const db = getFirestore(app);
+    let name = user.displayName || email.split('@')[0];
+
+    try {
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+        if (data.name) {
+          name = data.name;
+        }
+      }
+    } catch (error) {
+      console.warn('Could not load registered user name:', error);
+    }
 
     // Store email for simple display scripts
     localStorage.setItem("userEmail", user.email);
 
-    // Store user object for the dashboard logic to display the email at the top
+    // Store user object for the dashboard logic to display the registered name
     localStorage.setItem("urbanTrack_currentUser", JSON.stringify({
       uid: user.uid,
       email: user.email,
-      name: user.email // Set name to email so it appears in the welcome message
+      name
     }));
 
     window.location.href = "MainPage.html";
