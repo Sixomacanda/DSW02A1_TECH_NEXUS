@@ -11,9 +11,12 @@ const MongoStore = require("connect-mongo");
 const app = express();
 
 //paths
+const ROOT = path.join(__dirname, "UrbanTrack");
+const PAGES = path.join(ROOT, "pages");
 
 
-
+// static files
+app.use(express.static(ROOT));
 
 // cors
 app.use(cors({
@@ -23,8 +26,6 @@ app.use(cors({
     credentials: true
 }));;
 
-// static files
-app.use(express.static(ROOT));
 
 
 // session setup
@@ -67,8 +68,6 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 // pages
-const ROOT = __dirname; 
-const PAGES = path.join(ROOT, "pages");
 
 // homePage.html is directly under UrbanTrack/
 app.get("/homePage", (req, res) => {
