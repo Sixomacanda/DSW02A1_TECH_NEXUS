@@ -4,8 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UrbanTrack — Report an Issue</title>
-<<<<<<< HEAD
-<<<<<<< HEAD
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
@@ -17,23 +15,11 @@
     <!-- <header class="header"> -->
     <nav class="navbar">
       <div class="logo">Urban Track</div>
-=======
-=======
->>>>>>> 8985b8fd27a4320938f2957ed9b03b9a0c194500
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../Styles/MainPage.css">
-</head>
-<body>
->>>>>>> 8985b8fd27a4320938f2957ed9b03b9a0c194500
 
       <ul class="nav-links">
-<<<<<<< HEAD
-        <li><a href="../homePage.html">Home</a></li>
-=======
         <!-- google api -->
         <li><div id="google_translate_element"></div></li>
 
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
         <li><a href="UserDashboard.html">Dashboard</a></li>
         <li><a href="UserSettings.html">Settings</a></li>
         <li><a href="#" onclick="doLogout()">Logout</a></li>
@@ -56,77 +42,9 @@
     </nav>
     <!-- </header> -->
 
-<<<<<<< HEAD
     <!-- PAGE SHELL -->
     <div class="page-shell">
       <div class="page-header fade-up">
-=======
-<!-- Page -->
-<div class="page-wrap">
-
-    <!-- Header -->
-    <header class="header">
-      <nav class="navbar">
-        <div class="logo">Urban Track</div>
-
-        <ul class="nav-links">
-          <li><a href="MainPage.html">Home</a></li>
-          <li><a href="UserDashboard.html">Dashboard</a></li>
-          <li><a href="UserSettings.htm">Settings</a></li>
-          <li
-            id="mainUserInfo"
-            style="
-              display: flex;
-              align-items: center;
-              gap: 0.5rem;
-              padding: 0 0.75rem;
-              color: inherit;
-            "
-          >
-            <div
-              id="mainUserInitials"
-              style="
-                width: 32px;
-                height: 32px;
-                border-radius: 999px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: #ffffff;
-                color: #111111;
-                font-weight: 700;
-                font-size: 0.85rem;
-              "
-            >
-              JD
-            </div>
-            <span id="mainUserName" style="font-size: 0.95rem">Jane Doe</span>
-          </li>
-          <li>
-            <button
-              class="btn-primary btn-small"
-              onclick="
-                localStorage.removeItem('urbanTrack_currentUser');
-                location.href = '../../homePage.html';
-              "
-              style="border: none; background: inherit; cursor: pointer"
-            >
-              Logout
-            </button>
-          </li>
-        </ul>
-
-        <div class="menu-button">
-          <div class="menu-button__burger"></div>
-        </div>
-      </nav>
-    </header>
-
-    <!-- Page -->
-    <div class="page-wrap">
-      <!-- Header -->
-      <div class="page-header animate-fade-up">
->>>>>>> 8985b8fd27a4320938f2957ed9b03b9a0c194500
         <div class="page-badge">New Report</div>
         <h1 class="page-title">Report a Community Issue</h1>
         <p class="page-subtitle">
@@ -161,7 +79,6 @@
 
             <!-- STEP 1 -->
             <div class="form-section active" id="step-1">
-<<<<<<< HEAD
               <p class="section-heading">What type of issue is this?</p>
               <p class="section-desc">
                 Select the category that best describes the problem.
@@ -169,88 +86,6 @@
               <div class="category-grid">
                 <button class="cat-btn" data-cat="Pothole / Road">
                   <span class="cat-icon"></span>Pothole / Road
-=======
-                <p class="section-heading">What type of issue is this?</p>
-                <p class="section-desc">Select the category that best describes the problem.</p>
-                <div class="category-grid">
-                    <button class="cat-btn" id="pothole" data-cat="Pothole / Road"><span class="cat-icon"></span>Pothole / Road</button>
-                    <button class="cat-btn" id="streetlight" data-cat="Streetlight"><span class="cat-icon"></span>Streetlight</button>
-                    <button class="cat-btn" id="blockeddrain" data-cat="Blocked Drain"><span class="cat-icon"></span>Blocked Drain</button>
-                    <button class="cat-btn" id="waste" data-cat="Littering / Waste"><span class="cat-icon"></span>Littering / Waste</button>
-                    <button class="cat-btn" id="graffiti" data-cat="Graffiti / Vandalism"><span class="cat-icon"></span>Graffiti</button>
-                    <button class="cat-btn" id="vegetation" data-cat="Overgrown Vegetation"><span class="cat-icon"></span>Vegetation</button>
-                    <button class="cat-btn" id="pavement" data-cat="Broken Pavement"><span class="cat-icon"></span>Pavement</button>
-                    <button class="cat-btn" id="waterleak" data-cat="Water Leak"><span class="cat-icon"></span>Water Leak</button>
-                    <button class="cat-btn" id="other" data-cat="Other"><span class="cat-icon"></span>Other</button>
-                </div>
-                <div class="field-group" style="margin-top:1.5rem;">
-                    <label>Severity <span class="req">*</span></label>
-                    <div class="severity-row">
-                        <button class="severity-btn" id="low" data-sev="low"    onclick="setSeverity(this,'low')">🟢 Low</button>
-                        <button class="severity-btn" id="medium" data-sev="medium" onclick="setSeverity(this,'medium')">🟡 Medium</button>
-                        <button class="severity-btn" id="high" data-sev="high"   onclick="setSeverity(this,'high')">🔴 High / Urgent</button>
-                    </div>
-                </div>
-                <div class="form-nav">
-                    <span></span>
-                    <button class="btn-primary btn-medium" id="next" onclick="goStep(2)">Next: Details →</button>
-                </div>
-            </div>
-            <div class="step-dot" id="dot-3">
-              <div class="step-circle">3</div>
-              <span class="step-label">Location</span>
-            </div>
-            <div class="step-dot" id="dot-4">
-              <div class="step-circle">4</div>
-              <span class="step-label">Review</span>
-            </div>
-          </div>
-
-          <!-- STEP 1 -->
-          <div class="form-section active" id="step-1">
-            <p class="section-heading">What type of issue is this?</p>
-            <p class="section-desc">
-              Select the category that best describes the problem.
-            </p>
-            <div class="category-grid">
-              <button class="cat-btn" data-cat="Pothole / Road">
-                <span class="cat-icon"></span>Pothole / Road
-              </button>
-              <button class="cat-btn" data-cat="Streetlight">
-                <span class="cat-icon"></span>Streetlight
-              </button>
-              <button class="cat-btn" data-cat="Blocked Drain">
-                <span class="cat-icon"></span>Blocked Drain
-              </button>
-              <button class="cat-btn" data-cat="Littering / Waste">
-                <span class="cat-icon"></span>Littering / Waste
-              </button>
-              <button class="cat-btn" data-cat="Graffiti / Vandalism">
-                <span class="cat-icon"></span>Graffiti
-              </button>
-              <button class="cat-btn" data-cat="Overgrown Vegetation">
-                <span class="cat-icon"></span>Vegetation
-              </button>
-              <button class="cat-btn" data-cat="Broken Pavement">
-                <span class="cat-icon"></span>Pavement
-              </button>
-              <button class="cat-btn" data-cat="Water Leak">
-                <span class="cat-icon"></span>Water Leak
-              </button>
-              <button class="cat-btn" data-cat="Other">
-                <span class="cat-icon"></span>Other
-              </button>
-            </div>
-            <div class="field-group" style="margin-top: 1.5rem">
-              <label>Severity <span class="req">*</span></label>
-              <div class="severity-row">
-                <button
-                  class="severity-btn"
-                  data-sev="low"
-                  onclick="setSeverity(this, 'low')"
-                >
-                  Low
->>>>>>> 8985b8fd27a4320938f2957ed9b03b9a0c194500
                 </button>
                 <button class="cat-btn" data-cat="Streetlight">
                   <span class="cat-icon"></span>Streetlight
@@ -728,8 +563,6 @@
 
     <div class="toast" id="toast"></div>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     <script src="../js/main.js"></script>
 
     <script type="module">
@@ -762,10 +595,7 @@
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const db = getFirestore(app);
-<<<<<<< HEAD
-=======
       const EMAIL_API_BASE = "http://localhost:3000/api/email";
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
 
       // ── 3. GLOBAL STATE ──────────────────────────────────────────
       window.currentStep = 1;
@@ -1038,17 +868,12 @@
           reportedBy: userId,
           reporterName: userName,
           reporterEmail: u?.email || "N/A",
-<<<<<<< HEAD
-=======
           notifyByEmail: document.getElementById("notifyCheck").checked,
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
           ref,
         };
 
         try {
           await addDoc(collection(db, "reports"), reportData);
-<<<<<<< HEAD
-=======
           if (reportData.notifyByEmail && reportData.reporterEmail !== "N/A") {
             try {
               await fetch(`${EMAIL_API_BASE}/report-confirmation`, {
@@ -1065,7 +890,6 @@
               console.warn("Report confirmation email skipped:", emailError);
             }
           }
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
           if (userId) {
             try {
               await updateDoc(doc(db, "users", userId), {
@@ -1205,10 +1029,6 @@
       async
       defer
     ></script>
-<<<<<<< HEAD
-  </body>
-</html>
-=======
     <!-- Google api -->
  <script>
        
@@ -1217,110 +1037,6 @@ function googleTranslateElementInit() {
         { pageLanguage: 'en' },
         'google_translate_element'
     );
-=======
-=======
->>>>>>> 8985b8fd27a4320938f2957ed9b03b9a0c194500
-       </div> <div class="sidebar-card">
-            <p class="sidebar-title">Community Stats</p>
-            <div class="stats-grid">
-                <div class="stat-item"><div class="stat-num" id="myReportsCount">0</div><div class="stat-label">My Reports</div></div>
-                <div class="stat-item"><div class="stat-num" id="resolvedCount" style="color:var(--success);">0</div><div class="stat-label">Resolved</div></div>
-                <div class="stat-item"><div class="stat-num" id="progressCount" style="color:var(--warning);">0</div><div class="stat-label">In Progress</div></div>
-                <div class="stat-item"><div class="stat-num" id="urgentCount" style="color:var(--destructive);">0</div><div class="stat-label">Urgent</div></div>
-            </div> 
-        </div>
-
-        <div class="sidebar-card">
-            <p class="sidebar-title">Recent Reports</p>
-            <div class="feed-item">
-                <div class="feed-dot" style="background:var(--destructive)"></div>
-                <div class="feed-content">
-                    <div class="feed-title">Broken streetlight near school</div>
-                    <div class="feed-meta">Melville · 0 ago <span class="status-badge status-urgent">....</span></div>
-                </div>
-                <div class="feed-votes">▲ </div>
-            </div>
-            <div class="feed-item">
-                <div class="feed-dot" style="background:var(--warning)"></div>
-                <div class="feed-content">
-                    <div class="feed-title">Pothole on Jan Smuts Ave</div>
-                    <div class="feed-meta">Rosebank · 0h ago <span class="status-badge status-pending">.....</span></div>
-                </div>
-                <div class="feed-votes">▲ </div>
-            </div>
-            <div class="feed-item">
-                <div class="feed-dot" style="background:var(--success)"></div>
-                <div class="feed-content">
-                    <div class="feed-title">Blocked drain — flooding risk</div>
-                    <div class="feed-meta">Sandton · 0h ago <span class="status-badge status-resolved">.....</span></div>
-                </div>
-                <div class="feed-votes">▲ 0</div>
-            </div>
-            <div class="feed-item">
-                <div class="feed-dot" style="background:var(--warning)"></div>
-                <div class="feed-content">
-                    <div class="feed-title">Graffiti on community wall</div>
-                    <div class="feed-meta">Soweto · 0h ago <span class="status-badge status-pending">Pending</span></div>
-                </div>
-                <div class="feed-votes">▲ 0</div>
-            </div>
-            <div class="feed-item">
-                <div class="feed-dot" style="background:var(--destructive)"></div>
-                <div class="feed-content">
-                    <div class="feed-title">Water leak on Harris Road</div>
-                    <div class="feed-meta">Midrand · 0h ago <span class="status-badge status-urgent">Urgent</span></div>
-                </div>
-                <div class="feed-votes">▲ 0</div>
-            </div>
-        </div>
-
-        <div class="sidebar-card">
-            <p class="sidebar-title">Reporting Tips</p>
-            <div class="tip-item"><span class="tip-icon">-</span><span>Adding a photo increases resolution speed by 3×.</span></div>
-            <div class="tip-item"><span class="tip-icon">-</span><span>Include a nearby landmark or street number for accuracy.</span></div>
-            <div class="tip-item"><span class="tip-icon">-</span><span>Share your report so neighbours can upvote and boost priority.</span></div>
-            <div class="tip-item"><span class="tip-icon">-</span><span>Enable notifications to be updated when status changes.</span></div>
-        </div>
-
-    </div>
-</div>
-
-<div class="toast" id="toast"></div>
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, addDoc, doc, updateDoc, increment, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-/* ---------------- FIREBASE ---------------- */
-
-const firebaseConfig = {
-  apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
-  authDomain: "urban-track-91e53.firebaseapp.com",
-  projectId: "urban-track-91e53",
-  storageBucket: "urban-track-91e53.firebasestorage.app",
-  messagingSenderId: "519209303536",
-  appId: "1:519209303536:web:c212eb58eb836e27047135"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-/* ---------------- GLOBAL STATE ---------------- */
-
-window.currentStep = 1;
-window.selectedCategory = "";
-window.selectedSeverity = "";
-window.uploadedPhotos = [];
-
-/* ---------------- USER DISPLAY ---------------- */
-
-function getInitials(name) {
-  if (!name) return "U";
-  const parts = name.trim().split(" ");
-  return parts.slice(0, 2).map(p => p[0].toUpperCase()).join("");
->>>>>>> 8985b8fd27a4320938f2957ed9b03b9a0c194500
 }
 
 // Hide Google Translate banner whenever it appears
@@ -1367,19 +1083,9 @@ function googleTranslateElementInit() {
 }
 </script>
 
-<<<<<<< HEAD
 <script type="text/javascript"
 src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
 </script>
 <!-- The End of google api -->
   </body>
 </html>`
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
-=======
-
-
-</html>
-<<<<<<< HEAD
->>>>>>> 8985b8fd27a4320938f2957ed9b03b9a0c194500
-=======
->>>>>>> 8985b8fd27a4320938f2957ed9b03b9a0c194500

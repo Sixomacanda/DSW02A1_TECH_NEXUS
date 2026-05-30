@@ -395,8 +395,6 @@ form#signupForm {
     visibility: visible;
   }
 }
-<<<<<<< HEAD
-=======
 /* Hide the Google translate top bar */
 .goog-te-banner-frame {
     display: none !important;
@@ -469,4 +467,3 @@ body { top: 0 !important; } */
             background: #1e3a8a !important;
             color: white !important;
         }
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba

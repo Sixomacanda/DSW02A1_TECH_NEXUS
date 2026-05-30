@@ -1,9 +1,6 @@
 var cur = 1;
 var userEmail = "";
- <<<<<<< HEAD
-=======
 var verifiedPasswordOtp = "";
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
 var timerInterval = null;
 
 function goTo(n) {

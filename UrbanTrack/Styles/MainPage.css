@@ -1,10 +1,4 @@
-<<<<<<< HEAD
-/* ───────────────────────────────────────────
-       DESIGN TOKENS
-    ─────────────────────────────────────────── */
-=======
 
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
 :root {
   --bg-base: #0f172a;
   --bg-secondary: #1e3a8a;
@@ -1274,8 +1268,6 @@ select.field-input option {
     display: none;
   }
 }
-<<<<<<< HEAD
-=======
 
 .goog-te-banner-frame {
     display: none !important;
@@ -1352,4 +1344,3 @@ body { top: 0 !important; } */
             background: #1e3a8a !important;
             color: white !important;
         }
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba

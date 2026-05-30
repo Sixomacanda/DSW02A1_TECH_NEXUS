@@ -99,8 +99,6 @@
         <button type="submit" id="signing" class="btn" name="signup">
           Sign Up
         </button>
-<<<<<<< HEAD
-<<<<<<< HEAD
 
         <!-- Google signup option -->
         <a
@@ -111,10 +109,6 @@
           <i class="fa-brands fa-google"></i> Continue with Google
         </a>
 
-=======
->>>>>>> 8985b8fd27a4320938f2957ed9b03b9a0c194500
-=======
->>>>>>> 8985b8fd27a4320938f2957ed9b03b9a0c194500
         <p class="footer-text">
           Already have an account? <a href="login.html">Log in</a>
         </p>
@@ -147,10 +141,9 @@
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const db = getFirestore(app);
-<<<<<<< HEAD
-=======
-      const EMAIL_API_BASE = "http://localhost:3000/api/email";
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
+      
+      // Use 127.0.0.1 to avoid local DNS resolution issues ("Failed to fetch")
+      const EMAIL_API_BASE = "http://127.0.0.1:3000/api/email";
 
       const form = document.getElementById("signupForm");
       const surname = document.getElementById("surname");
@@ -159,6 +152,45 @@
       const confirmPassword = document.getElementById(
         "Signup-confirm-password",
       );
+
+      // Password Visibility Toggle
+      document.querySelectorAll(".password-group").forEach((group) => {
+        const input = group.querySelector("input");
+        const showBtn = group.querySelector(".fa-eye");
+        const hideBtn = group.querySelector(".fa-eye-slash");
+
+        if (showBtn && hideBtn) {
+          showBtn.addEventListener("click", () => {
+            input.type = "text";
+            showBtn.classList.add("hide");
+            hideBtn.classList.remove("hide");
+          });
+
+          hideBtn.addEventListener("click", () => {
+            input.type = "password";
+            hideBtn.classList.add("hide");
+            showBtn.classList.remove("hide");
+          });
+        }
+      });
+
+      // Mobile Menu Toggle (Moved outside of submit handler)
+      const menuBtn = document.querySelector(".menu-button");
+      const navLinks = document.querySelector(".nav-links");
+      if (menuBtn && navLinks) {
+        let menuOpen = false;
+        menuBtn.addEventListener("click", () => {
+          if (!menuOpen) {
+            menuBtn.classList.add("open");
+            navLinks.classList.add("show");
+            menuOpen = true;
+          } else {
+            menuBtn.classList.remove("open");
+            navLinks.classList.remove("show");
+            menuOpen = false;
+          }
+        });
+      }
 
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -197,8 +229,6 @@ Minimum 8 characters
         }
 
         try {
-<<<<<<< HEAD
-=======
           const signupOtpResponse = await fetch(`${EMAIL_API_BASE}/signup-otp`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -230,7 +260,6 @@ Minimum 8 characters
             throw new Error(verifyOtpData.error || "Invalid OTP.");
           }
 
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
           const userCredential = await createUserWithEmailAndPassword(
             auth,
             email.value,
@@ -243,38 +272,18 @@ Minimum 8 characters
             surname: surname.value,
             email: email.value,
             reportsCount: 0,
-<<<<<<< HEAD
-=======
             emailVerifiedByOtp: true,
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
           });
 
           alert("Account created successfully");
 
           window.location.href = "login.html";
         } catch (error) {
-          alert(error.message);
+          console.error("Signup error:", error);
+          alert("Signup failed: " + error.message + "\nPlease ensure your backend server is running on port 3000.");
         }
-        const menuBtn = document.querySelector(".menu-button");
-        const navLinks = document.querySelector(".nav-links");
-        let menuOpen = false;
-        menuBtn.addEventListener("click", () => {
-          if (!menuOpen) {
-            menuBtn.classList.add("open");
-            navLinks.classList.add("show");
-            menuOpen = true;
-          } else {
-            menuBtn.classList.remove("open");
-            navLinks.classList.remove("show");
-            menuOpen = false;
-          }
-        });
       });
     </script>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
       <!-- Google api -->
  <script>
        
@@ -334,10 +343,5 @@ src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit
 </script>
 <!-- The End of google api -->
     
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
-=======
->>>>>>> 8985b8fd27a4320938f2957ed9b03b9a0c194500
-=======
->>>>>>> 8985b8fd27a4320938f2957ed9b03b9a0c194500
   </body>
 </html>

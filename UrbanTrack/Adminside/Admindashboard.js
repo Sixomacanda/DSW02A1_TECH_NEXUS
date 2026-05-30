@@ -15,10 +15,7 @@ const firebaseConfig = {
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
-<<<<<<< HEAD
-=======
 const EMAIL_API_BASE = "http://localhost:3000/api/email";
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
 
 // ── Global data store (so filters work without re-fetching) ──
 let allReports = [];
@@ -155,9 +152,6 @@ window.handleSearch = function(q) {
 // ── UPDATE STATUS — UNTOUCHED from original ──
 window.updateStatus = async function(id, newStatus) {
   try {
-<<<<<<< HEAD
-    await updateDoc(doc(db, "reports", id), { status: newStatus });
-=======
     const report = allReports.find(r => r.id === id);
     await updateDoc(doc(db, "reports", id), { status: newStatus });
 
@@ -184,7 +178,6 @@ window.updateStatus = async function(id, newStatus) {
       }
     }
 
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
     showToast(`Status updated to ${newStatus}`, "success");
     loadDashboardData();
   } catch (e) {

@@ -1,33 +1,15 @@
-<<<<<<< HEAD
-require("dotenv").config();
-=======
 const path = require("path");
 
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 require("dotenv").config({
   path: path.join(__dirname, "..", "UrbanTrack", "google-auth-server", ".env"),
 });
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
 
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 
-<<<<<<< HEAD
-const app = express();
-
-// Session setup
-app.use(
-    session({
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: false,
-    })
-);
-app.use(express.static("public"));
-
-=======
 const allowedOrigins = (
   process.env.ALLOWED_ORIGINS ||
   "http://localhost:5500,http://localhost:5501,http://127.0.0.1:5500,http://127.0.0.1:5501,null"
@@ -92,25 +74,10 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-<<<<<<< HEAD
-// Google Strategy
-passport.use(
-    new GoogleStrategy(
-        {
-            clientID: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: "http://localhost:3000/auth/google/callback",
-        },
-        function (accessToken, refreshToken, profile, done) {
-            return done(null, profile);
-        }
-    )
-=======
 // Attempt to load optional modules/config for emails and firebase
 try {
   nodemailer = require("nodemailer");
@@ -289,62 +256,10 @@ passport.use(
       return done(null, profile);
     },
   ),
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
 );
 
 // Session handling
 passport.serializeUser(function (user, done) {
-<<<<<<< HEAD
-    done(null, user);
-});
-
-passport.deserializeUser(function (user, done) {
-    done(null, user);
-});
-
-
-// Start Google login
-app.get(
-    "/auth/google",
-    function (req, res, next) {
-        console.log("Google auth initiated from:", req.headers.referer);
-        next();
-    },
-    passport.authenticate("google", { scope: ["profile", "email"] })
-);
-
-// Callback after Google login
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5501/UrbanTrack/pages/MainPage.html";
-const FRONTEND_LOGIN_URL = process.env.FRONTEND_LOGIN_URL || "http://localhost:5501/UrbanTrack/pages/login.html";
-
-app.get(
-    "/auth/google/callback",
-    function (req, res, next) {
-        console.log("Google callback received, query:", req.query);
-        next();
-    },
-    passport.authenticate("google", {
-        failureRedirect: FRONTEND_LOGIN_URL,
-    }),
-    function (req, res) {
-        console.log("Google auth successful, user:", req.user ? req.user.displayName : "no user");
-        console.log("Google auth successful, redirecting to", FRONTEND_URL);
-        
-        // Store user data in session and send as query params
-        if (req.user) {
-            const userData = JSON.stringify({
-                name: req.user.displayName,
-                email: req.user.emails[0]?.value,
-                id: req.user.id,
-                picture: req.user.photos[0]?.value,
-                role: 'user'
-            });
-            res.redirect(FRONTEND_URL + "?googleUser=" + encodeURIComponent(userData));
-        } else {
-            res.redirect(FRONTEND_URL);
-        }
-    }
-=======
   done(null, user);
 });
 
@@ -402,32 +317,16 @@ app.get(
       res.redirect(FRONTEND_URL);
     }
   },
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
 );
 
 // Test endpoint to simulate successful auth
 app.get("/auth/test", function (req, res) {
-<<<<<<< HEAD
-    console.log("Test auth endpoint called, redirecting to", FRONTEND_URL);
-    res.redirect(FRONTEND_URL);
-=======
   console.log("Test auth endpoint called, redirecting to", FRONTEND_URL);
   res.redirect(FRONTEND_URL);
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
 });
 
 // Get logged-in user (for your frontend)
 app.get("/auth/user", function (req, res) {
-<<<<<<< HEAD
-    res.json(req.user || null);
-});
-
-
-// Start server
-app.listen(3000, function () {
-    console.log("Server running on http://localhost:3000");
-});
-=======
   res.json(req.user || null);
 });
 
@@ -630,4 +529,3 @@ app.get("/dev/send-test-email", async function (req, res) {
 app.listen(3000, function () {
   console.log("Server running on http://localhost:3000");
 });
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba

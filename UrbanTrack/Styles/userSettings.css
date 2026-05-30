@@ -1026,8 +1026,6 @@ input:checked + .toggle-slider::before {
     padding: 1.25rem;
   }
 }
-<<<<<<< HEAD
-=======
 
 /* google api */
 .goog-te-banner-frame {
@@ -1063,4 +1061,3 @@ input:checked + .toggle-slider::before {
             background: #1e3a8a !important;
             color: white !important;
         }
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba

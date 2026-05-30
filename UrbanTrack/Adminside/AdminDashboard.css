@@ -337,9 +337,6 @@
     .nav-item { width:auto; padding:.45rem .75rem; font-size:.78rem; }
     .stats-row { grid-template-columns:1fr 1fr; }
     .main { overflow:auto; }
-<<<<<<< HEAD
-  }
-=======
   }
 
   /* Hero section reset so slider fills it properly */
@@ -480,4 +477,3 @@
           font-size: 0.85rem;
         }
       }
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba

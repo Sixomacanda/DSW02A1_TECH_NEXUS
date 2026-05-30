@@ -23,16 +23,10 @@
       <nav class="navbar">
         <div class="logo">Urban Track</div>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         <ul class="nav-links">
-<<<<<<< HEAD
-          <li><a href="../homePage.html">Home</a></li>
-=======
            <!-- google api -->
         <li><div id="google_translate_element"></div></li>
           <li><a href="../../homePage.html">Home</a></li>
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
           <li><a href="login.html">Login</a></li>
           <li><a href="signUpPage.html">Sign Up</a></li>
         </ul>
@@ -211,38 +205,6 @@
             </div>
           </form>
         </section>
-=======
-=======
->>>>>>> 8985b8fd27a4320938f2957ed9b03b9a0c194500
-      <!-- <ul class="nav-links">
-        <li><a href="../../homePage.html">Home</a></li>
-        <li><a href="signUpPage.html">Sign Up</a></li>
-      </ul> -->
-    </nav>
-    <a class="back" href="login.html"
-      ><i class="fa-solid fa-angle-left"></i>
-    </a>
-    <!-- <h1 class="heading">Password Recovery</h1> -->
-    <form action="/recover" method="POST" novalidate>
-        <h1 class="heading">Password Recovery</h1>
-      <div class="container">
-        <div class="form-group">
-          <p>Enter your email address to receive a password reset link.</p>
-          <br /><br />
-          <label for="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="example@gmail.com"
-            required
-          />
-          <small class="error"></small>
-          <button class="btn" id="resetBtn" type="button" onclick="resetPassword()">
-            Send Reset Link
-          </button>
-        </div>
->>>>>>> 8985b8fd27a4320938f2957ed9b03b9a0c194500
       </div>
     </main>
 
@@ -286,11 +248,8 @@
 
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
-<<<<<<< HEAD
-=======
       const EMAIL_API_BASE = "http://localhost:3000/api/email";
       let verifiedPasswordOtp = "";
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
 
       function showStep(step) {
         document.querySelectorAll(".step").forEach((section) => {
@@ -411,11 +370,7 @@
         });
       });
 
-<<<<<<< HEAD
-      window.resetPassword = function () {
-=======
       window.resetPassword = async function () {
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
         const email = document.getElementById("email").value.trim();
         const error = document.querySelector(".step-email .hint");
 
@@ -426,22 +381,6 @@
 
         error.textContent = "";
 
-<<<<<<< HEAD
-        sendPasswordResetEmail(auth, email)
-          .then(() => {
-            alert("OTP sent to your email.");
-            showOtpStep();
-          })
-          .catch((error) => {
-            error.textContent = error.message;
-          });
-      };
-
-      window.verifyOtp = function () {
-        const otp = Array.from(document.querySelectorAll(".otp-box"))
-          .map((box) => box.value.trim())
-          .join("");
-=======
         try {
           const response = await fetch(`${EMAIL_API_BASE}/password-otp`, {
             method: "POST",
@@ -466,7 +405,6 @@
           .map((box) => box.value.trim())
           .join("");
         const email = document.getElementById("email").value.trim();
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
         const error = document.querySelector(".step-otp .hint");
 
         if (otp.length !== 6) {
@@ -475,12 +413,6 @@
         }
 
         error.textContent = "";
-<<<<<<< HEAD
-        showPasswordStep();
-      };
-
-      window.saveNewPassword = function () {
-=======
         try {
           const response = await fetch(`${EMAIL_API_BASE}/verify-password-otp`, {
             method: "POST",
@@ -501,17 +433,10 @@
       };
 
       window.saveNewPassword = async function () {
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
         if (!validateNewPasswordFields(true)) {
           return;
         }
 
-<<<<<<< HEAD
-        alert(
-          "Password reset successfully. Please log in with your new password.",
-        );
-        window.location.href = "login.html";
-=======
         try {
           const email = document.getElementById("email").value.trim();
           const response = await fetch(`${EMAIL_API_BASE}/reset-password`, {
@@ -536,7 +461,6 @@
         } catch (err) {
           passwordError.textContent = err.message;
         }
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
       };
       function setupPasswordToggles() {
         const passwordGroups = document.querySelectorAll(".password-group");
@@ -567,10 +491,6 @@
         });
       }
     </script>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
     <!-- Google api -->
  <script>
        
@@ -629,10 +549,5 @@ function googleTranslateElementInit() {
 src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
 </script>
 <!-- The End of google api -->
->>>>>>> 5a4397e34ac5e70efa640bae2c2fe871ee2df6ba
-=======
->>>>>>> 8985b8fd27a4320938f2957ed9b03b9a0c194500
-=======
->>>>>>> 8985b8fd27a4320938f2957ed9b03b9a0c194500
   </body>
 </html>
