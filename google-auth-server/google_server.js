@@ -10,6 +10,8 @@ const MongoStore = require("connect-mongo");
 
 const app = express();
 
+const ROOT = path.join(__dirname, "UrbanTrack", "pages");
+
 // paths
 //const ROOT = path.join(__dirname, "..", "UrbanTrack", "pages");
 
@@ -65,7 +67,7 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 // pages
-app.get("/homePage", (req, res) => {
+app.get("/mainPage", (req, res) => {
     res.sendFile(path.join(ROOT, "MainPage.html"));
 });
 
@@ -78,12 +80,6 @@ app.get("/dashboard", (req, res) => {
 });
 
 // google login
-app.get(
-    "/auth/google",
-    passport.authenticate("google", {
-        scope: ["profile", "email"]
-    })
-);
 
 const FRONTEND_URL =
     process.env.FRONTEND_URL ||
@@ -98,17 +94,18 @@ app.get("/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
-app.get("/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/pages/login.html" }),
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
-    res.redirect("/pages/MainPage.html");
+    res.redirect("/MainPage");
   }
 );
 
 
 // get session user
 app.get("/auth/user", (req, res) => {
-    res.json(req.session.user || null);
+    res.json(req.user || null);
 });
 
 // logout
