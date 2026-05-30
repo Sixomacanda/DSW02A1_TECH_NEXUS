@@ -1,3 +1,18 @@
+require("dotenv").config();
+const express = require("express");
+const path = require("path");
+
+const app = express();
+
+app.use(express.json());
+app.use(express.static(path.join(__dirname)));
+
+// Home route
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "homePage.html"));
+});
+
+// Chat API
 app.post("/api/chat", async (req, res) => {
     try {
         const userMessage = req.body.message;
@@ -34,4 +49,8 @@ app.post("/api/chat", async (req, res) => {
         console.error("Server error:", err);
         res.status(500).json({ error: "Internal server error" });
     }
+});
+
+app.listen(3000, () => {
+    console.log("Server running on http://localhost:3000");
 });

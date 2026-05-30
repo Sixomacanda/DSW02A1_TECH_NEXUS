@@ -917,6 +917,9 @@
 
   <!-- JS -->
   <script>
+    app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "homePage.html"));
+});
     document.getElementById('menuButton').addEventListener('click', () => {
       document.getElementById('navLinks').classList.toggle('show');
       document.getElementById('menuButton').classList.toggle('open');
