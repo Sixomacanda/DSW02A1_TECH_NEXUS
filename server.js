@@ -5,16 +5,21 @@ const path = require("path");
 const app = express();
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname)));
 
-app.use(express.static(path.join(__dirname, "public")));
+// Home route
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "homePage.html"));
+});
 
-// Serve frontend
-// app.use(express.static(path.join(__dirname)));
-
-//chat rout
+// Chat API
 app.post("/api/chat", async (req, res) => {
     try {
         const userMessage = req.body.message;
+
+        if (!userMessage) {
+            return res.status(400).json({ error: "Message is required" });
+        }
 
         const response = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
@@ -34,23 +39,18 @@ app.post("/api/chat", async (req, res) => {
 
         const data = await response.json();
 
-        // extract clean reply (IMPORTANT FIX)
         const reply =
             data?.candidates?.[0]?.content?.parts?.[0]?.text ||
             "Sorry, I couldn't generate a response.";
 
-        // return clean JSON (NOT full Gemini response)
         res.json({ reply });
 
     } catch (err) {
         console.error("Server error:", err);
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: "Internal server error" });
     }
 });
 
-//starts server
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-    console.log(`UrbanTrack server running → http://localhost:${PORT}`);
+app.listen(3000, () => {
+    console.log("Server running on http://localhost:3000");
 });
