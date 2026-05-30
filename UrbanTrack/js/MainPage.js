@@ -469,6 +469,10 @@ function initReportForm(currentUser) {
   const submitBtn = document.getElementById("submitBtn");
   if (!submitBtn) return;
 
+  if (typeof window.submitReport === "function") {
+    return;
+  }
+
   // Override the existing submitReport function to store in localStorage
   window.submitReport = function () {
     const agreeCheck = document.getElementById("agreeCheck");
