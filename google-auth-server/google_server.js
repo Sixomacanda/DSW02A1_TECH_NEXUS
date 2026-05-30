@@ -24,7 +24,8 @@ app.use(cors({
 }));;
 
 // static files
-app.use(express.static(path.join(__dirname, "UrbanTrack")));
+app.use(express.static(ROOT));
+
 
 // session setup
 app.set("trust proxy", 1);
@@ -66,7 +67,7 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 // pages
-const ROOT = path.join(__dirname, "UrbanTrack");
+const ROOT = __dirname; 
 const PAGES = path.join(ROOT, "pages");
 
 // homePage.html is directly under UrbanTrack/
