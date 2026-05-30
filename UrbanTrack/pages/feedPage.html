@@ -175,6 +175,27 @@
       setTimeout(() => toastEl.className = 'toast', 2800);
     }
 
+    function loadUserDisplay() {
+      const storedUser = JSON.parse(localStorage.getItem('urbanTrack_currentUser') || 'null');
+      const name = storedUser?.name || currentUser?.displayName || currentUser?.email?.split('@')[0] || 'User';
+      const initials = (name || 'U')
+        .split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+      const avatar = document.getElementById('userAvatar');
+      const nameLabel = document.getElementById('userName');
+      if (avatar) avatar.textContent = initials;
+      if (nameLabel) nameLabel.textContent = name;
+    }
+
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'urbanTrack_currentUser') {
+        loadUserDisplay();
+      }
+    });
+
+    window.addEventListener('focus', () => {
+      loadUserDisplay();
+    });
+
     // Auth guard
     onAuthStateChanged(auth, user => {
       if (!user) { window.location.href = 'UrbanTrack/pages/login.html'; return; }
