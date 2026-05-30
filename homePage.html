@@ -993,22 +993,14 @@
       }
       function removeTyping() { const e = document.getElementById('typing-msg'); if(e) e.remove(); }
 
-      async function callClaude(msg) {
-        history.push({ role:'user', content:msg });
-        const res = await fetch('https://api.anthropic.com/v1/messages', {
-          method:'POST',
-          headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify({
-            model:'claude-sonnet-4-20250514',
-            max_tokens:1000,
-            system:`You are UrbanBot, a friendly assistant for UrbanTrack — a community issue reporting platform. Keep replies concise (under 120 words), warm and helpful. Do not use any emojis. Format lists with numbered points. Focus on: reporting issues, upvoting, account setup, tracking reports, admin actions, and general platform help. Gently redirect unrelated questions back to UrbanTrack.`,
-            messages: history
-          })
+      async function callChatbot(msg) {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: msg })
         });
         const data = await res.json();
-        const reply = data.content?.map(b => b.text||'').join('') || "I am having trouble connecting. Please try again shortly.";
-        history.push({ role:'assistant', content:reply });
-        return reply;
+        return data.reply || "I am having trouble connecting. Please try again shortly.";
       }
 
       async function handleSend(text) {
@@ -1029,7 +1021,7 @@
 
         showTyping();
         try {
-          const reply = await callClaude(msg);
+          const reply = await callChatbot(msg);
           removeTyping(); addMsg('bot', reply);
         } catch(e) {
           removeTyping();
