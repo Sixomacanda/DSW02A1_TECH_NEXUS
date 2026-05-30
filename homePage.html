@@ -993,11 +993,11 @@
       }
       function removeTyping() { const e = document.getElementById('typing-msg'); if(e) e.remove(); }
 
-      async function callChatbot(msg) {
+      async function callChatbot(msg, history) {
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: msg })
+          body: JSON.stringify({ message: msg, history: history || [] })
         });
         const data = await res.json();
         return data.reply || "I am having trouble connecting. Please try again shortly.";
@@ -1011,18 +1011,29 @@
         quickWrap.style.display = 'none';
         addMsg('user', msg);
 
+        // push to local history (used to provide context to backend)
+        history.push({ role: 'user', content: msg });
+        // keep last ~12 exchanges (user+assistant => ~24 entries)
+        if (history.length > 24) history.splice(0, history.length - 24);
+
         const local = matchKB(msg);
         if (local) {
           showTyping();
           await new Promise(r => setTimeout(r, 600 + Math.random()*400));
           removeTyping(); addMsg('bot', local);
+          // store KB reply in history too
+          history.push({ role: 'assistant', content: local });
+          if (history.length > 24) history.splice(0, history.length - 24);
           isTyping = false; return;
         }
 
         showTyping();
         try {
-          const reply = await callChatbot(msg);
+          const reply = await callChatbot(msg, history);
           removeTyping(); addMsg('bot', reply);
+          // store assistant reply in history
+          history.push({ role: 'assistant', content: reply });
+          if (history.length > 24) history.splice(0, history.length - 24);
         } catch(e) {
           removeTyping();
           addMsg('bot', "Sorry, I could not connect right now. Try asking about reporting, upvoting, or signing up.");
