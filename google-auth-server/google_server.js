@@ -11,8 +11,10 @@ const MongoStore = require("connect-mongo");
 const app = express();
 
 //paths
-const PAGES = path.join(__dirname, "UrbanTrack", "pages");
-const HOME_PAGE = path.join(__dirname);
+const ROOT = path.join(__dirname, "UrbanTrack");
+const PAGES = path.join(ROOT, "pages");
+
+
 
 
 // cors
@@ -67,7 +69,7 @@ passport.deserializeUser((user, done) => done(null, user));
 
 // pages
 app.get("/homePage", (req, res) => {
-    res.sendFile(path.join(PAGES, "homePage.html"));
+    res.sendFile(path.join(ROOT, "homePage.html"));
 });
 
 app.get("/mainPage", (req, res) => {
