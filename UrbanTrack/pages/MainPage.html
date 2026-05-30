@@ -14,7 +14,6 @@
   <!-- <header class="header"> -->
   <nav class="navbar">
     <div class="logo">Urban Track</div>
-    <div id="authSection"></div>
 
     <ul class="nav-links">
       <!-- google api -->
@@ -952,10 +951,6 @@
           ${user.name}
           <button onclick="logout()">Logout</button>
         </div>
-      `;
-        } else {
-          authSection.innerHTML = `
-        <a href="/login" style="color:white;">Login</a>
       `;
         }
 
