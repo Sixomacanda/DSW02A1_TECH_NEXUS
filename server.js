@@ -9,16 +9,6 @@ const geminiApiKey = process.env.GEMINI_API_KEY;
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-<<<<<<< HEAD
-// Static frontend mounts (so URLs like /homePage.html work)
-app.use(express.static(__dirname)); // serves homePage.html from project root
-app.use(express.static(path.join(__dirname, "UrbanTrack/pages"))); // serves /login.html etc.
-app.use(express.static(path.join(__dirname, "UrbanTrack"))); // serves /js, /Styles, /Pictues, etc.
-
-
-//chat rout
-app.post("/api/chat", async (req, res) => {
-=======
 // Home route
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "homePage.html"));
@@ -26,7 +16,6 @@ app.get("/", (req, res) => {
 
 // Chat API — accepts `{ message, history }` and forwards a system-guided prompt to Gemini
 app.post('/api/chat', async (req, res) => {
->>>>>>> origin/main
     try {
         const userMessage = req.body.message;
         const history = Array.isArray(req.body.history) ? req.body.history : [];
@@ -119,14 +108,6 @@ app.post('/api/chat', async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
-//starts server
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-    console.log(`UrbanTrack server running → http://localhost:${PORT}`);
-=======
 app.listen(3000, () => {
     console.log("Server running on http://localhost:3000");
->>>>>>> origin/main
 });
