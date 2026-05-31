@@ -34,7 +34,7 @@ CREATE TABLE `boy_table` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `boy_table`
+-- Dumping data for table `boy_table` 
 --
 
 INSERT INTO `boy_table` (`Surname`, `Email`, `Password`) VALUES
@@ -42,6 +42,9 @@ INSERT INTO `boy_table` (`Surname`, `Email`, `Password`) VALUES
 ('Mthiyane', 'Zethembe@gmail.c', 'Mlekeleli36@meh'),
 ('Mthiyane', 'Zethembe@gmail.co', 'Mlekeleli36@meh'),
 ('Mthiyane', 'Zethembe@gmail.com', 'Zethembe36@meh');
+
+
+
 
 --
 -- Indexes for dumped tables
@@ -57,3 +60,5 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
