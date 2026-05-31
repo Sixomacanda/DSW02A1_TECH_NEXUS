@@ -1,0 +1,12 @@
+[
+  "UrbanTrack is a community issue reporting platform for tracking and managing local issues.",
+  "Users can create reports with a title, description, photo, and location.",
+  "Reports can be upvoted by community members to indicate priority.",
+  "Each report has a tracking status: Open, In Progress, Resolved.",
+  "Admins can assign reports, change statuses, and moderate content.",
+  "Users can view reports on a map and filter by status and category.",
+  "The platform exposes API endpoints for creating reports and fetching user report history.",
+  "Authentication uses standard email/password sign-up and optional OAuth providers.",
+  "User settings include profile info, notification preferences, and privacy options.",
+  "For troubleshooting, check network connectivity, verify location permissions, and inspect server logs for errors."
+]
