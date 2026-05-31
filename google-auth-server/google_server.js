@@ -14,6 +14,15 @@ const app = express();
 const ROOT = path.join(__dirname, "UrbanTrack");
 const PAGES = path.join(ROOT, "pages");
 
+const admin = require("firebase-admin");
+
+admin.initializeApp({
+  credential: admin.credential.cert(
+    JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+  )
+});
+
+const db = admin.firestore();
 
 // static files
 app.use(express.static(ROOT));
@@ -51,17 +60,40 @@ app.use(passport.session());
 
 // google strategy
 passport.use(
-    new GoogleStrategy(
-        {
-            clientID: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: "https://dsw02a1-tech-nexus-2.onrender.com/auth/google/callback"
-        },
-        (accessToken, refreshToken, profile, done) => {
-            return done(null, profile);
-        }
-    )
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL:
+        "https://dsw02a1-tech-nexus-2.onrender.com/auth/google/callback"
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        await db.collection("users").doc(profile.id).set(
+          {
+            uid: profile.id,
+            name: profile.displayName,
+            email: profile.emails?.[0]?.value || "",
+            photoURL: profile.photos?.[0]?.value || "",
+            provider: "google",
+            lastLogin: new Date()
+          },
+          { merge: true }
+        );
+
+        return done(null, profile);
+      } catch (err) {
+        console.error(err);
+        return done(err, null);
+      }
+    }
+  )
 );
+
+app.get("/auth/user", (req, res) => {
+  console.log(req.user);
+  res.json(req.user || null);
+});
 
 // serialize user
 passport.serializeUser((user, done) => done(null, user));

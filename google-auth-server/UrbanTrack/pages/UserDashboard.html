@@ -23,7 +23,7 @@
       </li>
       <li><a href="/mainPage">Home</a></li>
       <li><a href="/settings">Settings</a></li>
-      <li><a href="/logout" onclick="doLogout()">Logout</a></li>
+      <li><a href="https://dsw02a1-tech-nexus-2.onrender.com/logout" onclick="doLogout()">Logout</a></li>
     </ul>
 
     <div class="menu-button">
@@ -74,8 +74,8 @@
         <div class="empty-state">
           <div class="empty-state-line"></div>
           <!-- <p>No reports yet. Submit your first issue to get started.</p> -->
-          <a href="/mainPage" class="btn-primary"
-            style="margin-top:1rem;font-size:.78rem;padding:.5rem 1.2rem;">Report an Issue</a>
+          <a href="/mainPage" class="btn-primary" style="margin-top:1rem;font-size:.78rem;padding:.5rem 1.2rem;">Report
+            an Issue</a>
         </div>
       </div>
     </div>
@@ -154,7 +154,7 @@
     }
     function doLogout() {
       localStorage.removeItem("urbanTrack_currentUser");
-      location.href = "/login";
+      location.href = "https://dsw02a1-tech-nexus-2.onrender.com/logout";
     }
     function getInitials(name) {
       if (!name) return "U";
@@ -244,6 +244,30 @@
       if (nameEl) nameEl.textContent = "Welcome back, " + (currentUser.name || currentUser.email.split("@")[0]);
       if (avEl) avEl.textContent = getInitials(name);
     }
+
+    async function loadUser() {
+      try {
+        const res = await fetch(
+          "https://dsw02a1-tech-nexus-2.onrender.com/auth/user",
+          { credentials: "include" }
+        );
+
+        const user = await res.json();
+
+        if (!user) return;
+
+        const nameEl = document.getElementById("welcomeName");
+
+        if (nameEl) {
+          nameEl.textContent = "Welcome back, " + user.name;
+        }
+
+      } catch (err) {
+        console.error("User load failed", err);
+      }
+    }
+
+    loadUser();
   </script>
   <!-- Google api -->
   <script>
