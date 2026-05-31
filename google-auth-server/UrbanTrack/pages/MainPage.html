@@ -559,7 +559,7 @@
       const confirmLogout = confirm("Are you sure you want to logout?");
       if (confirmLogout) {
         localStorage.removeItem("urbanTrack_currentUser");
-        window.location.href = "/login";
+        window.location.href = "https://dsw02a1-tech-nexus-2.onrender.com/logout";
       }
     }
 
@@ -922,18 +922,7 @@
       loadUser();
       loadStats();
     });
-  </script>
 
-  <script src="../js/MainPage.js"></script>
-
-  <!--
-  Google Maps — replace YOUR_GOOGLE_MAPS_API_KEY with your actual key
-  Make sure "Maps JavaScript API" is enabled in Google Cloud Console
--->
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap" async
-    defer></script>
-  <!-- Google api -->
-  <script>
     async function checkUser() {
       try {
         const res = await fetch("https://dsw02a1-tech-nexus-2.onrender.com/auth/user", {
@@ -961,6 +950,16 @@
 
     checkUser();
   </script>
+
+  <script src="../js/MainPage.js"></script>
+
+  <!--
+  Google Maps — replace YOUR_GOOGLE_MAPS_API_KEY with your actual key
+  Make sure "Maps JavaScript API" is enabled in Google Cloud Console
+-->
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap" async
+    defer></script>
+  <!-- Google api -->
   <script type="text/javascript">
     function googleTranslateElementInit() {
       new google.translate.TranslateElement(
