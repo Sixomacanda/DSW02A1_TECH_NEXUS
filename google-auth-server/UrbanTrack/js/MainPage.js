@@ -1,4 +1,14 @@
 // Storage Keys
+document.addEventListener("DOMContentLoaded", () => {
+  const logoutLink = document.querySelector('a[onclick="doLogout()"]');
+  if (logoutLink) {
+    logoutLink.addEventListener("click", (e) => {
+      e.preventDefault(); // stop the link refresh caused by href="#"
+      doLogout();         // call your existing function
+    });
+  }
+});
+
 const STORAGE_USERS = "urbanTrack_users";
 const STORAGE_CURRENT_USER = "urbanTrack_currentUser";
 const STORAGE_ISSUES = "urbanTrack_issues";
@@ -410,7 +420,7 @@ function initLogin() {
         showToast(`Welcome back, ${user.name}! Redirecting to Main Page...`);
 
         setTimeout(() => {
-          window.location.href = "MainPage.html";
+      window.location.href = "UserDashboard.html";
         }, 1500);
         //GOOGlE AUTH HANDLER
         async function loadGoogleUser() {
@@ -669,27 +679,52 @@ function escapeHtml(str) {
 function handleGoogleUserData() {
   const params = new URLSearchParams(window.location.search);
   const googleUserData = params.get("googleUser");
-  
+
   if (googleUserData) {
     try {
       const userData = JSON.parse(decodeURIComponent(googleUserData));
       userData.isGoogleUser = true;
+
       // Store in localStorage as current user using the shared helper
       setCurrentUser(userData);
-      
+
       // Display user name and avatar if on MainPage
       displayUserInfo(userData);
       toggleLogoutButton();
-      
+
       // Clean URL by removing the query parameter
       window.history.replaceState({}, document.title, window.location.pathname);
-      
+
+      // ✅ Ensure user exists in localStorage “database” if using localStorage auth fallback
+      // (This makes Google users appear on the app even if Firestore user doc doesn't exist yet.)
+      try {
+        const STORAGE_USERS = "urbanTrack_users";
+        const users = JSON.parse(localStorage.getItem(STORAGE_USERS) || "[]");
+        const email = (userData.email || "").toLowerCase();
+        if (email) {
+          const exists = users.some((u) => (u.email || "").toLowerCase() === email);
+          if (!exists) {
+            users.push({
+              id: userData.id || ("user_" + Date.now()),
+              name: userData.name || email.split("@")[0],
+              email,
+              password: "", // not applicable for Google users
+              role: "user",
+              createdAt: new Date().toISOString(),
+            });
+            localStorage.setItem(STORAGE_USERS, JSON.stringify(users));
+          }
+        }
+      } catch (e) {
+        console.warn("Could not upsert Google user into localStorage users:", e);
+      }
+
       return userData;
     } catch (error) {
       console.error("Error parsing Google user data:", error);
     }
   }
-  
+
   return null;
 }
 
