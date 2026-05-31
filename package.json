@@ -4,7 +4,6 @@
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
     "denque": "^2.1.0",
-    "firebase-admin": "^13.10.0",
     "generate-function": "^2.3.1",
     "iconv-lite": "^0.7.2",
     "is-property": "^1.0.2",
