@@ -74,6 +74,11 @@ app.get("/homePage", (req, res) => {
   res.sendFile(path.join(PAGES, "homePage.html"));
 });
 
+app.get("/map", (req, res) => {
+  res.sendFile(path.join(PAGES, "map.html"));
+});
+
+
 // MainPage.html is inside UrbanTrack/pages/
 app.get("/mainPage", (req, res) => {
   res.sendFile(path.join(PAGES, "MainPage.html"));
