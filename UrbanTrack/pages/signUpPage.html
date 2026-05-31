@@ -101,13 +101,13 @@
         </button>
 
         <!-- Google signup option -->
-        <a
+        <button
           id="google-login-btn"
-          href="http://localhost:3000/auth/google"
+          type="button"
           class="btn google-btn"
         >
           <i class="fa-brands fa-google"></i> Continue with Google
-        </a>
+        </button>
 
         <p class="footer-text">
           Already have an account? <a href="login.html">Log in</a>
@@ -117,12 +117,12 @@
     <script src="../js/main.js"></script>
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
       import {
         getAuth,
         createUserWithEmailAndPassword,
+        GoogleAuthProvider,
+        signInWithPopup,
       } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
       import {
         getFirestore,
         doc,
@@ -141,6 +141,40 @@
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const db = getFirestore(app);
+      const googleProvider = new GoogleAuthProvider();
+
+      const googleBtn = document.getElementById("google-login-btn");
+      if (googleBtn) {
+        googleBtn.addEventListener("click", async (e) => {
+          e.preventDefault();
+          try {
+            const result = await signInWithPopup(auth, googleProvider);
+            const user = result.user;
+
+            if (!user) {
+              throw new Error("Google sign-up failed. Please try again.");
+            }
+
+            const userData = {
+              uid: user.uid,
+              email: user.email || "",
+              name: user.displayName || "",
+              photoURL: user.photoURL || "",
+              role: "user",
+              provider: "google",
+            };
+
+            await setDoc(doc(db, "users", user.uid), userData, { merge: true });
+            localStorage.setItem("urbanTrack_currentUser", JSON.stringify(userData));
+            localStorage.setItem("userEmail", user.email || "");
+
+            window.location.href = "MainPage.html";
+          } catch (error) {
+            console.error("Google signup error:", error);
+            alert(error.message || "Google signup failed. Please try again.");
+          }
+        });
+      }
 
       const form = document.getElementById("signupForm");
       const surname = document.getElementById("surname");
