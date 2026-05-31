@@ -404,9 +404,9 @@
   <nav class="navbar">
     <div class="logo">Urban Track</div>
     <ul class="nav-links" id="navLinks">
-      <li><a href="MainPage.html">Home</a></li>
-      <li><a href="UserDashboard.html">Dashboard</a></li>
-      <li><a href="login.html" onclick="doLogout()">Logout</a></li>
+      <li><a href="/mainPage">Home</a></li>
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/login" onclick="doLogout()">Logout</a></li>
     </ul>
     <div class="nav-actions">
       <div class="user-chip">
@@ -622,7 +622,7 @@
       if (confirmLogout) {
         localStorage.removeItem('urbanTrack_currentUser');
         // Redirect to Express logout route
-        location.href = '/logout';
+        location.href = '/login';
       }
     }
 
@@ -872,7 +872,7 @@
         await deleteUser(currentUser);
         localStorage.removeItem('urbanTrack_currentUser');
         alert('Your account and all data have been permanently deleted.');
-        window.location.href = '../../homePage.html';
+        window.location.href = '/homePage';
       } catch (e) {
         console.error(e);
         if (e.code === 'auth/requires-recent-login') {
