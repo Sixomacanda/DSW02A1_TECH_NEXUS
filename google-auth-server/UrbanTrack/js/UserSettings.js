@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 document.addEventListener("DOMContentLoaded", () => {
   const saveNameBtn = document.getElementById("saveNameBtn");
   if (saveNameBtn) {
@@ -32,7 +30,6 @@ if (deleteConfirmBtn) {
 
 
 // Define the function separately
->>>>>>> 5d07c4cf995450fc05aa062128ad95573fde3017
 async function deleteAccount() {
   const user = auth.currentUser;
 
@@ -42,10 +39,6 @@ async function deleteAccount() {
   }
 
   const confirmText = document.getElementById("deleteConfirmInput").value;
-<<<<<<< HEAD
-
-=======
->>>>>>> 5d07c4cf995450fc05aa062128ad95573fde3017
   if (confirmText !== "DELETE") {
     alert("Type DELETE to confirm");
     return;
@@ -62,11 +55,7 @@ async function deleteAccount() {
 
     alert("Account deleted successfully");
 
-<<<<<<< HEAD
-    // redirect
-=======
     // Redirect to login
->>>>>>> 5d07c4cf995450fc05aa062128ad95573fde3017
     window.location.href = "login.html";
 
   } catch (error) {
