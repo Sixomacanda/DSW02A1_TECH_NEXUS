@@ -9,6 +9,13 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../Styles/MainPage.css" />
+    <link rel="stylesheet" href="../styles/MainPage.css" />
+    <script>
+      // Session Guard: If not logged in, redirect to login page
+      if (!localStorage.getItem("urbanTrack_currentUser")) {
+        window.location.href = "login.html";
+      }
+    </script>
   </head>
   <body>
     <!-- HEADER -->
@@ -641,6 +648,7 @@
       window.doLogout = function () {
         localStorage.removeItem("urbanTrack_currentUser");
         location.href = "../../homePage.html";
+        location.href = "../homePage.html";
       };
 
       // window.toggleMobileMenu = function() {
