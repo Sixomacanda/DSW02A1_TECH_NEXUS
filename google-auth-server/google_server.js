@@ -71,7 +71,7 @@ passport.deserializeUser((user, done) => done(null, user));
 
 // homePage.html is directly under UrbanTrack/
 app.get("/homePage", (req, res) => {
-  res.sendFile(path.join(ROOT, "homePage.html"));
+  res.sendFile(path.join(PAGES, "homePage.html"));
 });
 
 // MainPage.html is inside UrbanTrack/pages/
