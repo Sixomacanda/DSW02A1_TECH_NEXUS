@@ -2,6 +2,36 @@ var cur = 1;
 var userEmail = "";
 var verifiedPasswordOtp = "";
 var timerInterval = null;
+var AUTH_API_BASE = "http://localhost:3000";
+
+function postAuthJson(path, payload) {
+  return fetch(AUTH_API_BASE + path, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  })
+    .catch(function () {
+      throw new Error(
+        "Cannot reach the auth server. Start it with npm start, then try again.",
+      );
+    })
+    .then(function (res) {
+      return res
+        .json()
+        .catch(function () {
+          return {};
+        })
+        .then(function (data) {
+          if (!res.ok) {
+            throw new Error(data.error || "Request failed. Please try again.");
+          }
+
+          return data;
+        });
+    });
+}
 
 function goTo(n) {
   document.getElementById("s" + cur).classList.remove("active");
@@ -38,21 +68,7 @@ function sendCode() {
   sp.style.display = "block";
   txt.textContent = "Sending…";
 
-  fetch("http://localhost:3000/api/email/password-otp", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email: em }),
-  })
-    .then(function (res) {
-      if (!res.ok) {
-        return res.json().then(function (error) {
-          throw new Error(error.error || "Failed to send OTP");
-        });
-      }
-      return res.json();
-    })
+  postAuthJson("/api/email/password-otp", { email: em })
     .then(function () {
       btn.disabled = false;
       sp.style.display = "none";
@@ -70,7 +86,7 @@ function sendCode() {
       sp.style.display = "none";
       txt.textContent = "Send Reset Code";
       console.error("Password OTP send error:", error);
-      toast("Failed to send reset code. Please try again.", "danger");
+      toast(error.message, "danger");
     });
 }
 
@@ -146,21 +162,10 @@ function verifyOtp() {
   sp.style.display = "block";
   txt.textContent = "Verifying…";
 
-  fetch("http://localhost:3000/api/email/verify-password-otp", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email: userEmail, otp: otp }),
+  postAuthJson("/api/email/verify-password-otp", {
+    email: userEmail,
+    otp: otp,
   })
-    .then(function (res) {
-      if (!res.ok) {
-        return res.json().then(function (error) {
-          throw new Error(error.error || "OTP verification failed");
-        });
-      }
-      return res.json();
-    })
     .then(function () {
       verifiedPasswordOtp = otp;
       btn.disabled = false;
@@ -175,7 +180,7 @@ function verifyOtp() {
       sp.style.display = "none";
       txt.textContent = "Verify Code";
       console.error("OTP verification error:", error);
-      toast("Invalid or expired code. Please try again.", "danger");
+      toast(error.message, "danger");
     });
 }
 
@@ -284,25 +289,11 @@ function doReset() {
   sp.style.display = "block";
   txt.textContent = "Resetting…";
 
-  fetch("http://localhost:3000/api/email/reset-password", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: userEmail,
-      otp: verifiedPasswordOtp,
-      password: p1,
-    }),
+  postAuthJson("/api/email/reset-password", {
+    email: userEmail,
+    otp: verifiedPasswordOtp,
+    password: p1,
   })
-    .then(function (res) {
-      if (!res.ok) {
-        return res.json().then(function (error) {
-          throw new Error(error.error || "Password reset failed");
-        });
-      }
-      return res.json();
-    })
     .then(function () {
       btn.disabled = false;
       sp.style.display = "none";
@@ -315,7 +306,7 @@ function doReset() {
       sp.style.display = "none";
       txt.textContent = "Reset Password";
       console.error("Password reset error:", error);
-      toast("Failed to reset password. Please try again.", "danger");
+      toast(error.message, "danger");
     });
 }
 

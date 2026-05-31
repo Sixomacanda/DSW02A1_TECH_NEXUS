@@ -239,6 +239,32 @@
         setTimeout(() => toast.classList.remove("show"), 3500);
       };
 
+      const AUTH_API_BASE = "http://localhost:3000";
+
+      async function postAuthJson(path, payload) {
+        let response;
+
+        try {
+          response = await fetch(`${AUTH_API_BASE}${path}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+        } catch (error) {
+          throw new Error(
+            "Cannot reach the auth server. Start it with npm start, then try again.",
+          );
+        }
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          throw new Error(data.error || "Request failed. Please try again.");
+        }
+
+        return data;
+      }
+
       function showStep(step) {
         document.querySelectorAll(".step").forEach((section) => {
           section.classList.toggle("active", section.classList.contains(step));
@@ -373,20 +399,7 @@
         btn.textContent = "Sending...";
 
         try {
-          const response = await fetch(
-            "http://localhost:3000/api/email/password-otp",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ email }),
-            },
-          );
-
-          const data = await response.json();
-
-          if (!response.ok) {
-            throw new Error(data.error || "Failed to send reset code.");
-          }
+          await postAuthJson("/api/email/password-otp", { email });
 
           window.recoveryEmail = email;
           showToast("A 6-digit code has been sent to your email.");
@@ -419,23 +432,14 @@
         btn.disabled = true;
 
         try {
-          const response = await fetch(
-            "http://localhost:3000/api/email/verify-password-otp",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ email: window.recoveryEmail, otp: otp }),
-            },
-          );
+          await postAuthJson("/api/email/verify-password-otp", {
+            email: window.recoveryEmail,
+            otp,
+          });
 
-          const data = await response.json();
-          if (response.ok) {
-            window.recoveryOtp = otp;
-            showToast("Code verified! Set your new password.");
-            showPasswordStep();
-          } else {
-            throw new Error(data.error || "Invalid code.");
-          }
+          window.recoveryOtp = otp;
+          showToast("Code verified! Set your new password.");
+          showPasswordStep();
         } catch (err) {
           showToast(err.message, "danger");
           if (error) error.textContent = err.message;
@@ -456,24 +460,11 @@
         btn.textContent = "Resetting...";
 
         try {
-          const response = await fetch(
-            "http://localhost:3000/api/email/reset-password",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                email: window.recoveryEmail,
-                otp: window.recoveryOtp,
-                password,
-              }),
-            },
-          );
-
-          const data = await response.json();
-
-          if (!response.ok) {
-            throw new Error(data.error || "Password reset failed.");
-          }
+          await postAuthJson("/api/email/reset-password", {
+            email: window.recoveryEmail,
+            otp: window.recoveryOtp,
+            password,
+          });
 
           alert(
             "Password reset successfully. Please log in with your new password.",
