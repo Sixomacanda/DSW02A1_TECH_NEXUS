@@ -69,10 +69,11 @@
       50%     { transform: translateY(-6px); }
     }
 
-    .fade-up  { animation: fadeUp 0.55s ease both; }
-    .delay-1  { animation-delay: 0.1s; }
-    .delay-2  { animation-delay: 0.2s; }
-    .delay-3  { animation-delay: 0.3s; }
+    /* Hero elements — start hidden, animate in */
+    .hero-title  { animation: fadeUp 0.6s 0.1s ease forwards; opacity: 0; }
+    .hero-sub    { animation: fadeUp 0.6s 0.2s ease forwards; opacity: 0; }
+    .hero-actions{ animation: fadeUp 0.6s 0.3s ease forwards; opacity: 0; }
+    .hero-stats  { animation: fadeUp 0.6s 0.45s ease forwards; opacity: 0; }
 
     .reveal { opacity: 0; transform: translateY(28px); transition: opacity .55s ease, transform .55s ease; }
     .reveal.visible { opacity: 1; transform: none; }
@@ -209,8 +210,6 @@
       letter-spacing: -0.03em;
       color: var(--text);
       margin-bottom: 1rem;
-      animation: fadeUp 0.6s 0.1s ease forwards;
-      opacity: 0;
     }
     .hero-title span {
       background: linear-gradient(90deg, var(--accent-light), #818cf8, var(--accent-light));
@@ -218,7 +217,7 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      animation: shimmer 3s linear infinite, fadeUp 0.6s 0.1s ease forwards;
+      animation: shimmer 3s linear infinite;
     }
 
     .hero-sub {
@@ -226,8 +225,6 @@
       color: var(--text-muted);
       max-width: 480px;
       margin: 0 auto 2.5rem;
-      animation: fadeUp 0.6s 0.2s ease forwards;
-      opacity: 0;
     }
 
     .hero-actions {
@@ -236,8 +233,6 @@
       justify-content: center;
       flex-wrap: wrap;
       margin-bottom: 3.5rem;
-      animation: fadeUp 0.6s 0.3s ease forwards;
-      opacity: 0;
     }
 
     .btn-primary {
@@ -283,8 +278,6 @@
       gap: 1rem;
       justify-content: center;
       flex-wrap: wrap;
-      animation: fadeUp 0.6s 0.45s ease forwards;
-      opacity: 0;
     }
     .stat-pill {
       display: flex;
@@ -917,16 +910,19 @@
 
   <!-- JS -->
   <script>
+    /* Hamburger menu */
     document.getElementById('menuButton').addEventListener('click', () => {
       document.getElementById('navLinks').classList.toggle('show');
       document.getElementById('menuButton').classList.toggle('open');
     });
 
+    /* Scroll reveal for feature/step/about cards */
     const input = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.12 });
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
+    /* Chatbot */
     (function () {
       'use strict';
       const toggleBtn  = document.getElementById('chatbot-toggle');
@@ -996,22 +992,14 @@
       }
       function removeTyping() { const e = document.getElementById('typing-msg'); if(e) e.remove(); }
 
-      async function callClaude(msg) {
-        history.push({ role:'user', content:msg });
-        const res = await fetch('https://api.anthropic.com/v1/messages', {
-          method:'POST',
-          headers:{ 'Content-Type':'application/json' },
-          body: JSON.stringify({
-            model:'claude-sonnet-4-20250514',
-            max_tokens:1000,
-            system:`You are UrbanBot, a friendly assistant for UrbanTrack — a community issue reporting platform. Keep replies concise (under 120 words), warm and helpful. Do not use any emojis. Format lists with numbered points. Focus on: reporting issues, upvoting, account setup, tracking reports, admin actions, and general platform help. Gently redirect unrelated questions back to UrbanTrack.`,
-            messages: history
-          })
+      async function callChatbot(msg, history) {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: msg, history: history || [] })
         });
         const data = await res.json();
-        const reply = data.content?.map(b => b.text||'').join('') || "I am having trouble connecting. Please try again shortly.";
-        history.push({ role:'assistant', content:reply });
-        return reply;
+        return data.reply || "I am having trouble connecting. Please try again shortly.";
       }
 
       async function handleSend(text) {
@@ -1022,18 +1010,29 @@
         quickWrap.style.display = 'none';
         addMsg('user', msg);
 
+        // push to local history (used to provide context to backend)
+        history.push({ role: 'user', content: msg });
+        // keep last ~12 exchanges (user+assistant => ~24 entries)
+        if (history.length > 24) history.splice(0, history.length - 24);
+
         const local = matchKB(msg);
         if (local) {
           showTyping();
           await new Promise(r => setTimeout(r, 600 + Math.random()*400));
           removeTyping(); addMsg('bot', local);
+          // store KB reply in history too
+          history.push({ role: 'assistant', content: local });
+          if (history.length > 24) history.splice(0, history.length - 24);
           isTyping = false; return;
         }
 
         showTyping();
         try {
-          const reply = await callClaude(msg);
+          const reply = await callChatbot(msg, history);
           removeTyping(); addMsg('bot', reply);
+          // store assistant reply in history
+          history.push({ role: 'assistant', content: reply });
+          if (history.length > 24) history.splice(0, history.length - 24);
         } catch(e) {
           removeTyping();
           addMsg('bot', "Sorry, I could not connect right now. Try asking about reporting, upvoting, or signing up.");
@@ -1063,239 +1062,5 @@
     })();
   </script>
 
-
-  <!-- GOOGLE TRANSLATE -->
-  <script>
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
-    }
-    (function hideBanner() {
-      document.body.style.top = '0px';
-      const b = document.querySelector('.goog-te-banner-frame');
-      if (b) b.style.display = 'none';
-    })();
-    new MutationObserver(() => {
-      document.body.style.top = '0px';
-      const b = document.querySelector('.goog-te-banner-frame');
-      if (b) b.style.display = 'none';
-    }).observe(document.body, { childList:true, subtree:true, attributes:true, attributeFilter:['style'] });
-  </script>
-  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-  <!-- JS -->
-  <script>
-    document.getElementById('menuButton').addEventListener('click', () => {
-      document.getElementById('navLinks').classList.toggle('show');
-      document.getElementById('menuButton').classList.toggle('open');
-    });
-
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-
-    //chatbot
-
-(function () {
-  'use strict';
-
-  const toggleBtn  = document.getElementById('chatbot-toggle');
-  const closeBtn   = document.getElementById('chatbot-close-btn');
-  const win        = document.getElementById('chatbot-window');
-  const messagesEl = document.getElementById('chatbot-messages');
-  const inputEl    = document.getElementById('chatbot-input');
-  const sendBtn    = document.getElementById('chatbot-send');
-  const quickWrap  = document.getElementById('quick-replies');
-
-  if (!toggleBtn || !win) return;
-
-  // =======================
-  // CONFIG
-  // =======================
-  
-
-  let isOpen = false;
-  let isTyping = false;
-
-  // =======================
-  // KNOWLEDGE BASE
-  // =======================
-  const KB = [
-    {
-      p: ['report', 'submit', 'how to report'],
-      a: "To report an issue:\n1. Sign up or log in\n2. Click Submit Report\n3. Add details\n4. Submit"
-    },
-    {
-      p: ['upvote', 'vote'],
-      a: "Upvoting pushes important issues to the top so authorities fix them faster."
-    },
-    {
-      p: ['sign up', 'register'],
-      a: "Click Sign Up, enter details, verify email — done."
-    },
-    {
-      p: ['hello', 'hi'],
-      a: "Hi! I am UrbanBot. How can I help you today?"
-    }
-  ];
-
-  function matchKB(text) {
-    const lower = text.toLowerCase();
-    for (const e of KB) {
-      if (e.p.some(p => lower.includes(p))) return e.a;
-    }
-    return null;
-  }
-
-  // =======================
-  // UI FUNCTIONS
-  // =======================
-  function addMsg(role, text) {
-    const el = document.createElement('div');
-    el.className = 'chat-msg ' + role;
-
-    el.innerHTML =
-      (role === 'bot' ? '<div class="bot-icon">UT</div>' : '') +
-      `<div class="bubble">${text}</div>`;
-
-    messagesEl.appendChild(el);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-  }
-
-  function showTyping() {
-    removeTyping();
-
-    const el = document.createElement('div');
-    el.className = 'chat-msg bot';
-    el.id = 'typing';
-
-    el.innerHTML =
-      '<div class="bot-icon">UT</div><div class="bubble">Typing...</div>';
-
-    messagesEl.appendChild(el);
-  }
-
-  function removeTyping() {
-    const t = document.getElementById('typing');
-    if (t) t.remove();
-  }
-
-  // =======================
-  // GROQ API CALL
-  // =======================
-  async function callAI(msg) {
-    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${GROQ_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "llama3-8b-8192",
-        messages: [
-          {
-            role: "system",
-            content: "You are UrbanBot for UrbanTrack. Keep answers short, helpful, and simple."
-          },
-          {
-            role: "user",
-            content: msg
-          }
-        ]
-      })
-    });
-
-    if (!res.ok) {
-      const err = await res.text();
-      console.error("Groq error:", err);
-      throw new Error("API error");
-    }
-
-    const data = await res.json();
-
-    return data?.choices?.[0]?.message?.content
-      || "Sorry, I could not respond.";
-  }
-
-  // =======================
-  // SEND HANDLER
-  // =======================
-  async function handleSend(text) {
-    const msg = (text || inputEl.value).trim();
-    if (!msg || isTyping) return;
-
-    inputEl.value = '';
-    isTyping = true;
-
-    addMsg('user', msg);
-
-    // Local KB first
-    const local = matchKB(msg);
-    if (local) {
-      showTyping();
-      setTimeout(() => {
-        removeTyping();
-        addMsg('bot', local);
-        isTyping = false;
-      }, 500);
-      return;
-    }
-
-    showTyping();
-
-    try {
-      const reply = await callAI(msg);
-      removeTyping();
-      addMsg('bot', reply);
-    } catch (e) {
-      removeTyping();
-      addMsg('bot', "⚠️ API error. Check your key or internet.");
-      console.error(e);
-    }
-
-    isTyping = false;
-  }
-
-  // =======================
-  // CHAT OPEN/CLOSE
-  // =======================
-  function openChat() {
-    isOpen = true;
-    win.classList.add('open');
-
-    if (!messagesEl.children.length) {
-      addMsg('bot', "Hi! I am UrbanBot. How can I help?");
-    }
-  }
-
-  function closeChat() {
-    isOpen = false;
-    win.classList.remove('open');
-  }
-
-  // =======================
-  // EVENTS
-  // =======================
-  toggleBtn.onclick = () => isOpen ? closeChat() : openChat();
-  closeBtn.onclick = closeChat;
-  sendBtn.onclick = () => handleSend();
-
-  inputEl.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  });
-
-  if (quickWrap) {
-    quickWrap.querySelectorAll('.quick-reply')
-      .forEach(btn => {
-        btn.onclick = () => handleSend(btn.dataset.msg);
-      });
-  }
-
-})();
-  </script>
-<script src="UrbanTrack/js/chatbot.js"></script>
 </body>
 </html>

@@ -14,3 +14,14 @@ google-auth-server/.env
 google-auth-server/.env
 UrbanTrack/google-auth-server/.env
 .env
+# Environment Variables
+.env*
+**/.env*
+# Dependencies
+node_modules/
+
+# Firebase keys
+*.json
+!package.json
+!composer.json
+.DS_Store
