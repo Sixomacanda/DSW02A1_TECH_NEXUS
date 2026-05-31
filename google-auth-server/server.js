@@ -1,15 +1,21 @@
 const path = require("path");
-
 require("dotenv").config({ path: path.join(__dirname, ".env") });
+<<<<<<< HEAD
 require("dotenv").config({
   path: path.join(__dirname, "..", "UrbanTrack", "google-auth-server", ".env"),
 });
+=======
+>>>>>>> d71744ac2cc31a3e4eb8fd582d854fe3c6af24fc
 
 const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const cors = require("cors");
+const nodemailer = require("nodemailer");
+const admin = require("firebase-admin");
 
+<<<<<<< HEAD
 const allowedOrigins = (
   process.env.ALLOWED_ORIGINS ||
   "http://localhost:5500,http://localhost:5501,http://127.0.0.1:5500,http://127.0.0.1:5501,null"
@@ -27,41 +33,75 @@ function isAllowedOrigin(origin) {
   } catch (error) {
     return false;
   }
-}
-
+=======
 const app = express();
 
-let nodemailer = null;
-let firebaseAdmin = null;
-const crypto = require("crypto");
+const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH
+  ? path.resolve(__dirname, process.env.FIREBASE_SERVICE_ACCOUNT_PATH)
+  : null;
 
-// simple in-memory OTP store
-const otpStore = new Map();
-
-function applyCors(req, res, next) {
-  const origin = req.headers.origin;
-
-  if (origin && isAllowedOrigin(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-    res.setHeader("Vary", "Origin");
-  } else if (!origin) {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-  }
-
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-
-  if (req.method === "OPTIONS") {
-    return res.status(204).end();
-  }
-
-  next();
+if (!admin.apps.length && serviceAccountPath) {
+  const serviceAccount = require(serviceAccountPath);
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    projectId: process.env.FIREBASE_PROJECT_ID || serviceAccount.project_id,
+  });
+>>>>>>> d71744ac2cc31a3e4eb8fd582d854fe3c6af24fc
 }
 
-app.use(applyCors);
-app.options(/.*/, applyCors);
+// Nodemailer Transporter Setup
+const smtpHost = process.env.SMTP_HOST || "smtp.gmail.com";
+const smtpPort = Number(process.env.SMTP_PORT || 587);
+const smtpSecure = String(process.env.SMTP_SECURE || "false") === "true";
+const smtpAllowInsecure =
+  String(process.env.SMTP_ALLOW_INSECURE || "false") === "true";
 
-// Session setup
+const transporter = nodemailer.createTransport({
+  host: smtpHost,
+  port: smtpPort,
+  secure: smtpSecure,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+  tls: smtpAllowInsecure ? { rejectUnauthorized: false } : undefined,
+});
+
+// In-memory store for OTPs (For production, use Redis or a Database)
+const otpStore = new Map();
+
+function normalizeEmail(email) {
+  return String(email || "").trim().toLowerCase();
+}
+
+function getValidOtpRecord(email, otp, purpose) {
+  const normalizedEmail = normalizeEmail(email);
+  const record = otpStore.get(normalizedEmail);
+
+  if (!record) {
+    return { error: "No OTP found for this email" };
+  }
+
+  if (record.expires < Date.now()) {
+    otpStore.delete(normalizedEmail);
+    return { error: "OTP has expired" };
+  }
+
+  if (record.otp !== String(otp || "").trim()) {
+    return { error: "Invalid OTP code" };
+  }
+
+  if (purpose && record.purpose !== purpose) {
+    return { error: "Invalid OTP code" };
+  }
+
+  return { record, normalizedEmail };
+}
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -69,15 +109,12 @@ app.use(
     saveUninitialized: false,
   }),
 );
-
-// Parse JSON and urlencoded bodies
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
+<<<<<<< HEAD
 // Attempt to load optional modules/config for emails and firebase
 try {
   nodemailer = require("nodemailer");
@@ -244,6 +281,8 @@ function otpEmailHtml(title, otp) {
     `;
 }
 
+=======
+>>>>>>> d71744ac2cc31a3e4eb8fd582d854fe3c6af24fc
 // Google Strategy
 passport.use(
   new GoogleStrategy(
@@ -330,198 +369,253 @@ app.get("/auth/user", function (req, res) {
   res.json(req.user || null);
 });
 
-// Email / OTP endpoints
-app.post("/api/email/signup-otp", async function (req, res) {
+// --- Password Recovery Routes ---
+
+// 1. Send 6-digit OTP via Email
+app.post("/api/email/password-otp", async (req, res) => {
+  const email = normalizeEmail(req.body.email);
+  if (!email) return res.status(400).json({ error: "Email is required" });
+
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  // Store OTP with a 10-minute expiry
+  otpStore.set(email, {
+    otp,
+    expires: Date.now() + 600000,
+    purpose: "password",
+  });
+
+  const mailOptions = {
+    from:
+      process.env.MAIL_FROM ||
+      `"UrbanTrack Support" <${process.env.SMTP_USER}>`,
+    to: email,
+    subject: "Your UrbanTrack Password Reset Code",
+    text: `Your password reset code is: ${otp}. This code expires in 10 minutes.`,
+    html: `<h3>Password Recovery</h3><p>Your 6-digit reset code is: <strong>${otp}</strong></p><p>This code expires in 10 minutes.</p>`,
+  };
+
   try {
-    const email = normalizeEmail(req.body.email);
-    if (!isValidEmail(email))
-      return res.status(400).json({ error: "Valid email is required." });
-
-    const otp = createOtp();
-    storeOtp(email, otp, "signup");
-
-    await sendEmail({
-      to: email,
-      subject: "Your UrbanTrack signup OTP",
-      text: `Your UrbanTrack signup OTP is ${otp}. It expires in ${process.env.OTP_TTL_MINUTES || 10} minutes.`,
-      html: otpEmailHtml("Confirm your UrbanTrack email", otp),
-    });
-
-    res.json({ ok: true });
+    await transporter.sendMail(mailOptions);
+    console.log(`OTP sent to ${email}`);
+    res.json({ success: true, message: "OTP sent successfully" });
   } catch (error) {
-    console.error("Signup OTP error:", error);
-    res.status(500).json({ error: "Could not send signup OTP." });
-  }
-});
-
-app.post("/api/email/verify-signup-otp", function (req, res) {
-  const result = validateOtp(req.body.email, req.body.otp, "signup");
-  if (!result.ok) return res.status(400).json({ error: result.message });
-  res.json({ ok: true });
-});
-
-app.post("/api/email/password-otp", async function (req, res) {
-  try {
-    const email = normalizeEmail(req.body.email);
-    if (!isValidEmail(email))
-      return res.status(400).json({ error: "Valid email is required." });
-
-    const otp = createOtp();
-    storeOtp(email, otp, "password");
-
-    await sendEmail({
-      to: email,
-      subject: "Your UrbanTrack password reset OTP",
-      text: `Your UrbanTrack password reset OTP is ${otp}. It expires in ${process.env.OTP_TTL_MINUTES || 10} minutes.`,
-      html: otpEmailHtml("Reset your UrbanTrack password", otp),
-    });
-
-    res.json({ ok: true });
-  } catch (error) {
-    console.error("Password OTP error:", error);
-    res.status(500).json({ error: "Could not send password reset OTP." });
-  }
-});
-
-app.post("/api/email/verify-password-otp", function (req, res) {
-  const result = validateOtp(req.body.email, req.body.otp, "password", false);
-  if (!result.ok) return res.status(400).json({ error: result.message });
-  res.json({ ok: true });
-});
-
-app.post("/api/email/reset-password", async function (req, res) {
-  try {
-    const email = normalizeEmail(req.body.email);
-    const password = String(req.body.password || "");
-    const result = validateOtp(email, req.body.otp, "password", false);
-    if (!result.ok) return res.status(400).json({ error: result.message });
-    if (password.length < 6)
-      return res
-        .status(400)
-        .json({ error: "Password must be at least 6 characters." });
-    if (!firebaseAdmin || !firebaseAdmin.apps.length) {
-      return res
-        .status(500)
-        .json({ error: "Firebase Admin is not configured on the server." });
-    }
-    const user = await firebaseAdmin.auth().getUserByEmail(email);
-    await firebaseAdmin.auth().updateUser(user.uid, { password });
-    otpStore.delete(`password:${email}`);
-    res.json({ ok: true });
-  } catch (error) {
-    console.error("Password reset error:", error);
-    if (error && error.code === "auth/user-not-found") {
-      return res.status(404).json({
-        error: "No Firebase account was found for this email address.",
-      });
-    }
-
-    if (error && error.code === "auth/invalid-password") {
-      return res.status(400).json({
-        error: "Firebase rejected this password. Try a stronger password.",
-      });
-    }
-
-    if (
-      error &&
-      (error.code === "app/invalid-credential" ||
-        error.code === "auth/invalid-credential")
-    ) {
-      return res.status(500).json({
-        error:
-          "Firebase Admin credentials are invalid. Check the service account JSON.",
-      });
-    }
-
-    res.status(500).json({
-      error:
-        error && error.message
-          ? `Could not reset password: ${error.message}`
-          : "Could not reset password.",
-    });
-  }
-});
-
-app.post("/api/email/report-confirmation", async function (req, res) {
-  try {
-    const email = normalizeEmail(req.body.email);
-    if (!isValidEmail(email))
-      return res
-        .status(400)
-        .json({ error: "Valid reporter email is required." });
-
-    const ref = req.body.ref || "UrbanTrack report";
-    const title = req.body.title || "your issue";
-
-    await sendEmail({
-      to: email,
-      subject: `UrbanTrack received report ${ref}`,
-      text: `Hi ${req.body.name || "there"}, we received your report "${title}". Reference: ${ref}.`,
-      html: `
-                <div style="font-family:Arial,sans-serif;line-height:1.5;color:#172033">
-                    <h2>Report received</h2>
-                    <p>Hi ${req.body.name || "there"},</p>
-                    <p>We received your report: <strong>${title}</strong>.</p>
-                    <p>Reference: <strong>${ref}</strong></p>
-                </div>
-            `,
-    });
-
-    res.json({ ok: true });
-  } catch (error) {
-    console.error("Report confirmation email error:", error);
+    console.error("Nodemailer error:", error);
     res
       .status(500)
-      .json({ error: "Could not send report confirmation email." });
+      .json({ error: "Failed to send email. Check SMTP settings." });
   }
 });
 
-app.post("/api/email/status-update", async function (req, res) {
+// 2. Verify OTP
+app.post("/api/email/verify-password-otp", (req, res) => {
+  const { email, otp } = req.body;
+  const result = getValidOtpRecord(email, otp, "password");
+
+  if (result.error) return res.status(400).json({ error: result.error });
+
+  res.json({ success: true, message: "OTP verified" });
+});
+
+// 3. Reset Firebase Auth password after OTP verification
+app.post("/api/email/reset-password", async (req, res) => {
+  const { email, otp, password } = req.body;
+  const result = getValidOtpRecord(email, otp, "password");
+
+  if (result.error) return res.status(400).json({ error: result.error });
+
+  if (!password || password.length < 8) {
+    return res
+      .status(400)
+      .json({ error: "Password must be at least 8 characters" });
+  }
+
   try {
-    const email = normalizeEmail(req.body.email);
-    if (!isValidEmail(email))
-      return res
-        .status(400)
-        .json({ error: "Valid reporter email is required." });
-
-    const status = String(req.body.status || "updated").replace("-", " ");
-    const ref = req.body.ref || "your report";
-    const title = req.body.title || "your issue";
-
-    await sendEmail({
-      to: email,
-      subject: `UrbanTrack report ${ref} status changed`,
-      text: `Your report "${title}" is now ${status}. Reference: ${ref}.`,
-      html: `
-                <div style="font-family:Arial,sans-serif;line-height:1.5;color:#172033">
-                    <h2>Report status updated</h2>
-                    <p>Your report <strong>${title}</strong> is now <strong>${status}</strong>.</p>
-                    <p>Reference: <strong>${ref}</strong></p>
-                </div>
-            `,
-    });
-
-    res.json({ ok: true });
+    const user = await admin.auth().getUserByEmail(result.normalizedEmail);
+    await admin.auth().updateUser(user.uid, { password });
+    otpStore.delete(result.normalizedEmail);
+    res.json({ success: true, message: "Password reset successfully" });
   } catch (error) {
-    console.error("Status email error:", error);
-    res.status(500).json({ error: "Could not send status update email." });
+    console.error("Firebase password reset error:", error);
+    if (error.code === "auth/user-not-found") {
+      return res.status(404).json({ error: "No account found for this email" });
+    }
+    res.status(500).json({ error: "Failed to reset password" });
   }
 });
 
-app.get("/dev/send-test-email", async function (req, res) {
+// --- Signup OTP Routes ---
+
+app.post("/api/email/signup-otp", async (req, res) => {
+  const email = normalizeEmail(req.body.email);
+  if (!email) return res.status(400).json({ error: "Email is required" });
+
   try {
-    const to = process.env.SMTP_USER;
-    if (!to) return res.status(400).json({ error: "No SMTP_USER configured" });
-    const info = await sendEmail({
-      to,
-      subject: "UrbanTrack test email",
-      text: "This is a test email from UrbanTrack.",
-      html: "<p>This is a test email from <strong>UrbanTrack</strong>.</p>",
+    await admin.auth().getUserByEmail(email);
+    return res.status(409).json({ error: "Email is already registered" });
+  } catch (error) {
+    if (error.code !== "auth/user-not-found") {
+      console.error("Signup email check error:", error);
+      return res.status(500).json({ error: "Failed to check email" });
+    }
+  }
+
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  otpStore.set(email, {
+    otp,
+    expires: Date.now() + 600000,
+    purpose: "signup",
+  });
+
+  const mailOptions = {
+    from:
+      process.env.MAIL_FROM ||
+      `"UrbanTrack Support" <${process.env.SMTP_USER}>`,
+    to: email,
+    subject: "Verify your UrbanTrack email",
+    text: `Your UrbanTrack signup code is: ${otp}. This code expires in 10 minutes.`,
+    html: `<h3>Verify your email</h3><p>Your 6-digit signup code is: <strong>${otp}</strong></p><p>This code expires in 10 minutes.</p>`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Signup OTP sent to ${email}`);
+    res.json({ success: true, message: "Signup OTP sent successfully" });
+  } catch (error) {
+    console.error("Signup OTP email error:", error);
+    res
+      .status(500)
+      .json({ error: "Failed to send email. Check SMTP settings." });
+  }
+});
+
+app.post("/api/email/complete-signup", async (req, res) => {
+  const { surname, password, otp } = req.body;
+  const email = normalizeEmail(req.body.email);
+  const result = getValidOtpRecord(email, otp, "signup");
+
+  if (result.error) return res.status(400).json({ error: result.error });
+
+  if (!surname || !String(surname).trim()) {
+    return res.status(400).json({ error: "Surname is required" });
+  }
+
+  if (!password || password.length < 8) {
+    return res
+      .status(400)
+      .json({ error: "Password must be at least 8 characters" });
+  }
+
+  try {
+    const user = await admin.auth().createUser({
+      email: result.normalizedEmail,
+      password,
+      emailVerified: true,
+      displayName: String(surname).trim(),
     });
-    res.json({ ok: true, info });
-  } catch (err) {
-    console.error("Dev test email error:", err);
-    res.status(500).json({ error: String(err && err.message) || "unknown" });
+
+    await admin.firestore().collection("users").doc(user.uid).set({
+      surname: String(surname).trim(),
+      email: result.normalizedEmail,
+      reportsCount: 0,
+    });
+
+    otpStore.delete(result.normalizedEmail);
+    res.json({ success: true, message: "Account created successfully" });
+  } catch (error) {
+    console.error("Signup completion error:", error);
+    if (error.code === "auth/email-already-exists") {
+      return res.status(409).json({ error: "Email is already registered" });
+    }
+    res.status(500).json({ error: "Failed to create account" });
+  }
+});
+
+// --- Issue Notification Routes ---
+
+app.post("/api/email/report-submitted", async (req, res) => {
+  const email = normalizeEmail(req.body.email);
+  const { name, ref, title, status } = req.body;
+
+  if (!email) return res.status(400).json({ error: "Email is required" });
+  if (!ref) return res.status(400).json({ error: "Reference number is required" });
+
+  const displayName = String(name || "Community Member").trim();
+  const issueTitle = String(title || "your issue report").trim();
+  const currentStatus = String(status || "pending").replace("-", " ");
+
+  const mailOptions = {
+    from:
+      process.env.MAIL_FROM ||
+      `"UrbanTrack Support" <${process.env.SMTP_USER}>`,
+    to: email,
+    subject: `UrbanTrack report submitted: ${ref}`,
+    text:
+      `Hi ${displayName},\n\n` +
+      `Your issue report was submitted successfully.\n\n` +
+      `Reference number: ${ref}\n` +
+      `Issue: ${issueTitle}\n` +
+      `Current status: ${currentStatus}\n\n` +
+      `Keep this reference number for tracking your report.`,
+    html:
+      `<h3>Report submitted successfully</h3>` +
+      `<p>Hi ${displayName}, your issue report was submitted successfully.</p>` +
+      `<p><strong>Reference number:</strong> ${ref}</p>` +
+      `<p><strong>Issue:</strong> ${issueTitle}</p>` +
+      `<p><strong>Current status:</strong> ${currentStatus}</p>` +
+      `<p>Keep this reference number for tracking your report.</p>`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true, message: "Report submission email sent" });
+  } catch (error) {
+    console.error("Report submission email error:", error);
+    res.status(500).json({ error: "Failed to send report email" });
+  }
+});
+
+app.post("/api/email/report-status", async (req, res) => {
+  const email = normalizeEmail(req.body.email);
+  const { name, ref, title, status } = req.body;
+
+  if (!email) return res.status(400).json({ error: "Email is required" });
+  if (!ref) return res.status(400).json({ error: "Reference number is required" });
+  if (!["in-progress", "resolved"].includes(status)) {
+    return res.status(400).json({ error: "Unsupported status" });
+  }
+
+  const displayName = String(name || "Community Member").trim();
+  const issueTitle = String(title || "your issue report").trim();
+  const statusLabel = status === "in-progress" ? "In Progress" : "Resolved";
+
+  const mailOptions = {
+    from:
+      process.env.MAIL_FROM ||
+      `"UrbanTrack Support" <${process.env.SMTP_USER}>`,
+    to: email,
+    subject: `UrbanTrack report ${ref} is ${statusLabel}`,
+    text:
+      `Hi ${displayName},\n\n` +
+      `Your issue report status has changed.\n\n` +
+      `Reference number: ${ref}\n` +
+      `Issue: ${issueTitle}\n` +
+      `New status: ${statusLabel}\n\n` +
+      `Thank you for helping improve your community.`,
+    html:
+      `<h3>Report status updated</h3>` +
+      `<p>Hi ${displayName}, your issue report status has changed.</p>` +
+      `<p><strong>Reference number:</strong> ${ref}</p>` +
+      `<p><strong>Issue:</strong> ${issueTitle}</p>` +
+      `<p><strong>New status:</strong> ${statusLabel}</p>` +
+      `<p>Thank you for helping improve your community.</p>`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true, message: "Report status email sent" });
+  } catch (error) {
+    console.error("Report status email error:", error);
+    res.status(500).json({ error: "Failed to send status email" });
   }
 });
 

@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UrbanTrack - Community Feed</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../Styles/feedPage.css">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">Urban Track</a>
+    <div class="nav-actions">
+
+      <!-- Shown when logged in -->
+      <div id="navUser" style="display:none; align-items:center; gap:0.85rem;">
+        <div class="user-chip">
+          <div class="avatar" id="userAvatar">?</div>
+          <span class="user-name" id="userName">Loading...</span>
+        </div>
+        <a href="/UrbanTrack/pages/submitReport.html" class="icon-btn" title="Submit Report">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </a>
+        <a href="/UrbanTrack/pages/userDashboard.html" class="icon-btn" title="My Dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+        </a>
+        <button class="btn-logout" id="logoutBtn">Logout</button>
+      </div>
+
+      <!-- Shown when logged out -->
+      <div id="navGuest" style="display:none; align-items:center; gap:0.75rem;">
+        <a href="/UrbanTrack/pages/login.html" class="btn-ghost-nav">Login</a>
+        <a href="/UrbanTrack/pages/signUpPage.html" class="btn-primary-nav">Sign Up</a>
+      </div>
+
+    </div>
+  </nav>
+
+  <div class="page-shell">
+
+    <div class="page-header">
+      <div class="page-badge">Live Community Feed</div>
+      <h1 class="page-title">Community Issues</h1>
+      <p class="page-subtitle">Browse and track issues reported in your area. Sign in to upvote.</p>
+    </div>
+
+    <div class="content-grid">
+
+      <!-- Main Feed -->
+      <div>
+        <div class="filter-bar">
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search issues..." />
+          </div>
+          <select class="filter-select" id="categoryFilter">
+            <option value="">All Categories</option>
+            <option value="Pothole">Pothole</option>
+            <option value="Streetlight">Streetlight</option>
+            <option value="Drain">Drain</option>
+            <option value="Vandalism">Vandalism</option>
+            <option value="Dumping">Illegal Dumping</option>
+            <option value="Tree">Fallen Tree</option>
+            <option value="Other">Other</option>
+          </select>
+          <select class="filter-select" id="statusFilter">
+            <option value="">All Statuses</option>
+            <option value="pending">Pending</option>
+            <option value="in-progress">In Progress</option>
+            <option value="resolved">Resolved</option>
+          </select>
+          <button class="sort-btn active" id="sortRecent">Newest</button>
+          <button class="sort-btn" id="sortTop">Top Voted</button>
+        </div>
+
+        <!-- Skeletons -->
+        <div class="feed-loader" id="feedLoader">
+          <div class="skeleton"><div class="skel-block skel-upvote"></div><div class="skel-body"><div class="skel-block skel-title"></div><div class="skel-block skel-desc"></div><div class="skel-block skel-desc2"></div><div class="skel-block skel-meta"></div></div></div>
+          <div class="skeleton"><div class="skel-block skel-upvote"></div><div class="skel-body"><div class="skel-block skel-title"></div><div class="skel-block skel-desc"></div><div class="skel-block skel-desc2"></div><div class="skel-block skel-meta"></div></div></div>
+          <div class="skeleton"><div class="skel-block skel-upvote"></div><div class="skel-body"><div class="skel-block skel-title"></div><div class="skel-block skel-desc"></div><div class="skel-block skel-desc2"></div><div class="skel-block skel-meta"></div></div></div>
+        </div>
+
+        <div class="issues-list" id="issuesList" style="display:none;"></div>
+
+        <div class="feed-empty" id="feedEmpty">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <p>No issues found matching your filters.</p>
+        </div>
+
+        <div class="load-more-wrap" id="loadMoreWrap" style="display:none;">
+          <button class="btn-ghost" id="loadMoreBtn">Load more issues</button>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+
+        <!-- Sign in prompt — only shown to guests -->
+        <div class="sidebar-card" id="guestPrompt" style="display:none;">
+          <div class="sidebar-title">Join the community</div>
+          <p style="font-size:0.82rem; color:var(--text-muted); opacity:0.8; margin-bottom:1rem; line-height:1.6;">
+            Sign in to upvote issues and submit your own reports.
+          </p>
+          <div style="display:flex; flex-direction:column; gap:0.6rem;">
+            <a href="/UrbanTrack/pages/signUpPage.html" class="btn-primary" style="width:100%; justify-content:center;">Sign Up Free</a>
+            <a href="/UrbanTrack/pages/login.html" class="btn-ghost" style="width:100%; text-align:center; text-decoration:none;">Login</a>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-title">Community Stats</div>
+          <div class="stats-grid">
+            <div class="stat-item"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Total</div></div>
+            <div class="stat-item"><div class="stat-num" id="statPending">—</div><div class="stat-label">Pending</div></div>
+            <div class="stat-item"><div class="stat-num" id="statProgress">—</div><div class="stat-label">In Progress</div></div>
+            <div class="stat-item"><div class="stat-num" id="statResolved">—</div><div class="stat-label">Resolved</div></div>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-title">By Category</div>
+          <div id="catBreakdown">
+            <div style="font-size:0.8rem; color:var(--text-muted); opacity:0.5;">Loading...</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <style>
+    .btn-ghost-nav {
+      padding: 0.4rem 1.1rem;
+      border-radius: 9999px;
+      border: 1px solid rgba(56,189,248,0.4);
+      color: #38bdf8;
+      font-size: 0.82rem; font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-ghost-nav:hover { background: rgba(56,189,248,0.1); }
+
+    .btn-primary-nav {
+      padding: 0.4rem 1.1rem;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, #38bdf8, #6366f1);
+      color: #fff;
+      font-size: 0.82rem; font-weight: 600;
+      text-decoration: none; border: none;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(14,165,233,0.3);
+    }
+    .btn-primary-nav:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0.65rem 1.4rem; border-radius: 9999px;
+      background: linear-gradient(135deg, #38bdf8, #6366f1);
+      color: #fff; font-weight: 600; font-size: 0.875rem;
+      text-decoration: none; border: none; cursor: pointer;
+      font-family: inherit; transition: all 0.25s;
+      box-shadow: 0 4px 14px rgba(56,189,248,0.3);
+    }
+    .btn-primary:hover { transform: scale(1.03); box-shadow: 0 6px 22px rgba(56,189,248,0.5); }
+
+    .btn-ghost {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: none; border: 1px solid rgba(255,255,255,0.11);
+      color: #dbeafe; padding: 0.6rem 1.4rem; border-radius: 9999px;
+      cursor: pointer; font-family: inherit;
+      font-size: 0.875rem; font-weight: 500; transition: all 0.25s;
+    }
+    .btn-ghost:hover { border-color: #38bdf8; color: #38bdf8; }
+  </style>
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut }
+      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      query,
+      orderBy,
+      onSnapshot,
+      doc,
+      getDoc,
+      updateDoc,
+      arrayUnion,
+      arrayRemove,
+      limit,
+      startAfter,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
+      authDomain: "urban-track-91e53.firebaseapp.com",
+      projectId: "urban-track-91e53",
+      storageBucket: "urban-track-91e53.firebasestorage.app",
+      messagingSenderId: "519209303536",
+      appId: "1:519209303536:web:c212eb58eb836e27047135",
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    // State
+    let currentUser = null;
+    let allIssues   = [];
+    let lastDoc     = null;
+    let sortMode    = 'recent';
+    const PAGE_SIZE = 10;
+
+    // DOM
+    const issuesList     = document.getElementById('issuesList');
+    const feedLoader     = document.getElementById('feedLoader');
+    const feedEmpty      = document.getElementById('feedEmpty');
+    const loadMoreWrap   = document.getElementById('loadMoreWrap');
+    const searchInput    = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const statusFilter   = document.getElementById('statusFilter');
+    const sortRecent     = document.getElementById('sortRecent');
+    const sortTop        = document.getElementById('sortTop');
+    const toastEl        = document.getElementById('toast');
+    const navUser        = document.getElementById('navUser');
+    const navGuest       = document.getElementById('navGuest');
+    const guestPrompt    = document.getElementById('guestPrompt');
+
+    // Toast
+    function showToast(msg, isError = false) {
+      toastEl.textContent = msg;
+      toastEl.className = 'toast show' + (isError ? ' error' : '');
+      setTimeout(() => toastEl.className = 'toast', 2800);
+    }
+
+    // Nav state
+    function showLoggedInNav(user) {
+      navUser.style.display  = 'flex';
+      navGuest.style.display = 'none';
+      guestPrompt.style.display = 'none';
+      const storedUser = JSON.parse(localStorage.getItem('urbanTrack_currentUser') || 'null');
+      const name = storedUser?.name || user.displayName || user.email.split('@')[0];
+      const initials = (name || 'U').split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+      document.getElementById('userAvatar').textContent = initials;
+      document.getElementById('userName').textContent   = name;
+    }
+
+    function showLoggedOutNav() {
+      navUser.style.display     = 'none';
+      navGuest.style.display    = 'flex';
+      guestPrompt.style.display = 'block';
+    }
+
+    // Auth — no redirect, public feed
+    onAuthStateChanged(auth, user => {
+      currentUser = user || null;
+      if (user) { showLoggedInNav(user); } else { showLoggedOutNav(); }
+      loadIssues();
+      loadStats();
+    });
+
+    // Logout — stay on feed
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await signOut(auth);
+      showLoggedOutNav();
+      showToast('Logged out successfully.');
+    });
+
+    // ── Load issues from 'reports' collection, no orderBy so all docs load ──
+    let unsubscribe = null;
+
+    function loadIssues() {
+      if (unsubscribe) unsubscribe();
+      feedLoader.style.display = 'flex';
+      issuesList.style.display = 'none';
+      feedEmpty.style.display  = 'none';
+      allIssues = [];
+
+      // No orderBy — loads all reports regardless of missing timestamp fields
+      // When sorting by top votes, we sort client-side instead
+      const q = query(
+        collection(db, 'reports'),   // ← FIXED: was 'issues'
+        limit(PAGE_SIZE)
+      );
+
+      unsubscribe = onSnapshot(q, snap => {
+        feedLoader.style.display = 'none';
+        allIssues = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        lastDoc = snap.docs[snap.docs.length - 1];
+        loadMoreWrap.style.display = snap.docs.length === PAGE_SIZE ? 'block' : 'none';
+
+        // Sort client-side
+        if (sortMode === 'top') {
+          allIssues.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
+        }
+
+        renderIssues();
+      }, err => {
+        feedLoader.style.display = 'none';
+        showToast('Failed to load reports.', true);
+        console.error(err);
+      });
+    }
+
+    // Load more
+    document.getElementById('loadMoreBtn').addEventListener('click', async () => {
+      if (!lastDoc) return;
+      const q = query(
+        collection(db, 'reports'),   // ← FIXED: was 'issues'
+        startAfter(lastDoc),
+        limit(PAGE_SIZE)
+      );
+      const snap = await getDocs(q);
+      const more = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      lastDoc = snap.docs[snap.docs.length - 1];
+      allIssues = [...allIssues, ...more];
+      if (snap.docs.length < PAGE_SIZE) loadMoreWrap.style.display = 'none';
+      renderIssues();
+    });
+
+    // Render
+    function renderIssues() {
+      const search   = searchInput.value.toLowerCase();
+      const category = categoryFilter.value;
+      const status   = statusFilter.value;
+
+      let filtered = allIssues.filter(issue => {
+        const matchSearch = !search ||
+          (issue.title || issue.category || '').toLowerCase().includes(search) ||
+          (issue.description || '').toLowerCase().includes(search);
+        const matchCat    = !category || issue.category === category;
+        const matchStatus = !status   || issue.status === status;
+        return matchSearch && matchCat && matchStatus;
+      });
+
+      // Client-side sort
+      if (sortMode === 'top') {
+        filtered.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
+      }
+
+      issuesList.innerHTML = '';
+
+      if (!filtered.length) {
+        issuesList.style.display = 'none';
+        feedEmpty.style.display  = 'block';
+        return;
+      }
+
+      feedEmpty.style.display  = 'none';
+      issuesList.style.display = 'flex';
+      filtered.forEach(issue => issuesList.appendChild(createCard(issue)));
+    }
+
+    // Build card — maps your actual Firestore fields
+    function createCard(issue) {
+      const voted = currentUser &&
+                    Array.isArray(issue.upvotedBy) &&
+                    issue.upvotedBy.includes(currentUser.uid);
+      const count = issue.upvotes || 0;
+
+      // Handle different possible timestamp field names
+      let ts = new Date();
+      if (issue.timestamp?.toDate)  ts = issue.timestamp.toDate();
+      else if (issue.createdAt?.toDate) ts = issue.createdAt.toDate();
+      else if (issue.date?.toDate)  ts = issue.date.toDate();
+      else if (issue.timestamp)     ts = new Date(issue.timestamp);
+      else if (issue.createdAt)     ts = new Date(issue.createdAt);
+
+      const statusClass = {
+        'pending':     'status-pending',
+        'in-progress': 'status-progress',
+        'resolved':    'status-resolved'
+      }[issue.status] || 'status-pending';
+
+      const statusLabel = {
+        'pending':     'Pending',
+        'in-progress': 'In Progress',
+        'resolved':    'Resolved'
+      }[issue.status] || 'Pending';
+
+      const sevClass = {
+        'low':    'sev-low',
+        'medium': 'sev-medium',
+        'high':   'sev-high'
+      }[issue.severity] || 'sev-medium';
+
+      // Location — your docs use lat/lng so show coords or address
+      const location = issue.address || issue.location ||
+        (issue.lat ? `${parseFloat(issue.lat).toFixed(4)}, ${parseFloat(issue.lng).toFixed(4)}` : 'Location not specified');
+
+      // Title — your docs use category as the main label
+      const title = issue.title || issue.category || 'Untitled Report';
+
+      // Photo — your docs use a photos array
+      const photoURL = issue.photoURL ||
+        (Array.isArray(issue.photos) && issue.photos.length ? issue.photos[0] : null);
+
+      // Reporter
+      const reporter = issue.reportedBy || issue.userId || issue.ref || null;
+
+      const card = document.createElement('div');
+      card.className = 'issue-card';
+      card.dataset.id = issue.id;
+
+      card.innerHTML = `
+        <div class="upvote-col">
+          <button class="upvote-btn ${voted ? 'voted' : ''}" data-id="${issue.id}" aria-label="Upvote this issue">
+            <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+          </button>
+          <span class="upvote-count" id="count-${issue.id}">${count}</span>
+        </div>
+        <div class="issue-body">
+          <div class="issue-top">
+            <span class="issue-category">${issue.category || 'Other'}</span>
+            <span class="status-badge ${statusClass}">${statusLabel}</span>
+            <span class="severity-dot ${sevClass}" title="Severity: ${issue.severity || 'medium'}"></span>
+          </div>
+          <div class="issue-title">${title}</div>
+          <div class="issue-desc">${issue.description || issue.notes || 'No description provided.'}</div>
+          <div class="issue-meta">
+            <span>
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              ${location}
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              ${timeAgo(ts)}
+            </span>
+            ${reporter ? `<span>Ref: ${reporter}</span>` : ''}
+          </div>
+        </div>
+        ${photoURL ? `<img class="issue-photo" src="${photoURL}" alt="Issue photo" loading="lazy" />` : ''}
+      `;
+
+      card.querySelector('.upvote-btn').addEventListener('click', e => {
+        e.stopPropagation();
+        handleUpvote(issue.id);
+      });
+
+      return card;
+    }
+
+    // Upvote — guests get a toast, no redirect
+    async function handleUpvote(issueId) {
+      if (!currentUser) {
+        showToast('Sign in to upvote issues.', true);
+        return;
+      }
+
+      const btn     = document.querySelector(`.upvote-btn[data-id="${issueId}"]`);
+      const countEl = document.getElementById(`count-${issueId}`);
+      const isVoted = btn.classList.contains('voted');
+      const current = parseInt(countEl.textContent) || 0;
+
+      // Optimistic update
+      btn.classList.toggle('voted');
+      countEl.textContent = isVoted ? current - 1 : current + 1;
+      countEl.style.color = btn.classList.contains('voted') ? 'var(--accent-light)' : '';
+
+      try {
+        const reportRef = doc(db, 'reports', issueId);   // ← FIXED: was 'issues'
+        const snap      = await getDoc(reportRef);
+        if (!snap.exists()) throw new Error('Report not found');
+        const data    = snap.data();
+        const already = Array.isArray(data.upvotedBy) && data.upvotedBy.includes(currentUser.uid);
+
+        await updateDoc(reportRef, {
+          upvotes:   already ? (data.upvotes || 1) - 1 : (data.upvotes || 0) + 1,
+          upvotedBy: already ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+        });
+
+        showToast(already ? 'Upvote removed.' : 'Upvoted!');
+
+        const local = allIssues.find(i => i.id === issueId);
+        if (local) {
+          local.upvotes   = already ? (local.upvotes || 1) - 1 : (local.upvotes || 0) + 1;
+          local.upvotedBy = already
+            ? (local.upvotedBy || []).filter(u => u !== currentUser.uid)
+            : [...(local.upvotedBy || []), currentUser.uid];
+        }
+
+      } catch (err) {
+        btn.classList.toggle('voted');
+        countEl.textContent = current;
+        countEl.style.color = '';
+        showToast('Could not save upvote. Try again.', true);
+        console.error(err);
+      }
+    }
+
+    // Stats — from 'reports' collection
+    function loadStats() {
+      onSnapshot(collection(db, 'reports'), snap => {   // ← FIXED: was 'issues'
+        const reports = snap.docs.map(d => d.data());
+        document.getElementById('statTotal').textContent    = reports.length;
+        document.getElementById('statPending').textContent  = reports.filter(i => i.status === 'pending').length;
+        document.getElementById('statProgress').textContent = reports.filter(i => i.status === 'in-progress').length;
+        document.getElementById('statResolved').textContent = reports.filter(i => i.status === 'resolved').length;
+
+        const cats = {};
+        reports.forEach(i => { const c = i.category || 'Other'; cats[c] = (cats[c] || 0) + 1; });
+        const sorted = Object.entries(cats).sort((a,b) => b[1]-a[1]).slice(0,6);
+        document.getElementById('catBreakdown').innerHTML = sorted.length
+          ? sorted.map(([name, c]) =>
+              `<div class="cat-row"><span class="cat-row-name">${name}</span><span class="cat-row-count">${c}</span></div>`
+            ).join('')
+          : '<div style="font-size:0.8rem;color:var(--text-muted);opacity:0.5;">No data yet.</div>';
+      });
+    }
+
+    // Filters
+    searchInput.addEventListener('input', renderIssues);
+    categoryFilter.addEventListener('change', renderIssues);
+    statusFilter.addEventListener('change', renderIssues);
+
+    sortRecent.addEventListener('click', () => {
+      if (sortMode === 'recent') return;
+      sortMode = 'recent';
+      sortRecent.classList.add('active');
+      sortTop.classList.remove('active');
+      renderIssues();
+    });
+    sortTop.addEventListener('click', () => {
+      if (sortMode === 'top') return;
+      sortMode = 'top';
+      sortTop.classList.add('active');
+      sortRecent.classList.remove('active');
+      renderIssues();
+    });
+
+    function timeAgo(date) {
+      const diff = Math.floor((Date.now() - date) / 1000);
+      if (diff < 60)    return 'just now';
+      if (diff < 3600)  return `${Math.floor(diff/60)}m ago`;
+      if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
+      return `${Math.floor(diff/86400)}d ago`;
+    }
+  </script>
+
+</body>
+</html>

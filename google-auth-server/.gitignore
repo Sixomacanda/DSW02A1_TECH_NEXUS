@@ -1,3 +1,6 @@
 .env
 node_modules/
+<<<<<<< HEAD
 urban-track-91e53-firebase-adminsdk-*.json
+=======
+>>>>>>> d71744ac2cc31a3e4eb8fd582d854fe3c6af24fc
