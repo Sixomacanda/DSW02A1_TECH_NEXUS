@@ -176,6 +176,7 @@
       const otpMessage = document.getElementById("otpMessage");
       const submitBtn = document.getElementById("signing");
       const editDetailsBtn = document.getElementById("editSignupDetails");
+      const googleBtn = document.getElementById("google-login-btn");
       const detailGroups = Array.from(
         document.querySelectorAll(".signup-container > .form-group"),
       ).filter((group) => !group.closest("#signupOtpPanel"));
@@ -339,6 +340,54 @@
         otpInput.value = otpInput.value.replace(/\D/g, "").slice(0, 6);
         otpError.textContent = "";
       });
+
+      if (googleBtn) {
+        googleBtn.addEventListener("click", async (e) => {
+          e.preventDefault();
+          const originalText = googleBtn.innerHTML;
+          googleBtn.disabled = true;
+          googleBtn.innerHTML =
+            '<i class="fa-brands fa-google"></i> Connecting...';
+
+          try {
+            const result = await signInWithPopup(auth, googleProvider);
+            const user = result.user;
+
+            if (!user) {
+              throw new Error("Google sign in failed. Please try again.");
+            }
+
+            const userData = {
+              uid: user.uid,
+              email: user.email || "",
+              name: user.displayName || "",
+              photoURL: user.photoURL || "",
+              role: "user",
+            };
+
+            try {
+              await setDoc(doc(db, "users", user.uid), userData, {
+                merge: true,
+              });
+            } catch (profileError) {
+              console.warn("Google profile write failed:", profileError);
+            }
+
+            localStorage.setItem(
+              "urbanTrack_currentUser",
+              JSON.stringify(userData),
+            );
+            localStorage.setItem("userEmail", user.email || "");
+            window.location.href = "MainPage.html";
+          } catch (error) {
+            console.error("Google signup error:", error);
+            alert(error.message || "Google sign up failed. Please try again.");
+          } finally {
+            googleBtn.disabled = false;
+            googleBtn.innerHTML = originalText;
+          }
+        });
+      }
 
       const menuBtn = document.querySelector(".menu-button");
       const navLinks = document.querySelector(".nav-links");

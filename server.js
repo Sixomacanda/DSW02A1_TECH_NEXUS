@@ -367,11 +367,20 @@ app.post("/api/email/complete-signup", async (req, res) => {
       displayName: String(surname).trim(),
     });
 
-    await admin.firestore().collection("users").doc(user.uid).set({
-      surname: String(surname).trim(),
-      email: result.normalizedEmail,
-      reportsCount: 0,
-    });
+    try {
+      await admin.firestore().collection("users").doc(user.uid).set({
+        surname: String(surname).trim(),
+        email: result.normalizedEmail,
+        role: "user",
+        reportsCount: 0,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+    } catch (profileError) {
+      console.warn(
+        "Signup profile write failed; Firebase Auth account was created:",
+        profileError,
+      );
+    }
 
     otpStore.delete(result.normalizedEmail);
     res.json({ success: true, message: "Account created successfully" });

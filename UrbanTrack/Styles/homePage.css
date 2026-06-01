@@ -542,6 +542,8 @@ section {
         .goog-te-combo option {
             background: #1e3a8a !important;
             color: white !important;
+<<<<<<< HEAD
+=======
         }
 
         .goog-te-banner-frame {
@@ -576,4 +578,5 @@ section {
         .goog-te-combo option {
             background: #1e3a8a !important;
             color: white !important;
+>>>>>>> 4077a6afbca24d1dd8f55367bad2644329836737
         }

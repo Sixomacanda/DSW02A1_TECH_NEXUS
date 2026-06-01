@@ -18,6 +18,8 @@
 
       <ul class="nav-links">
         <li><div id="google_translate_element"></div></li>
+
+
         <li><a href="../../homePage.html">Home</a></li>
         <li><a href="signUpPage.html">Sign Up</a></li>
       </ul>
@@ -94,6 +96,8 @@
         GoogleAuthProvider,
         sendEmailVerification,
         signOut,
+        GoogleAuthProvider,
+        signInWithPopup,
       } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
       import {
         getFirestore,
@@ -241,6 +245,11 @@
       if (googleBtn) {
         googleBtn.addEventListener("click", async (e) => {
           e.preventDefault();
+          const originalText = googleBtn.innerHTML;
+          googleBtn.disabled = true;
+          googleBtn.innerHTML =
+            '<i class="fa-brands fa-google"></i> Connecting...';
+
           try {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
@@ -257,9 +266,13 @@
               role: "user",
             };
 
-            await setDoc(doc(db, "users", user.uid), userData, {
-              merge: true,
-            });
+            try {
+              await setDoc(doc(db, "users", user.uid), userData, {
+                merge: true,
+              });
+            } catch (profileError) {
+              console.warn("Google profile write failed:", profileError);
+            }
 
             localStorage.setItem("urbanTrack_currentUser", JSON.stringify(userData));
             localStorage.setItem("userEmail", user.email || "");
@@ -267,6 +280,9 @@
           } catch (error) {
             console.error("Google login error:", error);
             alert(error.message || "Google login failed. Please try again.");
+          } finally {
+            googleBtn.disabled = false;
+            googleBtn.innerHTML = originalText;
           }
         });
       }
