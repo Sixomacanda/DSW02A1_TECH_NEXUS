@@ -141,11 +141,6 @@
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const db = getFirestore(app);
-<<<<<<< HEAD
-      
-      // Use 127.0.0.1 to avoid local DNS resolution issues ("Failed to fetch")
-      const EMAIL_API_BASE = "http://127.0.0.1:3000/api/email";
-=======
       const googleProvider = new GoogleAuthProvider();
 
       const googleBtn = document.getElementById("google-login-btn");
@@ -180,7 +175,6 @@
           }
         });
       }
->>>>>>> d86a897174acf08b82fe0ab503a84f3b4d21eebf
 
       const form = document.getElementById("signupForm");
       const surname = document.getElementById("surname");
