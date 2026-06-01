@@ -1,3 +1,19 @@
+# Ignore local environment files
+*.env
+**/*.env
+
+# Ignore Firebase Admin service account credentials and similar private JSON keys
+**/*firebase-adminsdk*.json
+**/*serviceAccount*.json
+google-auth-server/urban-track-91e53-firebase-adminsdk-*.json
+UrbanTrack/google-auth-server/urban-track-91e53-firebase-adminsdk-*.json
+
+# Ignore dependency directories
+node_modules/
+google-auth-server/.env
+google-auth-server/.env
+UrbanTrack/google-auth-server/.env
+.env
 # Environment Variables
 # Ignore any .env files (root and nested)
 .env

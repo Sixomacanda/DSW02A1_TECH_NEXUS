@@ -16,7 +16,8 @@
       <ul class="nav-links">
             <!-- google api -->
         <li><div id="google_translate_element"></div></li>
-        <li><a href="MainPage.html">Home</a></li>
+        <li><a href="../../homePage.html">Home</a></li>
+        <li><a href="MainPage.html">Report Issue</a></li>
         <li><a href="UserSettings.html">Settings</a></li>
         <li><a href="#" onclick="doLogout()">Logout</a></li>
       </ul>
@@ -146,9 +147,6 @@
     document.getElementById("navLinks").classList.toggle("show");
   }
   function doLogout() {
-    const confirmLogout = confirm("Are you sure you want to log out?");
-    if (!confirmLogout) return;
-
     localStorage.removeItem("urbanTrack_currentUser");
     location.href = "../../homePage.html";
   }
@@ -219,11 +217,9 @@
         const nameEl  = document.getElementById("welcomeName");
         const emailEl = document.getElementById("useremail");
         const avEl    = document.getElementById("userAvatar");
-        const storedUser = JSON.parse(localStorage.getItem("urbanTrack_currentUser") || "null");
-        const name = storedUser?.name || user.displayName || user.email.split("@")[0];
         if (emailEl) emailEl.textContent = user.email;
-        if (nameEl)  nameEl.textContent  = "Welcome back, " + name;
-        if (avEl)    avEl.textContent    = getInitials(name);
+        if (nameEl)  nameEl.textContent  = "Welcome back, " + (user.displayName || user.email.split("@")[0]);
+        if (avEl)    avEl.textContent    = getInitials(user.displayName || user.email);
 
       } catch (error) {
         console.error(error);
@@ -232,29 +228,16 @@
   });
 
   /* ── LocalStorage fallback — identical to original ── */
-  function updateDashboardName() {
-    const currentUser = JSON.parse(localStorage.getItem("urbanTrack_currentUser") || "null");
-    if (!currentUser) return;
+  const currentUser = JSON.parse(localStorage.getItem("urbanTrack_currentUser") || "null");
+  if (currentUser) {
     const name    = currentUser.name || currentUser.email || "User";
     const emailEl = document.getElementById("useremail");
     const nameEl  = document.getElementById("welcomeName");
     const avEl    = document.getElementById("userAvatar");
     if (emailEl) emailEl.textContent = currentUser.email;
-    if (nameEl)  nameEl.textContent  = "Welcome back, " + name;
+    if (nameEl)  nameEl.textContent  = "Welcome back, " + (currentUser.name || currentUser.email.split("@")[0]);
     if (avEl)    avEl.textContent    = getInitials(name);
   }
-
-  updateDashboardName();
-
-  window.addEventListener('storage', (event) => {
-    if (event.key === 'urbanTrack_currentUser') {
-      updateDashboardName();
-    }
-  });
-
-  window.addEventListener('focus', () => {
-    updateDashboardName();
-  });
 </script>
   <!-- Google api -->
  <script>
@@ -316,3 +299,8 @@ src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit
 <!-- The End of google api -->
 </body>
 </html>
+
+
+
+
+
