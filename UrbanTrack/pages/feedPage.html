@@ -15,36 +15,24 @@
   <!-- NAV -->
   <nav class="navbar">
     <a href="index.html" class="logo">Urban Track</a>
-    <div class="nav-actions">
 
-      <!-- Shown when logged in -->
+    <ul class="nav-links">
+      <li><a href="MainPage.html">Home</a></li>
+    </ul>
+
+    <div class="nav-actions">
       <div id="navUser" style="display:none; align-items:center; gap:0.85rem;">
-        <a href="MainPage.html" class="btn-home">Home</a>
         <div class="user-chip">
           <div class="avatar" id="userAvatar">?</div>
           <span class="user-name" id="userName">Loading...</span>
         </div>
-        <a href="/UrbanTrack/pages/submitReport.html" class="icon-btn" title="Submit Report">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16">
-            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-        </a>
-        <a href="/UrbanTrack/pages/userDashboard.html" class="icon-btn" title="My Dashboard">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-          </svg>
-        </a>
         <button class="btn-logout" id="logoutBtn">Logout</button>
       </div>
-
-      <!-- Shown when logged out -->
       <div id="navGuest" style="display:none; align-items:center; gap:0.75rem;">
         <a href="MainPage.html" class="btn-home">Home</a>
         <a href="/UrbanTrack/pages/login.html" class="btn-ghost-nav">Login</a>
         <a href="/UrbanTrack/pages/signUpPage.html" class="btn-primary-nav">Sign Up</a>
       </div>
-
     </div>
   </nav>
 
