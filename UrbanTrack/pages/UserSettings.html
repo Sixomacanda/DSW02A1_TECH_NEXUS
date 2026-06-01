@@ -7,10 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../Styles/userSettings.css" />
   <style>
-    /* ── page-level top padding so content clears fixed nav ── */
     .page { padding-top: 5.5rem; }
-
-    /* ── gradient accent line on every card ── */
     .settings-card { position: relative; }
     .settings-card::before {
       content: '';
@@ -18,11 +15,7 @@
       background: linear-gradient(90deg, #38bdf8, #6366f1);
       border-radius: var(--radius) var(--radius) 0 0;
     }
-    .danger-card::before {
-      background: linear-gradient(90deg, #ef4444, #b91c1c);
-    }
-
-    /* ── page heading block ── */
+    .danger-card::before { background: linear-gradient(90deg, #ef4444, #b91c1c); }
     .page-head { grid-column: 1 / -1; margin-bottom: 0.25rem; }
     .page-badge {
       display: inline-flex; align-items: center; gap: 0.4rem;
@@ -36,158 +29,78 @@
       background: #38bdf8; animation: blink 1.6s infinite;
     }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
-    .page-title {
-      font-size: clamp(1.5rem,3vw,2rem); font-weight: 800;
-      letter-spacing: -0.03em; color: #fff; line-height: 1.1;
-    }
-    .page-sub {
-      font-size: 0.875rem; color: #dbeafe; opacity: 0.55; margin-top: 0.3rem;
-    }
-
-    /* ── sidebar label ── */
-    .snav-label {
-      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em;
-      text-transform: uppercase; color: #dbeafe; opacity: 0.35;
-      padding: 0.4rem 0.65rem 0.25rem;
-    }
-
-    /* ── active dot on sidebar item ── */
+    .page-title { font-size: clamp(1.5rem,3vw,2rem); font-weight: 800; letter-spacing: -0.03em; color: #fff; line-height: 1.1; }
+    .page-sub { font-size: 0.875rem; color: #dbeafe; opacity: 0.55; margin-top: 0.3rem; }
+    .snav-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #dbeafe; opacity: 0.35; padding: 0.4rem 0.65rem 0.25rem; }
     .snav-item { justify-content: space-between; }
-    .snav-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: #38bdf8; opacity: 0; flex-shrink: 0;
-      animation: blink 2s infinite;
-    }
+    .snav-dot { width: 6px; height: 6px; border-radius: 50%; background: #38bdf8; opacity: 0; flex-shrink: 0; animation: blink 2s infinite; }
     .snav-item.active .snav-dot { opacity: 1; }
     .snav-item.danger-nav { color: rgba(239,68,68,.75); }
-    .snav-item.danger-nav:hover,
-    .snav-item.danger-nav.active {
-      background: rgba(239,68,68,.1); color: #ef4444;
-      border-color: rgba(239,68,68,.2);
-    }
+    .snav-item.danger-nav:hover, .snav-item.danger-nav.active { background: rgba(239,68,68,.1); color: #ef4444; border-color: rgba(239,68,68,.2); }
     .snav-item.danger-nav .snav-dot { background: #ef4444; }
-
-    /* ── card header with icon ── */
     .card-header { display: flex; align-items: center; gap: 0.85rem; }
-    .card-header-icon {
-      width: 36px; height: 36px; border-radius: 0.65rem; flex-shrink: 0;
-      background: linear-gradient(135deg,rgba(56,189,248,.18),rgba(99,102,241,.14));
-      border: 1px solid rgba(56,189,248,.2);
-      display: flex; align-items: center; justify-content: center; font-size: 1rem;
-    }
-    .danger-card .card-header-icon {
-      background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.25);
-    }
+    .card-header-icon { width: 36px; height: 36px; border-radius: 0.65rem; flex-shrink: 0; background: linear-gradient(135deg,rgba(56,189,248,.18),rgba(99,102,241,.14)); border: 1px solid rgba(56,189,248,.2); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+    .danger-card .card-header-icon { background: rgba(239,68,68,.12); border-color: rgba(239,68,68,.25); }
     .card-header-text { flex: 1; min-width: 0; }
+    .avatar-large { box-shadow: 0 0 0 3px rgba(56,189,248,.25), 0 8px 24px rgba(56,189,248,.18); transition: box-shadow .3s; }
+    .avatar-large:hover { box-shadow: 0 0 0 4px rgba(56,189,248,.5), 0 12px 30px rgba(56,189,248,.3); }
 
-    /* ── avatar glow ── */
-    .avatar-large {
-      box-shadow: 0 0 0 3px rgba(56,189,248,.25), 0 8px 24px rgba(56,189,248,.18);
-      transition: box-shadow .3s;
-    }
-    .avatar-large:hover {
-      box-shadow: 0 0 0 4px rgba(56,189,248,.5), 0 12px 30px rgba(56,189,248,.3);
-    }
-
-    /* ── info notice box ── */
     .info-notice {
       display: flex; gap: 0.65rem; align-items: flex-start;
       background: rgba(56,189,248,.07); border: 1px solid rgba(56,189,248,.2);
       border-radius: 0.85rem; padding: 0.85rem 1rem;
-      font-size: 0.8rem; color: #dbeafe; line-height: 1.6;
-      margin-bottom: 1.25rem;
+      font-size: 0.8rem; color: #dbeafe; line-height: 1.6; margin-bottom: 1.25rem;
     }
     .info-notice .ni-icon { font-size: 1rem; flex-shrink: 0; margin-top: .05rem; }
     .info-notice strong { color: #fff; }
 
-    /* ── re-auth box ── */
+    /* Updated info notice for verify flow */
+    .verify-notice {
+      display: flex; gap: 0.65rem; align-items: flex-start;
+      background: rgba(245,158,11,.07); border: 1px solid rgba(245,158,11,.28);
+      border-radius: 0.85rem; padding: 0.85rem 1rem;
+      font-size: 0.8rem; color: #dbeafe; line-height: 1.6; margin-bottom: 1.25rem;
+    }
+    .verify-notice strong { color: #f59e0b; }
+
     #reAuthBox {
       display: none;
       background: rgba(245,158,11,.07); border: 1px solid rgba(245,158,11,.28);
       border-radius: 0.85rem; padding: 1rem 1.1rem; margin-top: 1rem;
     }
-    .ra-label {
-      font-size: .7rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .09em; color: #f59e0b; margin-bottom: .35rem;
-    }
+    .ra-label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: #f59e0b; margin-bottom: .35rem; }
     #reAuthBox p { font-size: .8rem; color: #dbeafe; opacity: .8; margin-bottom: .85rem; }
-
-    /* ── spinner ── */
-    .spin {
-      display: inline-block; width: 14px; height: 14px; border-radius: 50%;
-      border: 2px solid rgba(255,255,255,.3); border-top-color: #fff;
-      animation: _spin .6s linear infinite; vertical-align: middle; margin-right: 5px;
-    }
+    .spin { display: inline-block; width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; animation: _spin .6s linear infinite; vertical-align: middle; margin-right: 5px; }
     @keyframes _spin { to { transform: rotate(360deg); } }
-
-    /* ── flash messages ── */
     .flash { font-size: .8rem; font-weight: 600; opacity: 0; transition: opacity .3s; }
     .flash.ok  { color: #10b981; }
     .flash.err { color: #ef4444; }
     .flash.show { opacity: 1; }
-
-    /* ── danger list ── */
     .danger-list { list-style: none; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: .65rem; }
-    .danger-list li {
-      display: flex; gap: .65rem; align-items: flex-start;
-      font-size: .875rem; color: #dbeafe; opacity: .8; line-height: 1.55;
-    }
-    .danger-list li::before {
-      content: ''; width: 5px; height: 5px; border-radius: 50%;
-      background: #ef4444; flex-shrink: 0; margin-top: .55rem;
-    }
-
-    /* ── nav user chip ── */
+    .danger-list li { display: flex; gap: .65rem; align-items: flex-start; font-size: .875rem; color: #dbeafe; opacity: .8; line-height: 1.55; }
+    .danger-list li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: #ef4444; flex-shrink: 0; margin-top: .55rem; }
     .nav-actions { display: flex; align-items: center; }
-    .user-chip {
-      display: flex; align-items: center; gap: .5rem;
-      background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.11);
-      border-radius: 9999px; padding: .3rem .9rem .3rem .38rem;
-      cursor: pointer; transition: border-color .2s;
-    }
+    .user-chip { display: flex; align-items: center; gap: .5rem; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.11); border-radius: 9999px; padding: .3rem .9rem .3rem .38rem; cursor: pointer; transition: border-color .2s; }
     .user-chip:hover { border-color: #38bdf8; }
-    .chip-av {
-      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
-      background: linear-gradient(135deg,#38bdf8,#6366f1);
-      display: flex; align-items: center; justify-content: center;
-      font-size: .68rem; font-weight: 700; color: #fff;
-    }
-    .chip-name {
-      font-size: .82rem; font-weight: 600; color: #dbeafe;
-      max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-
-    /* ── modal red accent line ── */
+    .chip-av { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; background: linear-gradient(135deg,#38bdf8,#6366f1); display: flex; align-items: center; justify-content: center; font-size: .68rem; font-weight: 700; color: #fff; }
+    .chip-name { font-size: .82rem; font-weight: 600; color: #dbeafe; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .modal { position: relative; }
-    .modal::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg,#ef4444,#b91c1c);
-      border-radius: var(--radius) var(--radius) 0 0;
-    }
+    .modal::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg,#ef4444,#b91c1c); border-radius: var(--radius) var(--radius) 0 0; }
     .modal-title { color: #ef4444; }
-
-    /* ── error msg (for .error-msg used in HTML that we map to .flash) ── */
-    .error-msg {
-      font-size: .8rem; font-weight: 600; color: #ef4444;
-      opacity: 0; transition: opacity .3s;
-    }
+    .error-msg { font-size: .8rem; font-weight: 600; color: #ef4444; opacity: 0; transition: opacity .3s; }
     .error-msg.show { opacity: 1; }
     .saved-msg { font-size: .8rem; font-weight: 600; color: #10b981; opacity: 0; transition: opacity .3s; }
     .saved-msg.show { opacity: 1; }
-
-    /* ── field hint ── */
-    .field-hint-text {
-      font-size: .72rem; color: #dbeafe; opacity: .5; margin-top: .3rem; padding-left: .5rem;
-    }
+    .field-hint-text { font-size: .72rem; color: #dbeafe; opacity: .5; margin-top: .3rem; padding-left: .5rem; }
   </style>
 </head>
 <body>
 
-<!-- ══ NAV ══ -->
+<!-- NAV -->
 <nav class="navbar">
   <div class="logo">Urban Track</div>
   <ul class="nav-links" id="navLinks">
-    <li><a href="MainPage.html.html">Home</a></li>
+    <li><a href="MainPage.html">Home</a></li>
     <li><a href="UserDashboard.html">Dashboard</a></li>
     <li><a href="#" onclick="doLogout()">Logout</a></li>
   </ul>
@@ -202,17 +115,16 @@
   </div>
 </nav>
 
-<!-- ══ PAGE ══ -->
+<!-- PAGE -->
 <div class="page">
 
-  <!-- Page heading — spans full width -->
   <div class="page-head fu">
     <div class="page-badge">Settings</div>
     <h1 class="page-title">Account Settings</h1>
     <p class="page-sub">Manage your profile and account security</p>
   </div>
 
-  <!-- Left sidebar -->
+  <!-- Sidebar -->
   <div class="settings-nav fu d1">
     <div class="snav-label">Account</div>
     <button class="snav-item active" onclick="showSection('profile',this)">
@@ -228,10 +140,10 @@
     </button>
   </div>
 
-  <!-- Right panel -->
+  <!-- Panel -->
   <div class="settings-panel">
 
-    <!-- ══ PROFILE ══ -->
+    <!-- PROFILE -->
     <div class="panel-section active" id="section-profile">
       <div class="settings-card fu d2">
         <div class="card-header">
@@ -242,7 +154,6 @@
           </div>
         </div>
         <div class="card-body">
-
           <div class="avatar-row">
             <div class="avatar-large" id="avatarDisplay">U</div>
             <div class="avatar-info">
@@ -250,7 +161,6 @@
               <p  id="avatarEmail">&nbsp;</p>
             </div>
           </div>
-
           <div class="form-row single">
             <div class="field">
               <label>Display Name</label>
@@ -258,44 +168,42 @@
               <span class="field-hint-text">This is how your name appears on reports you submit.</span>
             </div>
           </div>
-
           <div class="save-row">
             <button class="btn btn-primary" id="saveNameBtn" onclick="saveName()">Save Changes</button>
-            <button class="btn btn-ghost"   onclick="discardProfile()">Discard</button>
+            <button class="btn btn-ghost" onclick="discardProfile()">Discard</button>
             <span class="saved-msg" id="nameSavedMsg">Name updated</span>
             <span class="error-msg" id="nameErrorMsg">Failed to save</span>
           </div>
-
         </div>
       </div>
     </div>
 
-    <!-- ══ CHANGE EMAIL ══ -->
+    <!-- CHANGE EMAIL -->
     <div class="panel-section" id="section-email">
       <div class="settings-card fu d2">
         <div class="card-header">
           <div class="card-header-icon">&#9993;</div>
           <div class="card-header-text">
             <div class="card-title">Change Email</div>
-            <div class="card-sub">Your new email will be used for all future logins</div>
+            <div class="card-sub">A verification link will be sent to your new email address</div>
           </div>
         </div>
         <div class="card-body">
 
-          <div class="info-notice">
+          <!-- Updated notice explaining the verify flow -->
+          <div class="verify-notice">
             <span class="ni-icon">&#9432;</span>
             <span>
-              After saving, your login email changes immediately.
-              <strong>You must use the new email the next time you sign in.</strong>
-              You may be asked to re-enter your password to confirm the change.
+              For security, Firebase will send a <strong>verification link to your new email address</strong>.
+              Your email will only change after you click that link.
+              You may need to re-enter your password to confirm.
             </span>
           </div>
 
           <div class="form-row single">
             <div class="field">
               <label>Current Email</label>
-              <input type="email" id="currentEmailDisplay" readonly
-                style="opacity:.55;cursor:not-allowed;" />
+              <input type="email" id="currentEmailDisplay" readonly style="opacity:.55;cursor:not-allowed;" />
             </div>
           </div>
 
@@ -306,7 +214,7 @@
             </div>
           </div>
 
-          <!-- Re-auth box — appears automatically when Firebase requires it -->
+          <!-- Re-auth box -->
           <div id="reAuthBox">
             <div class="ra-label">Password Required</div>
             <p>Enter your current password to confirm the email change.</p>
@@ -316,13 +224,13 @@
               </div>
             </div>
             <button class="btn btn-primary" onclick="reAuthAndUpdateEmail()">
-              Confirm &amp; Update Email
+              Confirm &amp; Send Verification
             </button>
           </div>
 
           <div class="save-row" style="margin-top:1.25rem">
-            <button class="btn btn-primary" id="saveEmailBtn" onclick="saveEmail()">Update Email</button>
-            <span class="saved-msg" id="emailSavedMsg">Email updated — use it next login</span>
+            <button class="btn btn-primary" id="saveEmailBtn" onclick="saveEmail()">Send Verification Email</button>
+            <span class="saved-msg" id="emailSavedMsg">Verification sent — check your new inbox</span>
             <span class="error-msg" id="emailErrorMsg">Failed to update email</span>
           </div>
 
@@ -330,7 +238,7 @@
       </div>
     </div>
 
-    <!-- ══ DELETE ACCOUNT ══ -->
+    <!-- DELETE ACCOUNT -->
     <div class="panel-section" id="section-danger">
       <div class="settings-card danger-card fu d2">
         <div class="card-header">
@@ -342,7 +250,7 @@
         </div>
         <div class="card-body">
           <ul class="danger-list">
-            <li>Your profile and all personal information will be permanently removed from the database</li>
+            <li>Your profile and all personal information will be permanently deleted</li>
             <li>All reports and comments you have submitted will be deleted</li>
             <li>Your upvotes will be removed from all community issues</li>
             <li>This cannot be undone — there is no recovery option</li>
@@ -354,10 +262,10 @@
       </div>
     </div>
 
-  </div><!-- /settings-panel -->
-</div><!-- /page -->
+  </div>
+</div>
 
-<!-- ══ DELETE MODAL ══ -->
+<!-- DELETE MODAL -->
 <div class="modal-overlay" id="deleteModal">
   <div class="modal danger-modal">
     <button class="modal-close-x" onclick="closeDeleteModal()">&#x2715;</button>
@@ -367,12 +275,12 @@
       <strong style="color:#ef4444">This cannot be undone.</strong>
     </div>
     <div class="modal-confirm-field">
-      <label>Type DELETE to confirm</label>
+      <label>Type DELETE to confirm (case-insensitive)</label>
       <input type="text" id="deleteConfirmInput" placeholder="Type DELETE here"
         oninput="checkDeleteConfirm()" />
     </div>
     <div class="modal-actions">
-      <button class="btn btn-ghost"  onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-ghost" onclick="closeDeleteModal()">Cancel</button>
       <button class="btn btn-danger" id="deleteConfirmBtn" disabled onclick="deleteAccount()">
         Delete Permanently
       </button>
@@ -382,22 +290,18 @@
 
 <div class="toast" id="toast"></div>
 
-<!-- ══ UTILITY SCRIPTS ══ -->
 <script src="../js/main.js"></script>
 <script>
-  /* hamburger */
   document.getElementById('menuButton').addEventListener('click', () => {
     document.getElementById('navLinks').classList.toggle('show');
   });
 
-function doLogout() {
-  const confirmLogout = confirm("Are you sure you want to logout?");
-  
-  if (confirmLogout) {
-    localStorage.removeItem('urbanTrack_currentUser');
-    location.href = '../../homePage.html';
+  function doLogout() {
+    if (confirm("Are you sure you want to logout?")) {
+      localStorage.removeItem('urbanTrack_currentUser');
+      location.href = '../../homePage.html';
+    }
   }
-}
 
   function getInitials(name) {
     if (!name) return 'U';
@@ -435,7 +339,7 @@ function doLogout() {
   }
   function checkDeleteConfirm() {
     document.getElementById('deleteConfirmBtn').disabled =
-      document.getElementById('deleteConfirmInput').value !== 'DELETE';
+      document.getElementById('deleteConfirmInput').value.trim().toUpperCase() !== 'DELETE';
   }
 
   let _origName = '';
@@ -445,27 +349,27 @@ function doLogout() {
 
   function refreshHeaderUI(name) {
     const init = getInitials(name);
-    document.getElementById('avatarDisplay').textContent   = init;
-    document.getElementById('userAvatar').textContent      = init;
-    document.getElementById('avatarName').textContent      = name || 'User';
-    document.getElementById('headerUserName').textContent  = name || 'User';
+    document.getElementById('avatarDisplay').textContent  = init;
+    document.getElementById('userAvatar').textContent     = init;
+    document.getElementById('avatarName').textContent     = name || 'User';
+    document.getElementById('headerUserName').textContent = name || 'User';
   }
 </script>
 
-<!-- ══ FIREBASE MODULE ══ -->
+<!-- FIREBASE MODULE -->
 <script type="module">
   import { initializeApp }
     from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
   import {
     getAuth, onAuthStateChanged, deleteUser,
-    updateEmail, reauthenticateWithCredential, EmailAuthProvider
+    verifyBeforeUpdateEmail,          /* ← CHANGED: replaces updateEmail */
+    reauthenticateWithCredential, EmailAuthProvider
   } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
   import {
     getFirestore, doc, getDoc, setDoc, deleteDoc,
     collection, query, where, getDocs, writeBatch
   } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-  /* ── YOUR Firebase config — untouched ── */
   const firebaseConfig = {
     apiKey:            'AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U',
     authDomain:        'urban-track-91e53.firebaseapp.com',
@@ -483,9 +387,9 @@ function doLogout() {
   function populateUI(name, email, area) {
     const displayName = name || (email ? email.split('@')[0] : 'User');
     refreshHeaderUI(displayName);
-    document.getElementById('avatarEmail').textContent      = email || '';
-    document.getElementById('displayName').value            = displayName;
-    document.getElementById('currentEmailDisplay').value   = email || '';
+    document.getElementById('avatarEmail').textContent    = email || '';
+    document.getElementById('displayName').value          = displayName;
+    document.getElementById('currentEmailDisplay').value  = email || '';
     window._origName = displayName;
     const stored = JSON.parse(localStorage.getItem('urbanTrack_currentUser') || '{}');
     localStorage.setItem('urbanTrack_currentUser',
@@ -511,7 +415,7 @@ function doLogout() {
     }
   });
 
-  /* ── SAVE NAME ── */
+  /* SAVE NAME */
   window.saveName = async function () {
     if (!currentUser) { showToast('Not signed in', 'danger'); return; }
     const name = document.getElementById('displayName').value.trim();
@@ -534,39 +438,37 @@ function doLogout() {
     }
   };
 
-  /* ── SAVE EMAIL ── */
+  /* SAVE EMAIL — now uses verifyBeforeUpdateEmail */
   window.saveEmail = async function () {
     if (!currentUser) { showToast('Not signed in', 'danger'); return; }
     const newEmail = document.getElementById('newEmailField').value.trim().toLowerCase();
     if (!newEmail || !newEmail.includes('@')) { showToast('Enter a valid email address', 'danger'); return; }
     if (newEmail === currentUser.email) { showToast('That is already your current email', 'danger'); return; }
     const btn = document.getElementById('saveEmailBtn');
-    btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Updating…';
+    btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Sending…';
     try {
-      await updateEmail(currentUser, newEmail);
-      await setDoc(doc(db, 'users', currentUser.uid),
-        { email: newEmail, updatedAt: new Date().toISOString() }, { merge: true });
-      const stored = JSON.parse(localStorage.getItem('urbanTrack_currentUser') || '{}');
-      localStorage.setItem('urbanTrack_currentUser', JSON.stringify({ ...stored, email: newEmail }));
-      document.getElementById('currentEmailDisplay').value = newEmail;
-      document.getElementById('avatarEmail').textContent   = newEmail;
+      /* ── KEY CHANGE: verifyBeforeUpdateEmail sends a verification link
+            to the NEW email. The email only changes after the user clicks it. ── */
+      await verifyBeforeUpdateEmail(currentUser, newEmail);
       document.getElementById('newEmailField').value = '';
       document.getElementById('reAuthBox').style.display = 'none';
-      flashMsg('emailSavedMsg', 4000); showToast('Email updated — use it next login', 'success');
+      flashMsg('emailSavedMsg', 5000);
+      showToast('Verification email sent — check your new inbox', 'success');
     } catch (e) {
       console.error(e);
       if (e.code === 'auth/requires-recent-login') {
         document.getElementById('reAuthBox').style.display = 'block';
         showToast('Enter your password below to confirm', 'warning');
       } else {
-        flashMsg('emailErrorMsg'); showToast('Failed: ' + (e.message || e.code), 'danger');
+        flashMsg('emailErrorMsg');
+        showToast('Failed: ' + (e.message || e.code), 'danger');
       }
     } finally {
-      btn.disabled = false; btn.textContent = 'Update Email';
+      btn.disabled = false; btn.textContent = 'Send Verification Email';
     }
   };
 
-  /* ── RE-AUTH THEN UPDATE EMAIL ── */
+  /* RE-AUTH THEN SEND VERIFY EMAIL */
   window.reAuthAndUpdateEmail = async function () {
     if (!currentUser) return;
     const password = document.getElementById('reAuthPassword').value;
@@ -576,17 +478,13 @@ function doLogout() {
     try {
       const cred = EmailAuthProvider.credential(currentUser.email, password);
       await reauthenticateWithCredential(currentUser, cred);
-      await updateEmail(currentUser, newEmail);
-      await setDoc(doc(db, 'users', currentUser.uid),
-        { email: newEmail, updatedAt: new Date().toISOString() }, { merge: true });
-      const stored = JSON.parse(localStorage.getItem('urbanTrack_currentUser') || '{}');
-      localStorage.setItem('urbanTrack_currentUser', JSON.stringify({ ...stored, email: newEmail }));
-      document.getElementById('currentEmailDisplay').value = newEmail;
-      document.getElementById('avatarEmail').textContent   = newEmail;
-      document.getElementById('newEmailField').value       = '';
-      document.getElementById('reAuthPassword').value      = '';
-      document.getElementById('reAuthBox').style.display   = 'none';
-      flashMsg('emailSavedMsg', 4000); showToast('Email updated — use it next login', 'success');
+      /* ── KEY CHANGE: use verifyBeforeUpdateEmail after re-auth too ── */
+      await verifyBeforeUpdateEmail(currentUser, newEmail);
+      document.getElementById('newEmailField').value     = '';
+      document.getElementById('reAuthPassword').value   = '';
+      document.getElementById('reAuthBox').style.display = 'none';
+      flashMsg('emailSavedMsg', 5000);
+      showToast('Verification email sent — check your new inbox', 'success');
     } catch (e) {
       console.error(e);
       if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') {
@@ -597,7 +495,7 @@ function doLogout() {
     }
   };
 
-  /* ── DELETE ACCOUNT ── */
+  /* DELETE ACCOUNT */
   window.deleteAccount = async function () {
     if (!currentUser) { alert('Not logged in'); return; }
     const btn = document.getElementById('deleteConfirmBtn');
@@ -630,6 +528,5 @@ function doLogout() {
   };
 </script>
 
-<script src="../js/UserSettings.js"></script>
 </body>
 </html>

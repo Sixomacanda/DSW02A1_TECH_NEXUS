@@ -1,6 +1,37 @@
 var cur = 1;
 var userEmail = "";
+var verifiedPasswordOtp = "";
 var timerInterval = null;
+var AUTH_API_BASE = "http://localhost:3000";
+
+function postAuthJson(path, payload) {
+  return fetch(AUTH_API_BASE + path, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  })
+    .catch(function () {
+      throw new Error(
+        "Cannot reach the auth server. Start it with npm start, then try again.",
+      );
+    })
+    .then(function (res) {
+      return res
+        .json()
+        .catch(function () {
+          return {};
+        })
+        .then(function (data) {
+          if (!res.ok) {
+            throw new Error(data.error || "Request failed. Please try again.");
+          }
+
+          return data;
+        });
+    });
+}
 
 function goTo(n) {
   document.getElementById("s" + cur).classList.remove("active");
@@ -37,18 +68,26 @@ function sendCode() {
   sp.style.display = "block";
   txt.textContent = "Sending…";
 
-  setTimeout(function () {
-    btn.disabled = false;
-    sp.style.display = "none";
-    txt.textContent = "Send Reset Code";
-    document.getElementById("otpSub").innerHTML =
-      "We sent a 6-digit code to <strong>" +
-      em +
-      "</strong>. Check your inbox.";
-    goTo(2);
-    startTimer();
-    toast("Code sent to " + em, "success");
-  }, 1500);
+  postAuthJson("/api/email/password-otp", { email: em })
+    .then(function () {
+      btn.disabled = false;
+      sp.style.display = "none";
+      txt.textContent = "Send Reset Code";
+      document.getElementById("otpSub").innerHTML =
+        "We sent a 6-digit code to <strong>" +
+        em +
+        "</strong>. Check your inbox.";
+      goTo(2);
+      startTimer();
+      toast("Code sent to " + em, "success");
+    })
+    .catch(function (error) {
+      btn.disabled = false;
+      sp.style.display = "none";
+      txt.textContent = "Send Reset Code";
+      console.error("Password OTP send error:", error);
+      toast(error.message, "danger");
+    });
 }
 
 document.getElementById("emailIn").addEventListener("keydown", function (e) {
@@ -123,14 +162,26 @@ function verifyOtp() {
   sp.style.display = "block";
   txt.textContent = "Verifying…";
 
-  setTimeout(function () {
-    btn.disabled = false;
-    sp.style.display = "none";
-    txt.textContent = "Verify Code";
-    clearInterval(timerInterval);
-    goTo(3);
-    toast("Code verified! Set your new password.", "success");
-  }, 1400);
+  postAuthJson("/api/email/verify-password-otp", {
+    email: userEmail,
+    otp: otp,
+  })
+    .then(function () {
+      verifiedPasswordOtp = otp;
+      btn.disabled = false;
+      sp.style.display = "none";
+      txt.textContent = "Verify Code";
+      clearInterval(timerInterval);
+      goTo(3);
+      toast("Code verified! Set your new password.", "success");
+    })
+    .catch(function (error) {
+      btn.disabled = false;
+      sp.style.display = "none";
+      txt.textContent = "Verify Code";
+      console.error("OTP verification error:", error);
+      toast(error.message, "danger");
+    });
 }
 
 function startTimer() {
@@ -238,12 +289,25 @@ function doReset() {
   sp.style.display = "block";
   txt.textContent = "Resetting…";
 
-  setTimeout(function () {
-    btn.disabled = false;
-    sp.style.display = "none";
-    txt.textContent = "Reset Password";
-    goTo(4);
-  }, 1500);
+  postAuthJson("/api/email/reset-password", {
+    email: userEmail,
+    otp: verifiedPasswordOtp,
+    password: p1,
+  })
+    .then(function () {
+      btn.disabled = false;
+      sp.style.display = "none";
+      txt.textContent = "Reset Password";
+      goTo(4);
+      toast("Password reset successfully!", "success");
+    })
+    .catch(function (error) {
+      btn.disabled = false;
+      sp.style.display = "none";
+      txt.textContent = "Reset Password";
+      console.error("Password reset error:", error);
+      toast(error.message, "danger");
+    });
 }
 
 /* ---- TOAST ---- */

@@ -172,6 +172,10 @@ form#signupForm {
   margin-bottom: 18px;
 }
 
+.form-group.hidden {
+  display: none;
+}
+
 .form-group label {
   font-size: 14px;
   display: block;
@@ -259,6 +263,41 @@ form#signupForm {
   box-shadow: 0 0 15px #38bdf8;
 }
 
+<<<<<<< HEAD
+=======
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  margin-bottom: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+}
+
+.signup-otp-panel {
+  display: none;
+}
+
+.signup-otp-panel.active {
+  display: block;
+}
+
+.signup-otp-panel p {
+  color: #dbeafe;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+
+.signup-otp-panel strong {
+  color: #38bdf8;
+}
+
+>>>>>>> 4077a6afbca24d1dd8f55367bad2644329836737
 .btn.google-btn {
   background: linear-gradient(135deg, #4285F4, #34A853);
   display: flex;
@@ -466,4 +505,8 @@ body { top: 0 !important; } */
         .goog-te-combo option {
             background: #1e3a8a !important;
             color: white !important;
+<<<<<<< HEAD
         }
+=======
+        }
+>>>>>>> 4077a6afbca24d1dd8f55367bad2644329836737
