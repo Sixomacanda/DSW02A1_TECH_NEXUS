@@ -156,9 +156,11 @@ body {
 
 .nav-links li a:hover,
 .nav-links li a:focus-visible {
-  background-color: rgba(56, 189, 248, 0.25);
+  background: linear-gradient(90deg, rgba(56,189,248,0.14), rgba(99,102,241,0.08));
   color: #dbeafe;
   outline: none;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(14,165,233,0.08);
 }
 
 .nav-actions {
@@ -240,8 +242,9 @@ body {
   transition: all 0.15s;
 }
 .btn-logout:hover {
-  background: rgba(239, 68, 68, 0.12);
-  color: #fca5a5;
+  background: linear-gradient(90deg, rgba(239,68,68,0.12), rgba(220,38,38,0.08));
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(239,68,68,0.12);
 }
 
 /* Hamburger */
