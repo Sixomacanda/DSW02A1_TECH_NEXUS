@@ -87,7 +87,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret:
+      process.env.SESSION_SECRET || "default-unsafe-secret-change-in-production",
     resave: false,
     saveUninitialized: false,
   }),
@@ -114,30 +115,30 @@ passport.use(
 );
 
 if (!process.env.SESSION_SECRET) {
-    console.warn(
-        "Warning: SESSION_SECRET is not set. This is unsafe in production."
-    );
+  console.warn(
+    "Warning: SESSION_SECRET is not set. Using an unsafe development fallback.",
+  );
 }
 
 if (GOOGLE_OAUTH_CONFIGURED) {
-    passport.use(
-        new GoogleStrategy(
-            {
-                clientID: process.env.GOOGLE_CLIENT_ID,
-                clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-                callbackURL:
-                    process.env.GOOGLE_CALLBACK_URL ||
-                    "http://localhost:3000/auth/google/callback",
-            },
-            function (accessToken, refreshToken, profile, done) {
-                return done(null, profile);
-            }
-        )
-    );
+  passport.use(
+    new GoogleStrategy(
+      {
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL:
+          process.env.GOOGLE_CALLBACK_URL ||
+          "http://localhost:3000/auth/google/callback",
+      },
+      function (accessToken, refreshToken, profile, done) {
+        return done(null, profile);
+      },
+    ),
+  );
 } else {
-    console.warn(
-        "Google OAuth credentials missing. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in .env"
-    );
+  console.warn(
+    "Google OAuth credentials missing. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in .env",
+  );
 }
 
 // Session handling
@@ -149,9 +150,20 @@ passport.deserializeUser(function (user, done) {
   done(null, user);
 });
 
+function ensureGoogleOAuthConfigured(req, res, next) {
+  if (!GOOGLE_OAUTH_CONFIGURED) {
+    return res
+      .status(503)
+      .send("Google OAuth is not configured on this server.");
+  }
+
+  next();
+}
+
 // Start Google login
 app.get(
   "/auth/google",
+  ensureGoogleOAuthConfigured,
   function (req, res, next) {
     console.log("Google auth initiated from:", req.headers.referer);
     next();
@@ -169,6 +181,7 @@ const FRONTEND_LOGIN_URL =
 
 app.get(
   "/auth/google/callback",
+  ensureGoogleOAuthConfigured,
   function (req, res, next) {
      console.log("Google callback received, query:", req.query);
     next();
