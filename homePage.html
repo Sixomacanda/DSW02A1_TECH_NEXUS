@@ -995,13 +995,22 @@
       }
       function removeTyping() { const e = document.getElementById('typing-msg'); if(e) e.remove(); }
 
+      function getChatApiUrl() {
+        const isLocalDevServer =
+          location.protocol === 'file:' ||
+          location.port === '5500' ||
+          location.port === '5501';
+        return (isLocalDevServer ? 'http://localhost:3000' : '') + '/api/chat';
+      }
+
       async function callChatbot(msg, history) {
-        const res = await fetch('/api/chat', {
+        const res = await fetch(getChatApiUrl(), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message: msg, history: history || [] })
         });
         const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Chat API error');
         return data.reply || "I am having trouble connecting. Please try again shortly.";
       }
 
