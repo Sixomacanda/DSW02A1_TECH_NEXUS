@@ -96,6 +96,24 @@
           </div>
           <small class="error"></small>
         </div>
+        <div class="signup-otp-panel" id="signupOtpPanel">
+          <p id="otpMessage"></p>
+          <div class="form-group">
+            <label for="signupOtp">Email OTP</label>
+            <input
+              type="text"
+              name="signupOtp"
+              id="signupOtp"
+              inputmode="numeric"
+              maxlength="6"
+              placeholder="Enter 6-digit code"
+            />
+            <small class="error" id="otpError"></small>
+          </div>
+          <button type="button" id="editSignupDetails" class="btn btn-secondary">
+            Edit Details
+          </button>
+        </div>
         <button type="submit" id="signing" class="btn" name="signup">
           Sign Up
         </button>
@@ -119,66 +137,6 @@
     </form>
     <script src="../js/main.js"></script>
     <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-      import {
-        getAuth,
-        createUserWithEmailAndPassword,
-        GoogleAuthProvider,
-        signInWithPopup,
-      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-      import {
-        getFirestore,
-        doc,
-        setDoc,
-      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-      const firebaseConfig = {
-        apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
-        authDomain: "urban-track-91e53.firebaseapp.com",
-        projectId: "urban-track-91e53",
-        storageBucket: "urban-track-91e53.firebasestorage.app",
-        messagingSenderId: "519209303536",
-        appId: "1:519209303536:web:c212eb58eb836e27047135",
-      };
-
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-      const googleProvider = new GoogleAuthProvider();
-
-      const googleBtn = document.getElementById("google-login-btn");
-      if (googleBtn) {
-        googleBtn.addEventListener("click", async (e) => {
-          e.preventDefault();
-          try {
-            const result = await signInWithPopup(auth, googleProvider);
-            const user = result.user;
-
-            if (!user) {
-              throw new Error("Google sign-up failed. Please try again.");
-            }
-
-            const userData = {
-              uid: user.uid,
-              email: user.email || "",
-              name: user.displayName || "",
-              photoURL: user.photoURL || "",
-              role: "user",
-              provider: "google",
-            };
-
-            await setDoc(doc(db, "users", user.uid), userData, { merge: true });
-            localStorage.setItem("urbanTrack_currentUser", JSON.stringify(userData));
-            localStorage.setItem("userEmail", user.email || "");
-
-            window.location.href = "MainPage.html";
-          } catch (error) {
-            console.error("Google signup error:", error);
-            alert(error.message || "Google signup failed. Please try again.");
-          }
-        });
-      }
-
       const form = document.getElementById("signupForm");
       const surname = document.getElementById("surname");
       const email = document.getElementById("email");
@@ -186,138 +144,246 @@
       const confirmPassword = document.getElementById(
         "Signup-confirm-password",
       );
+      const otpPanel = document.getElementById("signupOtpPanel");
+      const otpInput = document.getElementById("signupOtp");
+      const otpError = document.getElementById("otpError");
+      const otpMessage = document.getElementById("otpMessage");
+      const submitBtn = document.getElementById("signing");
+      const editDetailsBtn = document.getElementById("editSignupDetails");
+      const detailGroups = Array.from(
+        document.querySelectorAll(".signup-container > .form-group"),
+      ).filter((group) => !group.closest("#signupOtpPanel"));
+      let signupStep = "details";
+      let pendingSignup = null;
 
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
+      function setSignupStep(step) {
+        signupStep = step;
+        const showingOtp = step === "otp";
+        detailGroups.forEach((group) => {
+          group.classList.toggle("hidden", showingOtp);
+        });
+        otpPanel.classList.toggle("active", showingOtp);
+        submitBtn.textContent = showingOtp
+          ? "Verify & Create Account"
+          : "Sign Up";
+      }
 
-        /* EMAIL VALIDATION */
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      function setButtonLoading(isLoading, text) {
+        submitBtn.disabled = isLoading;
+        submitBtn.textContent = isLoading
+          ? text
+          : signupStep === "otp"
+            ? "Verify & Create Account"
+            : "Sign Up";
+      }
 
-        if (!emailPattern.test(email.value)) {
-          alert("Please enter a valid email address");
-          return;
+      async function readError(response, fallback) {
+        try {
+          const data = await response.json();
+          return data.error || fallback;
+        } catch {
+          return fallback;
         }
+      }
 
-        /* PASSWORD VALIDATION
-Minimum 8 characters
-1 uppercase
-1 lowercase
-1 number
-1 special character
-*/
-
+      function validateSignupDetails() {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const passwordPattern =
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+        if (!surname.value.trim()) {
+          alert("Please enter your surname");
+          return false;
+        }
+
+        if (!emailPattern.test(email.value.trim())) {
+          alert("Please enter a valid email address");
+          return false;
+        }
 
         if (!passwordPattern.test(password.value)) {
           alert(
             "Password must contain:\n- Minimum 8 characters\n- One uppercase letter\n- One lowercase letter\n- One digit\n- One special character",
           );
-          return;
+          return false;
         }
-
-        /* CONFIRM PASSWORD CHECK */
 
         if (password.value !== confirmPassword.value) {
           alert("Passwords do not match");
+          return false;
+        }
+
+        return true;
+      }
+
+      async function sendSignupOtp() {
+        if (!validateSignupDetails()) return;
+
+        pendingSignup = {
+          surname: surname.value.trim(),
+          email: email.value.trim().toLowerCase(),
+          password: password.value,
+        };
+
+        setButtonLoading(true, "Sending Code...");
+
+        try {
+          const response = await fetch(
+            "http://localhost:3000/api/email/signup-otp",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email: pendingSignup.email }),
+            },
+          );
+
+          if (!response.ok) {
+            throw new Error(
+              await readError(response, "Failed to send verification code"),
+            );
+          }
+
+          otpInput.value = "";
+          otpError.textContent = "";
+          otpMessage.innerHTML =
+            "We sent a 6-digit code to <strong>" +
+            pendingSignup.email +
+            "</strong>.";
+          setSignupStep("otp");
+          otpInput.focus();
+        } catch (error) {
+          alert(error.message);
+        } finally {
+          setButtonLoading(false);
+        }
+      }
+
+      async function completeSignup() {
+        const otp = otpInput.value.trim();
+
+        if (!/^\d{6}$/.test(otp)) {
+          otpError.textContent = "Enter the 6-digit code from your email.";
           return;
         }
 
+        otpError.textContent = "";
+        setButtonLoading(true, "Creating Account...");
+
         try {
-          const userCredential = await createUserWithEmailAndPassword(
-            auth,
-            email.value,
-            password.value,
+          const response = await fetch(
+            "http://localhost:3000/api/email/complete-signup",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ ...pendingSignup, otp }),
+            },
           );
 
-          const user = userCredential.user;
+          if (!response.ok) {
+            throw new Error(
+              await readError(response, "Failed to create account"),
+            );
+          }
 
-          await setDoc(doc(db, "users", user.uid), {
-            surname: surname.value,
-            email: email.value,
-            reportsCount: 0,
-          });
-
-          alert("Account created successfully");
-
+          alert("Account created successfully. You can now log in.");
           window.location.href = "login.html";
         } catch (error) {
-          alert(error.message);
+          otpError.textContent = error.message;
+        } finally {
+          setButtonLoading(false);
         }
-        const menuBtn = document.querySelector(".menu-button");
-        const navLinks = document.querySelector(".nav-links");
-        let menuOpen = false;
-        menuBtn.addEventListener("click", () => {
-          if (!menuOpen) {
-            menuBtn.classList.add("open");
-            navLinks.classList.add("show");
-            menuOpen = true;
-          } else {
-            menuBtn.classList.remove("open");
-            navLinks.classList.remove("show");
-            menuOpen = false;
-          }
-        });
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        if (signupStep === "details") {
+          await sendSignupOtp();
+          return;
+        }
+
+        await completeSignup();
+      });
+
+      editDetailsBtn.addEventListener("click", () => {
+        setSignupStep("details");
+      });
+
+      otpInput.addEventListener("input", () => {
+        otpInput.value = otpInput.value.replace(/\D/g, "").slice(0, 6);
+        otpError.textContent = "";
+      });
+
+      const menuBtn = document.querySelector(".menu-button");
+      const navLinks = document.querySelector(".nav-links");
+      let menuOpen = false;
+      menuBtn.addEventListener("click", () => {
+        if (!menuOpen) {
+          menuBtn.classList.add("open");
+          navLinks.classList.add("show");
+          menuOpen = true;
+        } else {
+          menuBtn.classList.remove("open");
+          navLinks.classList.remove("show");
+          menuOpen = false;
+        }
       });
     </script>
-      <!-- Google api -->
- <script>
-       
-function googleTranslateElementInit() {
-    new google.translate.TranslateElement(
-        { pageLanguage: 'en' },
-        'google_translate_element'
-    );
-}
+    <!-- Google api -->
+    <script>
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          { pageLanguage: "en" },
+          "google_translate_element",
+        );
+      }
 
-// Hide Google Translate banner whenever it appears
-function hideGoogleTranslateBanner() {
-    // Remove the top offset Google adds to body
-    document.body.style.top = '0px';
-    
-    // Hide the banner frame
-    const banner = document.querySelector('.goog-te-banner-frame');
-    if (banner) {
-        banner.style.display = 'none';
-    }
+      // Hide Google Translate banner whenever it appears
+      function hideGoogleTranslateBanner() {
+        // Remove the top offset Google adds to body
+        document.body.style.top = "0px";
 
-    // Also target the iframe by id
-    const bannerById = document.getElementById(':1.container');
-    if (bannerById) {
-        bannerById.style.display = 'none';
-    }
-}
+        // Hide the banner frame
+        const banner = document.querySelector(".goog-te-banner-frame");
+        if (banner) {
+          banner.style.display = "none";
+        }
 
-// Run on page load
-hideGoogleTranslateBanner();
+        // Also target the iframe by id
+        const bannerById = document.getElementById(":1.container");
+        if (bannerById) {
+          bannerById.style.display = "none";
+        }
+      }
 
-// Watch for DOM changes (when Google injects the banner after language select)
-const observer = new MutationObserver(function(mutations) {
-    hideGoogleTranslateBanner();
-});
+      // Run on page load
+      hideGoogleTranslateBanner();
 
-observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ['style']
-});
+      // Watch for DOM changes (when Google injects the banner after language select)
+      const observer = new MutationObserver(function (mutations) {
+        hideGoogleTranslateBanner();
+      });
 
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["style"],
+      });
+    </script>
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          { pageLanguage: "en" },
+          "google_translate_element",
+        );
+      }
+    </script>
 
-</script>
-<script type="text/javascript">
-function googleTranslateElementInit() {
-    new google.translate.TranslateElement(
-        { pageLanguage: 'en' },
-        'google_translate_element'
-    );
-}
-</script>
-
-<script type="text/javascript"
-src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
-</script>
-<!-- The End of google api -->
-    
+    <script
+      type="text/javascript"
+      src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+    ></script>
+    <!-- The End of google api -->
   </body>
 </html>

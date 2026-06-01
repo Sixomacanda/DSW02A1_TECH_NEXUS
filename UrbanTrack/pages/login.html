@@ -8,16 +8,23 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
       integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="../Styles/login.css" />
   </head>
+  <header></header>
   <body>
     <nav class="navbar">
       <div class="logo">Urban Track</div>
 
       <ul class="nav-links">
+        <!-- google api -->
+        <!-- <li><div id="google_translate_element"></div></li> -->
+
+        <!-- google api -->
         <li><div id="google_translate_element"></div></li>
+
         <li><a href="../../homePage.html">Home</a></li>
         <li><a href="signUpPage.html">Sign Up</a></li>
       </ul>
@@ -67,13 +74,13 @@
           <button type="submit" id="log" name="login" class="btn">Login</button>
 
           <!-- Google login option -->
-          <button
-    type="button"
-    id="google-login-btn"
-    class="btn google-btn">
-    <i class="fa-brands fa-google"></i>
-    Continue with Google
-</button>
+          <a
+            id="google-login-btn"
+            href="http://localhost:3000/auth/google"
+            class="btn google-btn"
+          >
+            <i class="fa-brands fa-google"></i> Continue with Google
+          </a>
 
           <p class="forgot-password">
             <a href="passRecovery.html">Forgot password?</a>
@@ -88,17 +95,16 @@
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
       import {
-  getAuth,
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        getAuth,
+        signInWithEmailAndPassword,
+        sendEmailVerification,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
       import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        getFirestore,
+        doc,
+        getDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
@@ -112,7 +118,6 @@
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
       const db = getFirestore(app);
-      const googleProvider = new GoogleAuthProvider();
 
       // Password Visibility Toggle
       const passwordGroup = document.querySelector(".password-group");
@@ -189,6 +194,15 @@
           );
           const user = userCredential.user;
 
+          // if (!user.emailVerified) {
+          //   await sendEmailVerification(user);
+          //   await signOut(auth);
+          //   alert(
+          //     "Please verify your email before logging in. A new verification email has been sent.",
+          //   );
+          //   return;
+          // }
+
           // Fetch user details from Firestore
           const userDoc = await getDoc(doc(db, "users", user.uid));
           let userData = {
@@ -225,41 +239,6 @@
           showLoginError();
         }
       });
-
-      const googleBtn = document.getElementById("google-login-btn");
-      if (googleBtn) {
-        googleBtn.addEventListener("click", async (e) => {
-          e.preventDefault();
-          try {
-            const result = await signInWithPopup(auth, googleProvider);
-            const user = result.user;
-
-            if (!user) {
-              throw new Error("Google sign in failed. Please try again.");
-            }
-
-            const userData = {
-              uid: user.uid,
-              email: user.email || "",
-              name: user.displayName || "",
-              photoURL: user.photoURL || "",
-              role: "user",
-            };
-
-            await setDoc(doc(db, "users", user.uid), userData, {
-              merge: true,
-            });
-
-            localStorage.setItem("urbanTrack_currentUser", JSON.stringify(userData));
-            localStorage.setItem("userEmail", user.email || "");
-            window.location.href = "MainPage.html";
-          } catch (error) {
-            console.error("Google login error:", error);
-            alert(error.message || "Google login failed. Please try again.");
-          }
-        });
-      }
-
       function initLogin() {
         const loginForm = document.getElementById("loginForm");
         if (!loginForm) return;
@@ -298,54 +277,60 @@
     <!--<script type="module" src="../js/login.js"></script>-->
 
     <!-- Google api -->
- <script>
-       
-function googleTranslateElementInit() {
-    new google.translate.TranslateElement(
-        { pageLanguage: 'en' },
-        'google_translate_element'
-    );
-}
+    <script>
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          { pageLanguage: "en" },
+          "google_translate_element",
+        );
+      }
 
-// Hide Google Translate banner whenever it appears
-function hideGoogleTranslateBanner() {
-    // Remove the top offset Google adds to body
-    document.body.style.top = '0px';
-    
-    // Hide the banner frame
-    const banner = document.querySelector('.goog-te-banner-frame');
-    if (banner) {
-        banner.style.display = 'none';
-    }
+      // Hide Google Translate banner whenever it appears
+      function hideGoogleTranslateBanner() {
+        // Remove the top offset Google adds to body
+        document.body.style.top = "0px";
 
-    // Also target the iframe by id
-    const bannerById = document.getElementById(':1.container');
-    if (bannerById) {
-        bannerById.style.display = 'none';
-    }
-}
+        // Hide the banner frame
+        const banner = document.querySelector(".goog-te-banner-frame");
+        if (banner) {
+          banner.style.display = "none";
+        }
 
-// Run on page load
-hideGoogleTranslateBanner();
+        // Also target the iframe by id
+        const bannerById = document.getElementById(":1.container");
+        if (bannerById) {
+          bannerById.style.display = "none";
+        }
+      }
 
-// Watch for DOM changes (when Google injects the banner after language select)
-const observer = new MutationObserver(function(mutations) {
-    hideGoogleTranslateBanner();
-});
+      // Run on page load
+      hideGoogleTranslateBanner();
 
-observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ['style']
-});
+      // Watch for DOM changes (when Google injects the banner after language select)
+      const observer = new MutationObserver(function (mutations) {
+        hideGoogleTranslateBanner();
+      });
 
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["style"],
+      });
+    </script>
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          { pageLanguage: "en" },
+          "google_translate_element",
+        );
+      }
+    </script>
 
-</script>
-<script type="text/javascript"
-src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
-</script>
-<!-- The End of google api -->
+    <script
+      type="text/javascript"
+      src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+    ></script>
+    <!-- The End of google api -->
   </body>
 </html>
-
