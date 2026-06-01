@@ -86,17 +86,31 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
+<<<<<<< HEAD
+    session({
+        secret: process.env.SESSION_SECRET || "default-unsafe-secret-change-in-production",
+        resave: false,
+        saveUninitialized: false,
+    })
+=======
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
   }),
+>>>>>>> 8f7ab9fb67ed3a0d5502a1eb196ee588eb941899
 );
-app.use(express.static("public"));
+const ROOT = path.join(__dirname, "..");
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(ROOT));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
+<<<<<<< HEAD
+const GOOGLE_OAUTH_CONFIGURED = !!(
+    process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+=======
 // Google Strategy
 passport.use(
   new GoogleStrategy(
@@ -109,7 +123,35 @@ passport.use(
       return done(null, profile);
     },
   ),
+>>>>>>> 8f7ab9fb67ed3a0d5502a1eb196ee588eb941899
 );
+
+if (!process.env.SESSION_SECRET) {
+    console.warn(
+        "Warning: SESSION_SECRET is not set. This is unsafe in production."
+    );
+}
+
+if (GOOGLE_OAUTH_CONFIGURED) {
+    passport.use(
+        new GoogleStrategy(
+            {
+                clientID: process.env.GOOGLE_CLIENT_ID,
+                clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+                callbackURL:
+                    process.env.GOOGLE_CALLBACK_URL ||
+                    "http://localhost:3000/auth/google/callback",
+            },
+            function (accessToken, refreshToken, profile, done) {
+                return done(null, profile);
+            }
+        )
+    );
+} else {
+    console.warn(
+        "Google OAuth credentials missing. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in .env"
+    );
+}
 
 // Session handling
 passport.serializeUser(function (user, done) {
@@ -122,12 +164,26 @@ passport.deserializeUser(function (user, done) {
 
 // Start Google login
 app.get(
+<<<<<<< HEAD
+    "/auth/google",
+    function (req, res, next) {
+        if (!GOOGLE_OAUTH_CONFIGURED) {
+            return res
+                .status(503)
+                .send("Google OAuth is not configured on this server.");
+        }
+        console.log("Google auth initiated from:", req.headers.referer);
+        next();
+    },
+    passport.authenticate("google", { scope: ["profile", "email"] })
+=======
   "/auth/google",
   function (req, res, next) {
     console.log("Google auth initiated from:", req.headers.referer);
     next();
   },
   passport.authenticate("google", { scope: ["profile", "email"] }),
+>>>>>>> 8f7ab9fb67ed3a0d5502a1eb196ee588eb941899
 );
 
 // Callback after Google login
@@ -139,6 +195,38 @@ const FRONTEND_LOGIN_URL =
   "http://localhost:5501/UrbanTrack/pages/login.html";
 
 app.get(
+<<<<<<< HEAD
+    "/auth/google/callback",
+    function (req, res, next) {
+        if (!GOOGLE_OAUTH_CONFIGURED) {
+            return res
+                .status(503)
+                .send("Google OAuth is not configured on this server.");
+        }
+        console.log("Google callback received, query:", req.query);
+        next();
+    },
+    passport.authenticate("google", {
+        failureRedirect: FRONTEND_LOGIN_URL,
+    }),
+    function (req, res) {
+        console.log("Google auth successful, user:", req.user ? req.user.displayName : "no user");
+        console.log("Google auth successful, redirecting to", FRONTEND_URL);
+        
+        // Store user data in session and send as query params
+        if (req.user) {
+            const userData = JSON.stringify({
+                name: req.user.displayName,
+                email: req.user.emails[0]?.value,
+                id: req.user.id,
+                picture: req.user.photos[0]?.value,
+                role: 'user'
+            });
+            res.redirect(FRONTEND_URL + "?googleUser=" + encodeURIComponent(userData));
+        } else {
+            res.redirect(FRONTEND_URL);
+        }
+=======
   "/auth/google/callback",
   function (req, res, next) {
     console.log("Google callback received, query:", req.query);
@@ -168,6 +256,7 @@ app.get(
       );
     } else {
       res.redirect(FRONTEND_URL);
+>>>>>>> 8f7ab9fb67ed3a0d5502a1eb196ee588eb941899
     }
   },
 );
@@ -183,6 +272,24 @@ app.get("/auth/user", function (req, res) {
   res.json(req.user || null);
 });
 
+<<<<<<< HEAD
+// Ensure root home page is served when running backend directly
+function serveHomePage(req, res) {
+    const filePath = path.join(ROOT, "homePage.html");
+    console.log("Serving home page for", req.path, "->", filePath);
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            console.error("Failed to send homePage.html:", err);
+            if (!res.headersSent) {
+                res.status(err.status || 500).send(err.message);
+            }
+        }
+    });
+}
+app.get("/", serveHomePage);
+app.get("/homePage", serveHomePage);
+app.get("/homePage.html", serveHomePage);
+=======
 // --- Password Recovery Routes ---
 
 // 1. Send 6-digit OTP via Email
@@ -432,6 +539,7 @@ app.post("/api/email/report-status", async (req, res) => {
     res.status(500).json({ error: "Failed to send status email" });
   }
 });
+>>>>>>> 8f7ab9fb67ed3a0d5502a1eb196ee588eb941899
 
 // Start server
 app.listen(3000, function () {
