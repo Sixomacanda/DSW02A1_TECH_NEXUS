@@ -144,23 +144,80 @@ body {
   background-color: transparent;
 }
 
-.nav-links li a {
+.nav-links li a,
+.nav-links li button {
   color: #38bdf8;
   text-decoration: none;
   padding: 8px 12px;
   border-radius: 20px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
   transition:
     background-color 0.2s ease,
-    color 0.2s ease;
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .nav-links li a:hover,
-.nav-links li a:focus-visible {
+.nav-links li button:hover,
+.nav-links li a:focus-visible,
+.nav-links li button:focus-visible {
   background: linear-gradient(90deg, rgba(56,189,248,0.14), rgba(99,102,241,0.08));
   color: #dbeafe;
   outline: none;
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(14,165,233,0.08);
+}
+
+.btn-home {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #38bdf8;
+  border: 1px solid rgba(56,189,248,0.18);
+}
+
+.btn-home:hover {
+  background: rgba(56, 189, 248, 0.15);
+  color: #dbeafe;
+}
+
+.btn-ghost-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.95rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(56,189,248,0.28);
+  background: transparent;
+  color: #38bdf8;
+  text-decoration: none;
+}
+
+.btn-ghost-nav:hover {
+  background: rgba(56, 189, 248, 0.12);
+  color: #dbeafe;
+}
+
+.btn-primary-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn-primary-nav:hover {
+  opacity: 0.94;
+  transform: translateY(-1px);
 }
 
 .nav-actions {
@@ -176,7 +233,8 @@ body {
   align-items: center;
   gap: 0.55rem;
 }
-.user-av {
+.user-av,
+.avatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -189,6 +247,7 @@ body {
   color: #fff;
   flex-shrink: 0;
 }
+.user-name,
 .user-email-text {
   font-size: 0.8rem;
   color: var(--text-secondary);
@@ -196,6 +255,9 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  opacity: 0.8;
+}
+.user-email-text {
   opacity: 0.8;
 }
 
@@ -230,21 +292,23 @@ body {
 
 /* Logout — minimal text button */
 .btn-logout {
-  padding: 0.38rem 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  background: transparent;
-  color: rgba(252, 165, 165, 0.8);
-  font-size: 0.78rem;
+  padding: 0.4rem 1.1rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.1);
+  color: #fca5a5;
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
-  transition: all 0.15s;
+  transition: all 0.2s;
 }
 .btn-logout:hover {
-  background: linear-gradient(90deg, rgba(239,68,68,0.12), rgba(220,38,38,0.08));
+  background: rgba(239, 68, 68, 0.25);
+  border-color: var(--danger);
   color: #fff;
-  box-shadow: 0 6px 16px rgba(239,68,68,0.12);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.16);
 }
 
 /* Hamburger */
