@@ -18,10 +18,6 @@
 
       <ul class="nav-links">
         <li><div id="google_translate_element"></div></li>
-<<<<<<< HEAD
-=======
-
->>>>>>> 8f7ab9fb67ed3a0d5502a1eb196ee588eb941899
         <li><a href="../../homePage.html">Home</a></li>
         <li><a href="signUpPage.html">Sign Up</a></li>
       </ul>
@@ -94,15 +90,17 @@
       import {
         getAuth,
         signInWithEmailAndPassword,
+        signInWithPopup,
+        GoogleAuthProvider,
         sendEmailVerification,
         signOut,
       } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
       import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        getFirestore,
+        doc,
+        getDoc,
+        setDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",

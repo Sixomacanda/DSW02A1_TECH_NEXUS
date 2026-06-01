@@ -137,6 +137,32 @@
     </form>
     <script src="../js/main.js"></script>
     <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+      import {
+        getAuth,
+        GoogleAuthProvider,
+        signInWithPopup,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U",
+        authDomain: "urban-track-91e53.firebaseapp.com",
+        projectId: "urban-track-91e53",
+        storageBucket: "urban-track-91e53.firebasestorage.app",
+        messagingSenderId: "519209303536",
+        appId: "1:519209303536:web:c212eb58eb836e27047135",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      const googleProvider = new GoogleAuthProvider();
+
       const form = document.getElementById("signupForm");
       const surname = document.getElementById("surname");
       const email = document.getElementById("email");
@@ -328,6 +354,40 @@
           menuOpen = false;
         }
       });
+
+      const googleBtn = document.getElementById("google-login-btn");
+      if (googleBtn) {
+        googleBtn.addEventListener("click", async (e) => {
+          e.preventDefault();
+          try {
+            const result = await signInWithPopup(auth, googleProvider);
+            const user = result.user;
+
+            if (!user) {
+              throw new Error("Google sign in failed. Please try again.");
+            }
+
+            const userData = {
+              uid: user.uid,
+              email: user.email || "",
+              name: user.displayName || "",
+              photoURL: user.photoURL || "",
+              role: "user",
+            };
+
+            await setDoc(doc(db, "users", user.uid), userData, {
+              merge: true,
+            });
+
+            localStorage.setItem("urbanTrack_currentUser", JSON.stringify(userData));
+            localStorage.setItem("userEmail", user.email || "");
+            window.location.href = "MainPage.html";
+          } catch (error) {
+            console.error("Google signup error:", error);
+            alert(error.message || "Google signup failed. Please try again.");
+          }
+        });
+      }
     </script>
     <!-- Google api -->
     <script>
