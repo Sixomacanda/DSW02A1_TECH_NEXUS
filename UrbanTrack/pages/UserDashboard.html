@@ -13,15 +13,22 @@
     <nav class="navbar">
       <div class="logo">Urban Track</div>
 
-      <ul class="nav-links">
-            <!-- google api -->
-        <li><div id="google_translate_element"></div></li>
-        <li><a href="MainPage.html">Home</a></li>
-        <li><a href="UserSettings.html">Settings</a></li>
-        <li><a href="#" onclick="doLogout()">Logout</a></li>
-      </ul>
+      <div class="nav-actions">
+        <ul class="nav-links" id="navLinks">
+          <!-- google api -->
+          <li><div id="google_translate_element"></div></li>
+          <li><a href="MainPage.html">Home</a></li>
+          <li><a href="UserSettings.html">Settings</a></li>
+          <li><a href="feedPage.html">Feed</a></li>
+        </ul>
 
-      <div class="menu-button">
+        <div class="user-chip">
+          <div class="avatar" id="userAvatarHeader">U</div>
+          <span class="user-name" id="userNameHeader">Welcome</span>
+        </div>
+      </div>
+
+      <div class="menu-button" id="menuButton" aria-label="Toggle menu">
         <div class="menu-button__burger"></div>
       </div>
     </nav>
@@ -143,15 +150,19 @@
 <script>
   /* Simple nav helpers */
   function toggleNav() {
-    document.getElementById("navLinks").classList.toggle("show");
+    const navLinks = document.getElementById("navLinks");
+    const menuButton = document.getElementById("menuButton");
+    if (navLinks) navLinks.classList.toggle("show");
+    if (menuButton) menuButton.classList.toggle("open");
   }
-  function doLogout() {
-    const confirmLogout = confirm("Are you sure you want to log out?");
-    if (!confirmLogout) return;
 
-    localStorage.removeItem("urbanTrack_currentUser");
-    location.href = "../../homePage.html";
-  }
+  document.addEventListener("DOMContentLoaded", () => {
+    const menuButton = document.getElementById("menuButton");
+    if (menuButton) {
+      menuButton.addEventListener("click", toggleNav);
+    }
+  });
+
   function getInitials(name) {
     if (!name) return "U";
     return name.trim().split(" ").slice(0,2).map(p => p[0].toUpperCase()).join("");
@@ -219,11 +230,15 @@
         const nameEl  = document.getElementById("welcomeName");
         const emailEl = document.getElementById("useremail");
         const avEl    = document.getElementById("userAvatar");
+        const headerAv = document.getElementById("userAvatarHeader");
+        const headerName = document.getElementById("userNameHeader");
         const storedUser = JSON.parse(localStorage.getItem("urbanTrack_currentUser") || "null");
         const name = storedUser?.name || user.displayName || user.email.split("@")[0];
         if (emailEl) emailEl.textContent = user.email;
         if (nameEl)  nameEl.textContent  = "Welcome back, " + name;
         if (avEl)    avEl.textContent    = getInitials(name);
+        if (headerAv) headerAv.textContent = getInitials(name);
+        if (headerName) headerName.textContent = name || '';
 
       } catch (error) {
         console.error(error);
@@ -239,9 +254,13 @@
     const emailEl = document.getElementById("useremail");
     const nameEl  = document.getElementById("welcomeName");
     const avEl    = document.getElementById("userAvatar");
+    const headerAv = document.getElementById("userAvatarHeader");
+    const headerName = document.getElementById("userNameHeader");
     if (emailEl) emailEl.textContent = currentUser.email;
     if (nameEl)  nameEl.textContent  = "Welcome back, " + name;
     if (avEl)    avEl.textContent    = getInitials(name);
+    if (headerAv) headerAv.textContent = getInitials(name);
+    if (headerName) headerName.textContent = name || '';
   }
 
   updateDashboardName();

@@ -16,26 +16,21 @@
     <nav class="navbar">
       <div class="logo">Urban Track</div>
 
-      <ul class="nav-links">
-        <!-- google api -->
-        <li><div id="google_translate_element"></div></li>
+      <div class="nav-actions">
+        <ul class="nav-links">
+          <!-- google api -->
+          <li><div id="google_translate_element"></div></li>
+          <li><a href="UserDashboard.html">Dashboard</a></li>
+          <li><a href="UserSettings.html">Settings</a></li>
+          <li><a href="feedPage.html">Feed</a></li>
+          <li><button class="btn-logout" onclick="doLogout()">Logout</button></li>
+        </ul>
 
-        <li><a href="UserDashboard.html">Dashboard</a></li>
-        <li><a href="UserSettings.html">Settings</a></li>
-         <li><a href="feedPage.html">Feed</a></li>
-        <li><a href="#" onclick="doLogout()">Logout</a></li>
-        <div class="nav-actions">
-          <div class="user-chip" id="userChip">
+        <div class="user-chip" id="userChip">
           <div class="avatar" id="userAvatar">?</div>
-        <span class="user-name" id="userNameDisplay">Loading…</span>
-        <span></span><span></span>
+          <span class="user-name" id="userNameDisplay">Loading…</span>
+        </div>
       </div>
-      </ul>
-      <!-- <div class="nav-actions">
-        <div class="user-chip" id="userChip"></div>
-        <div class="avatar" id="userAvatar">?</div>
-        <span class="user-name" id="userNameDisplay">Loading…</span>
-      </div> -->
 
       <div class="menu-button">
         <div class="menu-button__burger"></div>

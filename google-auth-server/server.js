@@ -5,7 +5,6 @@ const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const cors = require("cors");
 const nodemailer = require("nodemailer");
 const admin = require("firebase-admin");
 
@@ -22,6 +21,10 @@ if (!admin.apps.length && serviceAccountPath) {
     projectId: process.env.FIREBASE_PROJECT_ID || serviceAccount.project_id,
   });
 }
+
+const GOOGLE_OAUTH_CONFIGURED = Boolean(
+  process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET,
+);
 
 // Nodemailer Transporter Setup
 const smtpHost = process.env.SMTP_HOST || "smtp.gmail.com";
@@ -73,12 +76,23 @@ function getValidOtpRecord(email, otp, purpose) {
 }
 
 // Middleware
-app.use(cors());
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+
+  next();
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret:
+      process.env.SESSION_SECRET || "default-unsafe-secret-change-in-production",
     resave: false,
     saveUninitialized: false,
   }),
@@ -91,44 +105,31 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Google Strategy
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/auth/google/callback",
-    },
-    function (accessToken, refreshToken, profile, done) {
-      return done(null, profile);
-    },
-  ),
-);
-
 if (!process.env.SESSION_SECRET) {
-    console.warn(
-        "Warning: SESSION_SECRET is not set. This is unsafe in production."
-    );
+  console.warn(
+    "Warning: SESSION_SECRET is not set. Using an unsafe development fallback.",
+  );
 }
 
 if (GOOGLE_OAUTH_CONFIGURED) {
-    passport.use(
-        new GoogleStrategy(
-            {
-                clientID: process.env.GOOGLE_CLIENT_ID,
-                clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-                callbackURL:
-                    process.env.GOOGLE_CALLBACK_URL ||
-                    "http://localhost:3000/auth/google/callback",
-            },
-            function (accessToken, refreshToken, profile, done) {
-                return done(null, profile);
-            }
-        )
-    );
+  passport.use(
+    new GoogleStrategy(
+      {
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL:
+          process.env.GOOGLE_CALLBACK_URL ||
+          "http://localhost:3000/auth/google/callback",
+      },
+      function (accessToken, refreshToken, profile, done) {
+        return done(null, profile);
+      },
+    ),
+  );
 } else {
-    console.warn(
-        "Google OAuth credentials missing. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in .env"
-    );
+  console.warn(
+    "Google OAuth credentials missing. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in .env",
+  );
 }
 
 // Session handling
@@ -140,9 +141,20 @@ passport.deserializeUser(function (user, done) {
   done(null, user);
 });
 
+function ensureGoogleOAuthConfigured(req, res, next) {
+  if (!GOOGLE_OAUTH_CONFIGURED) {
+    return res
+      .status(503)
+      .send("Google OAuth is not configured on this server.");
+  }
+
+  next();
+}
+
 // Start Google login
 app.get(
   "/auth/google",
+  ensureGoogleOAuthConfigured,
   function (req, res, next) {
     console.log("Google auth initiated from:", req.headers.referer);
     next();
@@ -160,6 +172,7 @@ const FRONTEND_LOGIN_URL =
 
 app.get(
   "/auth/google/callback",
+  ensureGoogleOAuthConfigured,
   function (req, res, next) {
      console.log("Google callback received, query:", req.query);
     next();
@@ -347,11 +360,20 @@ app.post("/api/email/complete-signup", async (req, res) => {
       displayName: String(surname).trim(),
     });
 
-    await admin.firestore().collection("users").doc(user.uid).set({
-      surname: String(surname).trim(),
-      email: result.normalizedEmail,
-      reportsCount: 0,
-    });
+    try {
+      await admin.firestore().collection("users").doc(user.uid).set({
+        surname: String(surname).trim(),
+        email: result.normalizedEmail,
+        role: "user",
+        reportsCount: 0,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+    } catch (profileError) {
+      console.warn(
+        "Signup profile write failed; Firebase Auth account was created:",
+        profileError,
+      );
+    }
 
     otpStore.delete(result.normalizedEmail);
     res.json({ success: true, message: "Account created successfully" });
