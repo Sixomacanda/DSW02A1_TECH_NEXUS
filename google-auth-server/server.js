@@ -101,8 +101,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Google Strategy
-const GOOGLE_OAUTH_CONFIGURED = Boolean(
-  process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET,
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: "http://localhost:3000/auth/google/callback",
+    },
+    function (accessToken, refreshToken, profile, done) {
+      return done(null, profile);
+    },
+  ),
 );
 
 if (!process.env.SESSION_SECRET) {
@@ -174,7 +183,7 @@ app.get(
   "/auth/google/callback",
   ensureGoogleOAuthConfigured,
   function (req, res, next) {
-    console.log("Google callback received, query:", req.query);
+     console.log("Google callback received, query:", req.query);
     next();
   },
   passport.authenticate("google", {
@@ -215,15 +224,6 @@ app.get("/auth/test", function (req, res) {
 app.get("/auth/user", function (req, res) {
   res.json(req.user || null);
 });
-
-// Ensure root home page is served when running backend directly
-function serveHomePage(req, res) {
-  res.sendFile(path.join(ROOT, "homePage.html"));
-}
-
-app.get("/", serveHomePage);
-app.get("/homePage", serveHomePage);
-app.get("/homePage.html", serveHomePage);
 
 // --- Password Recovery Routes ---
 
