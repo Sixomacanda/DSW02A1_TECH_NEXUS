@@ -55,9 +55,11 @@
         <div class="admin-role">Super Administrator</div>
       </div>
     </div>
-
+<<<<<<< HEAD
+    <button class="logout-btn" onclick="if (confirm('Are you sure you want to log out?')) { localStorage.removeItem('urbanTrack_currentUser'); location.href='../../homePage.html'; }">Logout</button>
+=======
     <button class="logout-btn" onclick="localStorage.removeItem('urbanTrack_currentUser'); location.href='../../homePage.html'">Logout</button>
- 5d07c4cf995450fc05aa062128ad95573fde3017
+>>>>>>> 5d07c4cf995450fc05aa062128ad95573fde3017
   </div>
 </aside>
 
@@ -274,6 +276,8 @@
 
 <script type="module" src="Admindashboard.js"></script>
 </body>
-
+<<<<<<< HEAD
 </html>
- 5d07c4cf995450fc05aa062128ad95573fde3017
+=======
+</html>
+>>>>>>> 5d07c4cf995450fc05aa062128ad95573fde3017

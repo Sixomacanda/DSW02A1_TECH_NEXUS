@@ -543,7 +543,8 @@ section {
             background: #1e3a8a !important;
             color: white !important;
         }
-
+<<<<<<< HEAD
+=======
   :root {
       --bg-base: #0f172a;
       --bg-secondary: #1e3a8a;
@@ -1219,7 +1220,9 @@ section {
       #chatbot-window { bottom: 5.5rem; right: 1rem; width: calc(100vw - 2rem); }
       #chatbot-toggle { bottom: 1.25rem; right: 1.25rem; }
     }
-
+<<<<<<< HEAD:google-auth-server/UrbanTrack/Styles/homePage.css
+>>>>>>> 5d07c4cf995450fc05aa062128ad95573fde3017
+=======
   </style>
 </head>
 <body>
@@ -1610,4 +1613,4 @@ section {
 
 </body>
 </html>
- 81ba5177b7195ff894beba8c57589e69e8338f12:homePage.html
+>>>>>>> 81ba5177b7195ff894beba8c57589e69e8338f12:homePage.html
