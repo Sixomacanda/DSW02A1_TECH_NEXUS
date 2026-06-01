@@ -223,8 +223,14 @@ body {
 .nav-actions {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 0.75rem;
-  flex-shrink: 0;
+  flex: 1;
+  margin-left: auto;
+}
+
+.nav-actions .nav-links {
+  margin-right: 1rem;
 }
 
 /* User chip — borderless, clean */
@@ -232,11 +238,21 @@ body {
   display: flex;
   align-items: center;
   gap: 0.55rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 9999px;
+  padding: 0.35rem 0.85rem 0.35rem 0.45rem;
+  cursor: pointer;
+  transition: all 0.2s;
 }
+.user-chip:hover {
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
 .user-av,
 .avatar {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--accent), var(--indigo));
   display: flex;
@@ -248,14 +264,15 @@ body {
   flex-shrink: 0;
 }
 .user-name,
-.user-email-text {
-  font-size: 0.8rem;
+.user-email-text,
+.chip-name {
+  font-size: 0.82rem;
+  font-weight: 600;
   color: var(--text-secondary);
-  max-width: 140px;
+  max-width: 110px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  opacity: 0.8;
 }
 .user-email-text {
   opacity: 0.8;
@@ -1060,13 +1077,18 @@ body {
   .navbar {
     padding: 1px 40px;
   }
-    .nav-links {
+    .nav-actions {
+    gap: 0.75rem;
+    align-items: center;
+  }
+  .nav-links {
     justify-items: end;
     align-items: end;
     position: fixed;
     top: 65px;
     left: 0px;
     right: 0px;
+    width: 100%;
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(15px);
     flex-direction: column;
@@ -1076,11 +1098,16 @@ body {
     visibility: hidden;
     transition: all 0.3s ease;
     padding: 1rem;
-    /* border-radius: 12px; */
     z-index: 999;
   }
   .nav-links li {
     margin: 0.5rem 0;
+    width: 100%;
+  }
+  .nav-links li a,
+  .nav-links li button {
+    width: 100%;
+    justify-content: flex-start;
   }
 .nav-links.show {
     transform: scaleY(1);

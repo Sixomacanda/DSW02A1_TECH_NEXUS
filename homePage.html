@@ -471,6 +471,7 @@
     /* Google Translate */
     .goog-te-banner-frame { display: none !important; }
     body { top: 0px !important; position: static !important; }
+    #google_translate_element { display: flex; align-items: center; min-height: 34px; }
     .goog-logo-link, .goog-te-gadget span { display: none !important; }
     .goog-te-gadget { color: transparent !important; }
     .goog-te-combo {
@@ -895,18 +896,20 @@
     function googleTranslateElementInit() {
       new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
     }
-    (function hideBanner() {
+
+    function hideGoogleTranslateBanner() {
       document.body.style.top = '0px';
-      const b = document.querySelector('.goog-te-banner-frame');
-      if (b) b.style.display = 'none';
-    })();
-    new MutationObserver(() => {
-      document.body.style.top = '0px';
-      const b = document.querySelector('.goog-te-banner-frame');
-      if (b) b.style.display = 'none';
-    }).observe(document.body, { childList:true, subtree:true, attributes:true, attributeFilter:['style'] });
+      const banner = document.querySelector('.goog-te-banner-frame');
+      if (banner) banner.style.display = 'none';
+      const bannerById = document.getElementById(':1.container');
+      if (bannerById) bannerById.style.display = 'none';
+    }
+
+    hideGoogleTranslateBanner();
+    new MutationObserver(() => hideGoogleTranslateBanner())
+      .observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
   </script>
-  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   <!-- JS -->
   <script>

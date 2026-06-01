@@ -16,23 +16,25 @@
   <nav class="navbar">
     <a href="index.html" class="logo">Urban Track</a>
 
-    <ul class="nav-links">
-      <li><a href="MainPage.html">Home</a></li>
-    </ul>
-
     <div class="nav-actions">
+      <ul class="nav-links">
+        <li><a href="MainPage.html">Home</a></li>
+        <li id="dashboardLink" style="display:none;"><a href="UserDashboard.html">Dashboard</a></li>
+        <li id="settingsLink" style="display:none;"><a href="UserSettings.html">Settings</a></li>
+        <li><div id="google_translate_element"></div></li>
+        <li id="guestLoginLink" style="display:none;"><a href="/UrbanTrack/pages/login.html">Login</a></li>
+        <li id="guestSignupLink" style="display:none;"><a href="/UrbanTrack/pages/signUpPage.html">Sign Up</a></li>
+      </ul>
       <div id="navUser" style="display:none; align-items:center; gap:0.85rem;">
         <div class="user-chip">
           <div class="avatar" id="userAvatar">?</div>
           <span class="user-name" id="userName">Loading...</span>
         </div>
-        <button class="btn-logout" id="logoutBtn">Logout</button>
-      </div>
-      <div id="navGuest" style="display:none; align-items:center; gap:0.75rem;">
-        <a href="MainPage.html" class="btn-home">Home</a>
-        <a href="/UrbanTrack/pages/login.html" class="btn-ghost-nav">Login</a>
-        <a href="/UrbanTrack/pages/signUpPage.html" class="btn-primary-nav">Sign Up</a>
-      </div>
+    </div>
+    </div>
+
+    <div class="menu-button" id="menuButton" aria-label="Toggle menu">
+      <div class="menu-button__burger"></div>
     </div>
   </nav>
 
@@ -222,19 +224,23 @@
     const PAGE_SIZE = 10;
 
     // DOM
-    const issuesList     = document.getElementById('issuesList');
-    const feedLoader     = document.getElementById('feedLoader');
-    const feedEmpty      = document.getElementById('feedEmpty');
-    const loadMoreWrap   = document.getElementById('loadMoreWrap');
-    const searchInput    = document.getElementById('searchInput');
-    const categoryFilter = document.getElementById('categoryFilter');
-    const statusFilter   = document.getElementById('statusFilter');
-    const sortRecent     = document.getElementById('sortRecent');
-    const sortTop        = document.getElementById('sortTop');
-    const toastEl        = document.getElementById('toast');
-    const navUser        = document.getElementById('navUser');
-    const navGuest       = document.getElementById('navGuest');
-    const guestPrompt    = document.getElementById('guestPrompt');
+    const issuesList      = document.getElementById('issuesList');
+    const feedLoader      = document.getElementById('feedLoader');
+    const feedEmpty       = document.getElementById('feedEmpty');
+    const loadMoreWrap    = document.getElementById('loadMoreWrap');
+    const searchInput     = document.getElementById('searchInput');
+    const categoryFilter  = document.getElementById('categoryFilter');
+    const statusFilter    = document.getElementById('statusFilter');
+    const sortRecent      = document.getElementById('sortRecent');
+    const sortTop         = document.getElementById('sortTop');
+    const toastEl         = document.getElementById('toast');
+    const navUser         = document.getElementById('navUser');
+    const dashboardLink   = document.getElementById('dashboardLink');
+    const settingsLink    = document.getElementById('settingsLink');
+    const guestLoginLink  = document.getElementById('guestLoginLink');
+    const guestSignupLink = document.getElementById('guestSignupLink');
+    const menuButton      = document.getElementById('menuButton');
+    const guestPrompt     = document.getElementById('guestPrompt');
 
     // Toast
     function showToast(msg, isError = false) {
@@ -245,9 +251,12 @@
 
     // Nav state
     function showLoggedInNav(user) {
-      navUser.style.display  = 'flex';
-      navGuest.style.display = 'none';
-      guestPrompt.style.display = 'none';
+      navUser.style.display      = 'flex';
+      dashboardLink.style.display = 'list-item';
+      settingsLink.style.display  = 'list-item';
+      guestLoginLink.style.display  = 'none';
+      guestSignupLink.style.display = 'none';
+      guestPrompt.style.display    = 'none';
       const storedUser = JSON.parse(localStorage.getItem('urbanTrack_currentUser') || 'null');
       const name = storedUser?.name || user.displayName || user.email.split('@')[0];
       const initials = (name || 'U').split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
@@ -256,9 +265,12 @@
     }
 
     function showLoggedOutNav() {
-      navUser.style.display     = 'none';
-      navGuest.style.display    = 'flex';
-      guestPrompt.style.display = 'block';
+      navUser.style.display        = 'none';
+      dashboardLink.style.display = 'none';
+      settingsLink.style.display  = 'none';
+      guestLoginLink.style.display  = 'list-item';
+      guestSignupLink.style.display = 'list-item';
+      guestPrompt.style.display     = 'block';
     }
 
     // Auth — no redirect, public feed
@@ -269,12 +281,15 @@
       loadStats();
     });
 
-    // Logout — stay on feed
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
-      await signOut(auth);
-      showLoggedOutNav();
-      showToast('Logged out successfully.');
-    });
+    // Mobile menu toggle
+    if (menuButton) {
+      menuButton.addEventListener('click', () => {
+        const navLinks = document.querySelector('.nav-links');
+        if (!navLinks) return;
+        navLinks.classList.toggle('show');
+        menuButton.classList.toggle('open');
+      });
+    }
 
     // ── Load issues from 'reports' collection, no orderBy so all docs load ──
     let unsubscribe = null;
@@ -547,5 +562,24 @@
     }
   </script>
 
+  <script>
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+    }
+
+    function hideGoogleTranslateBanner() {
+      document.body.style.top = '0px';
+      const banner = document.querySelector('.goog-te-banner-frame');
+      if (banner) banner.style.display = 'none';
+      const bannerById = document.getElementById(':1.container');
+      if (bannerById) bannerById.style.display = 'none';
+    }
+
+    hideGoogleTranslateBanner();
+    const observer = new MutationObserver(() => hideGoogleTranslateBanner());
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
+  </script>
+
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
