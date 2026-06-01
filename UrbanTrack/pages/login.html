@@ -18,6 +18,10 @@
 
       <ul class="nav-links">
         <li><div id="google_translate_element"></div></li>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8f7ab9fb67ed3a0d5502a1eb196ee588eb941899
         <li><a href="../../homePage.html">Home</a></li>
         <li><a href="signUpPage.html">Sign Up</a></li>
       </ul>
@@ -88,11 +92,19 @@
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
       import {
+<<<<<<< HEAD
   getAuth,
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+=======
+        getAuth,
+        signInWithEmailAndPassword,
+        sendEmailVerification,
+        signOut,
+      } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+>>>>>>> 8f7ab9fb67ed3a0d5502a1eb196ee588eb941899
       import {
   getFirestore,
   doc,
@@ -188,6 +200,15 @@
             passwordValue,
           );
           const user = userCredential.user;
+
+          // if (!user.emailVerified) {
+          //   await sendEmailVerification(user);
+          //   await signOut(auth);
+          //   alert(
+          //     "Please verify your email before logging in. A new verification email has been sent.",
+          //   );
+          //   return;
+          // }
 
           // Fetch user details from Firestore
           const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -298,54 +319,69 @@
     <!--<script type="module" src="../js/login.js"></script>-->
 
     <!-- Google api -->
- <script>
-       
-function googleTranslateElementInit() {
-    new google.translate.TranslateElement(
-        { pageLanguage: 'en' },
-        'google_translate_element'
-    );
-}
+    <script>
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          { pageLanguage: "en" },
+          "google_translate_element",
+        );
+      }
 
-// Hide Google Translate banner whenever it appears
-function hideGoogleTranslateBanner() {
-    // Remove the top offset Google adds to body
-    document.body.style.top = '0px';
-    
-    // Hide the banner frame
-    const banner = document.querySelector('.goog-te-banner-frame');
-    if (banner) {
-        banner.style.display = 'none';
-    }
+      // Hide Google Translate banner whenever it appears
+      function hideGoogleTranslateBanner() {
+        // Remove the top offset Google adds to body
+        document.body.style.top = "0px";
 
-    // Also target the iframe by id
-    const bannerById = document.getElementById(':1.container');
-    if (bannerById) {
-        bannerById.style.display = 'none';
-    }
-}
+        // Hide the banner frame
+        const banner = document.querySelector(".goog-te-banner-frame");
+        if (banner) {
+          banner.style.display = "none";
+        }
 
-// Run on page load
-hideGoogleTranslateBanner();
+        // Also target the iframe by id
+        const bannerById = document.getElementById(":1.container");
+        if (bannerById) {
+          bannerById.style.display = "none";
+        }
+      }
 
-// Watch for DOM changes (when Google injects the banner after language select)
-const observer = new MutationObserver(function(mutations) {
-    hideGoogleTranslateBanner();
-});
+      // Run on page load
+      hideGoogleTranslateBanner();
 
-observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ['style']
-});
+      // Watch for DOM changes (when Google injects the banner after language select)
+      const observer = new MutationObserver(function (mutations) {
+        hideGoogleTranslateBanner();
+      });
 
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["style"],
+      });
+    </script>
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          { pageLanguage: "en" },
+          "google_translate_element",
+        );
+      }
+    </script>
 
+<<<<<<< HEAD
 </script>
 <script type="text/javascript"
 src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
 </script>
 <!-- The End of google api -->
+=======
+    <script
+      type="text/javascript"
+      src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+    ></script>
+    <!-- The End of google api -->
+>>>>>>> 8f7ab9fb67ed3a0d5502a1eb196ee588eb941899
   </body>
 </html>
 

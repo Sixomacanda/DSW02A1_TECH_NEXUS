@@ -1,12 +1,25 @@
-# Ignore local environment files
-*.env
-**/*.env
+# Environment Variables
+# Ignore any .env files (root and nested)
+.env
+**/.env
 
-# Ignore Firebase Admin service account credentials and similar private JSON keys
-**/*firebase-adminsdk*.json
-**/*serviceAccount*.json
-google-auth-server/urban-track-91e53-firebase-adminsdk-*.json
-UrbanTrack/google-auth-server/urban-track-91e53-firebase-adminsdk-*.json
-
-# Ignore dependency directories
+# Dependencies
 node_modules/
+
+# Lock files
+package-lock.json
+yarn.lock
+
+# Firebase / keys / secrets - list specific sensitive files rather than all JSON
+# Example: firebase config, local keys, or exported data
+firebase.json
+urbantrack_kb.json
+google-auth-server/.env
+
+# Keep project metadata files tracked (package.json, composer.json)
+!package.json
+!**/package.json
+!composer.json
+
+# OS
+.DS_Store

@@ -22,6 +22,7 @@
 
         <li><a href="UserDashboard.html">Dashboard</a></li>
         <li><a href="UserSettings.html">Settings</a></li>
+         <li><a href="feedPage.html">Feed</a></li>
         <li><a href="#" onclick="doLogout()">Logout</a></li>
         <div class="nav-actions">
           <div class="user-chip" id="userChip">
@@ -640,7 +641,20 @@
         document.getElementById("userAvatar").textContent = getInitials(name);
       }
 
+      window.addEventListener('storage', (event) => {
+        if (event.key === 'urbanTrack_currentUser') {
+          loadUser();
+        }
+      });
+
+      window.addEventListener('focus', () => {
+        loadUser();
+      });
+
       window.doLogout = function () {
+        const confirmLogout = confirm("Are you sure you want to log out?");
+        if (!confirmLogout) return;
+
         localStorage.removeItem("urbanTrack_currentUser");
         location.href = "../../homePage.html";
       };
@@ -870,11 +884,28 @@
           reportedBy: userId,
           reporterName: userName,
           reporterEmail: u?.email || "N/A",
+          notifyByEmail: document.getElementById("notifyCheck").checked,
+          status: "pending",
           ref,
         };
 
         try {
           await addDoc(collection(db, "reports"), reportData);
+          if (reportData.reporterEmail && reportData.reporterEmail !== "N/A") {
+            fetch("http://localhost:3000/api/email/report-submitted", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: reportData.reporterEmail,
+                name: reportData.reporterName,
+                ref: reportData.ref,
+                title: reportData.title,
+                status: reportData.status,
+              }),
+            }).catch((emailError) => {
+              console.warn("Report confirmation email skipped:", emailError);
+            });
+          }
           if (userId) {
             try {
               await updateDoc(doc(db, "users", userId), {

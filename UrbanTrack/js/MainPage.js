@@ -113,6 +113,9 @@ function isLoggedIn() {
 }
 
 function logout() {
+  const confirmLogout = confirm("Are you sure you want to log out?");
+  if (!confirmLogout) return;
+
   if (isGoogleUser()) {
     console.warn("Google-authenticated users remain logged in and logout is disabled.");
     return;
@@ -465,6 +468,10 @@ function initReportForm(currentUser) {
   // Check if we're on the report page (look for report-specific elements)
   const submitBtn = document.getElementById("submitBtn");
   if (!submitBtn) return;
+
+  if (typeof window.submitReport === "function") {
+    return;
+  }
 
   // Override the existing submitReport function to store in localStorage
   window.submitReport = function () {
