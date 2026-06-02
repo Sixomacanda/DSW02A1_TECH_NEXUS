@@ -887,7 +887,7 @@
         try {
           await addDoc(collection(db, "reports"), reportData);
           if (reportData.reporterEmail && reportData.reporterEmail !== "N/A") {
-            fetch("http://localhost:3000/api/email/report-submitted", {
+            fetch("https://urbantrack-9z2l.onrender.com/api/email/report-submitted", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({

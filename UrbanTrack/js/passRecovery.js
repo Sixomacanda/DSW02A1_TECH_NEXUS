@@ -2,7 +2,7 @@ var cur = 1;
 var userEmail = "";
 var verifiedPasswordOtp = "";
 var timerInterval = null;
-var AUTH_API_BASE = "http://localhost:3000";
+var AUTH_API_BASE = "https://urbantrack-9z2l.onrender.com";
 
 function postAuthJson(path, payload) {
   return fetch(AUTH_API_BASE + path, {
