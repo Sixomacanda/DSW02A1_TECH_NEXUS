@@ -251,9 +251,8 @@
             body: JSON.stringify(payload),
           });
         } catch (error) {
-          throw new Error(
-            "Cannot reach the auth server. Start it with npm start, then try again.",
-          );
+          console.error("Fetch error:", error);
+          throw new Error(`Fetch failed: ${error.message}`);
         }
 
         const data = await response.json().catch(() => ({}));
