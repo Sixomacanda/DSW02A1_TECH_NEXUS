@@ -48,7 +48,9 @@ const transporter = nodemailer.createTransport({
 const otpStore = new Map();
 
 function normalizeEmail(email) {
-  return String(email || "").trim().toLowerCase();
+  return String(email || "")
+    .trim()
+    .toLowerCase();
 }
 
 function getValidOtpRecord(email, otp, purpose) {
@@ -92,7 +94,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
     secret:
-      process.env.SESSION_SECRET || "default-unsafe-secret-change-in-production",
+      process.env.SESSION_SECRET ||
+      "default-unsafe-secret-change-in-production",
     resave: false,
     saveUninitialized: false,
   }),
@@ -174,7 +177,7 @@ app.get(
   "/auth/google/callback",
   ensureGoogleOAuthConfigured,
   function (req, res, next) {
-     console.log("Google callback received, query:", req.query);
+    console.log("Google callback received, query:", req.query);
     next();
   },
   passport.authenticate("google", {
@@ -290,57 +293,11 @@ app.post("/api/email/reset-password", async (req, res) => {
   }
 });
 
-// --- Signup OTP Routes ---
-
-app.post("/api/email/signup-otp", async (req, res) => {
-  const email = normalizeEmail(req.body.email);
-  if (!email) return res.status(400).json({ error: "Email is required" });
-
-  try {
-    await admin.auth().getUserByEmail(email);
-    return res.status(409).json({ error: "Email is already registered" });
-  } catch (error) {
-    if (error.code !== "auth/user-not-found") {
-      console.error("Signup email check error:", error);
-      return res.status(500).json({ error: "Failed to check email" });
-    }
-  }
-
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  otpStore.set(email, {
-    otp,
-    expires: Date.now() + 600000,
-    purpose: "signup",
-  });
-
-  const mailOptions = {
-    from:
-      process.env.MAIL_FROM ||
-      `"UrbanTrack Support" <${process.env.SMTP_USER}>`,
-    to: email,
-    subject: "Verify your UrbanTrack email",
-    text: `Your UrbanTrack signup code is: ${otp}. This code expires in 10 minutes.`,
-    html: `<h3>Verify your email</h3><p>Your 6-digit signup code is: <strong>${otp}</strong></p><p>This code expires in 10 minutes.</p>`,
-  };
-
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log(`Signup OTP sent to ${email}`);
-    res.json({ success: true, message: "Signup OTP sent successfully" });
-  } catch (error) {
-    console.error("Signup OTP email error:", error);
-    res
-      .status(500)
-      .json({ error: "Failed to send email. Check SMTP settings." });
-  }
-});
-
 app.post("/api/email/complete-signup", async (req, res) => {
-  const { surname, password, otp } = req.body;
+  const { surname, password } = req.body;
   const email = normalizeEmail(req.body.email);
-  const result = getValidOtpRecord(email, otp, "signup");
 
-  if (result.error) return res.status(400).json({ error: result.error });
+  if (!email) return res.status(400).json({ error: "Email is required" });
 
   if (!surname || !String(surname).trim()) {
     return res.status(400).json({ error: "Surname is required" });
@@ -354,20 +311,24 @@ app.post("/api/email/complete-signup", async (req, res) => {
 
   try {
     const user = await admin.auth().createUser({
-      email: result.normalizedEmail,
+      email,
       password,
       emailVerified: true,
       displayName: String(surname).trim(),
     });
 
     try {
-      await admin.firestore().collection("users").doc(user.uid).set({
-        surname: String(surname).trim(),
-        email: result.normalizedEmail,
-        role: "user",
-        reportsCount: 0,
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
+      await admin
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .set({
+          surname: String(surname).trim(),
+          email,
+          role: "user",
+          reportsCount: 0,
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
     } catch (profileError) {
       console.warn(
         "Signup profile write failed; Firebase Auth account was created:",
@@ -375,7 +336,6 @@ app.post("/api/email/complete-signup", async (req, res) => {
       );
     }
 
-    otpStore.delete(result.normalizedEmail);
     res.json({ success: true, message: "Account created successfully" });
   } catch (error) {
     console.error("Signup completion error:", error);
@@ -393,7 +353,8 @@ app.post("/api/email/report-submitted", async (req, res) => {
   const { name, ref, title, status } = req.body;
 
   if (!email) return res.status(400).json({ error: "Email is required" });
-  if (!ref) return res.status(400).json({ error: "Reference number is required" });
+  if (!ref)
+    return res.status(400).json({ error: "Reference number is required" });
 
   const displayName = String(name || "Community Member").trim();
   const issueTitle = String(title || "your issue report").trim();
@@ -435,7 +396,8 @@ app.post("/api/email/report-status", async (req, res) => {
   const { name, ref, title, status } = req.body;
 
   if (!email) return res.status(400).json({ error: "Email is required" });
-  if (!ref) return res.status(400).json({ error: "Reference number is required" });
+  if (!ref)
+    return res.status(400).json({ error: "Reference number is required" });
   if (!["in-progress", "resolved"].includes(status)) {
     return res.status(400).json({ error: "Unsupported status" });
   }
