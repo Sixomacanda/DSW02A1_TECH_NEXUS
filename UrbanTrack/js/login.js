@@ -95,3 +95,33 @@ function initLogin() {
     
   });
 }
+
+// Password visibility toggle functionality
+function initPasswordToggle() {
+  const passwordInput = document.getElementById("password");
+  const eyeIcon = document.querySelector(".fa-eye");
+  const eyeSlashIcon = document.querySelector(".fa-eye-slash");
+
+  if (!passwordInput || !eyeIcon || !eyeSlashIcon) return;
+
+  // Toggle on eye icon click
+  eyeIcon.addEventListener("click", function() {
+    passwordInput.type = "text";
+    eyeIcon.classList.add("hide");
+    eyeSlashIcon.classList.remove("hide");
+  });
+
+  // Toggle on eye-slash icon click
+  eyeSlashIcon.addEventListener("click", function() {
+    passwordInput.type = "password";
+    eyeSlashIcon.classList.add("hide");
+    eyeIcon.classList.remove("hide");
+  });
+}
+
+// Initialize password toggle when page loads
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initPasswordToggle);
+} else {
+  initPasswordToggle();
+}
