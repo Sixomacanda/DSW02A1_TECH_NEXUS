@@ -1,3 +1,6 @@
+console.log("🔥 SERVER LOADED - complete-signup route should exist");
+
+
 require("dotenv").config();
 
 const path = require("path");
