@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, getDocs, doc, updateDoc, setDoc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, getDocs, doc, updateDoc, setDoc, getDoc, query, orderBy, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // ── Firebase config — UNTOUCHED ──
 const firebaseConfig = {
@@ -37,7 +37,6 @@ window.showView = function(viewId, btn) {
   };
   document.getElementById("topbarTitle").textContent = titles[viewId] || "Dashboard";
 
-  
   if (viewId === "users") {
     renderUsers(allUsers);
   }
@@ -46,6 +45,7 @@ window.showView = function(viewId, btn) {
     renderIssues(allReports);
   }
 };
+
 // ── TOAST ──
 window.showToast = function(msg, type) {
   const t = document.getElementById("toast");
@@ -105,7 +105,7 @@ function renderIssues(reports) {
 function renderUsers(users) {
   const tbody = document.getElementById("usersTbody");
   if (!users.length) {
-    tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No registered users found.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-state">No registered users found.</td></tr>`;
     return;
   }
   tbody.innerHTML = users.map(u => `
@@ -118,13 +118,69 @@ function renderUsers(users) {
       <td>${u.area || "—"}</td>
       <td style="font-weight:700;color:var(--accent);">${u.reportsCount || 0}</td>
       <td><span class="badge badge-active">${u.status || "Active"}</span></td>
+      <td>
+        <button class="btn btn-ghost" style="color:#ef4444;border-color:#ef4444;padding:.25rem .65rem;font-size:.75rem;"
+          onclick="deleteUser('${u.id}', '${(u.name || u.email || "this user").replace(/'/g, "\\'")}', '${(u.email || "").replace(/'/g, "\\'")}')">
+          Delete
+        </button>
+      </td>
     </tr>
   `).join("");
 }
 
+// ── DELETE USER ──
+window.deleteUser = async function(uid, label, email) {
+  if (!confirm(`Permanently delete "${label}"?\nAll their reports and issues will also be deleted. This cannot be undone.`)) return;
+  try {
+    // ── Step 1: Delete reports matched by uid field ──
+    const byUid = await getDocs(query(collection(db, "reports"), where("uid", "==", uid)));
+    await Promise.all(byUid.docs.map(d => deleteDoc(doc(db, "reports", d.id))));
+
+    // ── Step 2: Delete reports matched by userId field (fallback) ──
+    const byUserId = await getDocs(query(collection(db, "reports"), where("userId", "==", uid)));
+    await Promise.all(byUserId.docs.map(d => deleteDoc(doc(db, "reports", d.id))));
+
+    // ── Step 3: Delete reports matched by reporterEmail (second fallback) ──
+    if (email) {
+      const byEmail = await getDocs(query(collection(db, "reports"), where("reporterEmail", "==", email)));
+      await Promise.all(byEmail.docs.map(d => deleteDoc(doc(db, "reports", d.id))));
+    }
+
+    // ── Step 4: Delete the user document from Firestore ──
+    await deleteDoc(doc(db, "users", uid));
+
+    // ── Step 5: Remove from local arrays so UI updates instantly ──
+    allUsers   = allUsers.filter(u => u.id !== uid);
+    allReports = allReports.filter(r =>
+      r.uid !== uid &&
+      r.userId !== uid &&
+      r.reporterEmail !== email
+    );
+
+    // ── Step 6: Re-render tables and update all counters ──
+    renderUsers(allUsers);
+    renderIssues(allReports);
+
+    document.getElementById("usersBadge").textContent  = allUsers.length;
+    document.getElementById("statTotal").textContent   = allReports.length;
+    document.getElementById("issuesBadge").textContent = allReports.length;
+
+    const resolved = allReports.filter(r => r.status === "resolved").length;
+    const progress = allReports.filter(r => r.status === "in-progress").length;
+    const urgent   = allReports.filter(r => r.severity === "high" && r.status !== "resolved").length;
+    document.getElementById("statResolved").textContent = resolved;
+    document.getElementById("statProgress").textContent = progress;
+    document.getElementById("statUrgent").textContent   = urgent;
+
+    showToast(`User "${label}" and all their reports have been permanently deleted.`, "success");
+  } catch (err) {
+    console.error("Delete user error:", err);
+    showToast("Failed to delete user. Check console for details.", "danger");
+  }
+};
+
 // ── FILTER ISSUES ──
 window.filterIssues = function(status, btn) {
-  // Update active filter button style
   document.querySelectorAll("#view-issues .btn-ghost, #view-issues .btn-primary")
     .forEach(b => { b.style.borderColor = ""; b.style.color = ""; });
   if (btn) { btn.style.borderColor = "var(--accent)"; btn.style.color = "var(--accent)"; }
