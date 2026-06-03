@@ -4,19 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UrbanTrack - Reset Password</title>
+
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
     />
+
     <link rel="stylesheet" href="../Styles/passRecovery.css" />
   </head>
+
   <body>
     <!-- Header -->
     <header class="header">
@@ -24,7 +25,6 @@
         <div class="logo">Urban Track</div>
 
         <ul class="nav-links">
-          <!-- google api -->
           <li><div id="google_translate_element"></div></li>
           <li><a href="../../homePage.html">Home</a></li>
           <li><a href="login.html">Login</a></li>
@@ -47,31 +47,20 @@
           </div>
 
           <h1 class="card-title">Password Recovery</h1>
+
           <p class="card-sub">
-            Enter your email address to receive a one-time code to reset your
-            password.
+            Enter your email address to receive a one-time code to reset your password.
           </p>
 
-          <form action="/recover" method="POST" novalidate class="reset-form">
+          <form class="reset-form" novalidate>
             <div class="step step-email active">
               <div class="field">
                 <label for="email">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="example@gmail.com"
-                  required
-                />
+                <input id="email" type="email" placeholder="example@gmail.com" required />
                 <small class="hint err"></small>
               </div>
 
-              <button
-                class="btn-main"
-                id="resetBtn"
-                type="button"
-                onclick="resetPassword()"
-              >
+              <button class="btn-main" onclick="resetPassword()" type="button">
                 Send Reset Code
               </button>
             </div>
@@ -79,127 +68,32 @@
             <div class="step step-otp">
               <p class="card-sub">Enter the 6-digit code sent to your email.</p>
 
-              <div class="field">
-                <label>OTP Code</label>
-                <div class="otp-row" aria-label="Enter 6-digit code">
-                  <input
-                    type="text"
-                    inputmode="numeric"
-                    pattern="\d*"
-                    maxlength="1"
-                    class="otp-box"
-                    aria-label="OTP digit 1"
-                    autocomplete="one-time-code"
-                  />
-                  <input
-                    type="text"
-                    inputmode="numeric"
-                    pattern="\d*"
-                    maxlength="1"
-                    class="otp-box"
-                    aria-label="OTP digit 2"
-                    autocomplete="one-time-code"
-                  />
-                  <input
-                    type="text"
-                    inputmode="numeric"
-                    pattern="\d*"
-                    maxlength="1"
-                    class="otp-box"
-                    aria-label="OTP digit 3"
-                    autocomplete="one-time-code"
-                  />
-                  <input
-                    type="text"
-                    inputmode="numeric"
-                    pattern="\d*"
-                    maxlength="1"
-                    class="otp-box"
-                    aria-label="OTP digit 4"
-                    autocomplete="one-time-code"
-                  />
-                  <input
-                    type="text"
-                    inputmode="numeric"
-                    pattern="\d*"
-                    maxlength="1"
-                    class="otp-box"
-                    aria-label="OTP digit 5"
-                    autocomplete="one-time-code"
-                  />
-                  <input
-                    type="text"
-                    inputmode="numeric"
-                    pattern="\d*"
-                    maxlength="1"
-                    class="otp-box"
-                    aria-label="OTP digit 6"
-                    autocomplete="one-time-code"
-                  />
-                </div>
-                <small class="hint err"></small>
+              <div class="otp-row">
+                <input maxlength="1" class="otp-box" />
+                <input maxlength="1" class="otp-box" />
+                <input maxlength="1" class="otp-box" />
+                <input maxlength="1" class="otp-box" />
+                <input maxlength="1" class="otp-box" />
+                <input maxlength="1" class="otp-box" />
               </div>
 
-              <button
-                class="btn-main"
-                id="verifyBtn"
-                type="button"
-                onclick="verifyOtp()"
-              >
+              <button class="btn-main" onclick="verifyOtp()" type="button">
                 Verify OTP
               </button>
-              <button class="btn-ghost" type="button" onclick="showEmailStep()">
+
+              <button class="btn-ghost" onclick="showEmailStep()" type="button">
                 Edit email
               </button>
             </div>
 
             <div class="step step-password">
-              <p class="card-sub">
-                Enter your new password to complete the reset.
-              </p>
+              <p class="card-sub">Enter your new password.</p>
 
-              <div class="field password-group">
-                <label for="password">New Password</label>
-                <div class="input-wrapper">
-                  <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Enter your new password"
-                    required
-                  />
-                  <i class="fa-solid fa-eye"></i>
-                  <i class="fa-solid fa-eye-slash hide"></i>
-                </div>
-                <small class="hint err"></small>
-              </div>
+              <input id="password" type="password" />
+              <input id="confirmPassword" type="password" />
 
-              <div class="field password-group">
-                <label for="confirmPassword">Confirm Password</label>
-                <div class="input-wrapper">
-                  <input
-                    type="password"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    placeholder="Confirm password"
-                    required
-                  />
-                  <i class="fa-solid fa-eye"></i>
-                  <i class="fa-solid fa-eye-slash hide"></i>
-                </div>
-                <small class="hint err"></small>
-              </div>
-
-              <button
-                class="btn-main"
-                id="resetPasswordBtn"
-                type="button"
-                onclick="saveNewPassword()"
-              >
+              <button class="btn-main" onclick="saveNewPassword()" type="button">
                 Reset Password
-              </button>
-              <button class="btn-ghost" type="button" onclick="showOtpStep()">
-                Back to OTP
               </button>
             </div>
           </form>
@@ -207,362 +101,79 @@
       </div>
     </main>
 
-    <!-- Toast -->
     <div class="toast" id="toast"></div>
 
-    <script src="../js/main.js"></script>
-    <script type="module">
-      /*document
-        .getElementById("resetBtn")
-        .addEventListener("click", function (e) {
-          e.preventDefault();
-          const emailInput = document.getElementById("email");
-          const emailValue = emailInput.value.trim();
-
-          if (!emailValue) {
-            setError(emailInput, "Email is required.");
-          } else if (!validateEmail(emailValue)) {
-            setError(emailInput, "Please enter a valid email address.");
-          } else {
-            clearError(emailInput);
-            // Submit the form if valid
-            document.querySelector("form").submit();
-            "AIzaSyD4Wy3nmsbaUWGF-rh6ubXvCmAAKhho49U"
-          }
-        });*/
-      // Fix: Define showToast so it can be called throughout the script
-      window.showToast = function (message, type = "success") {
-        const toast = document.getElementById("toast");
-        if (!toast) return;
-        toast.textContent = message;
-        toast.className = `toast show ${type}`;
-        setTimeout(() => toast.classList.remove("show"), 3500);
-      };
-
-      const AUTH_API_BASE = "http://localhost:3000";
+    <script>
+      // ✅ FIXED API URL
+      const AUTH_API_BASE = "https://dsw02a1technexus-production.up.railway.app";
 
       async function postAuthJson(path, payload) {
         let response;
 
         try {
-          response = await fetch(`${AUTH_API_BASE}${path}`, {
+          response = await fetch(AUTH_API_BASE + path, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
+            body: JSON.stringify(payload)
           });
         } catch (error) {
-          throw new Error(
-            "Cannot reach the auth server. Start it with npm start, then try again.",
-          );
+          throw new Error("Cannot reach the server. Please try again later.");
         }
 
         const data = await response.json().catch(() => ({}));
 
         if (!response.ok) {
-          throw new Error(data.error || "Request failed. Please try again.");
+          throw new Error(data.error || "Request failed");
         }
 
         return data;
       }
 
-      function showStep(step) {
-        document.querySelectorAll(".step").forEach((section) => {
-          section.classList.toggle("active", section.classList.contains(step));
-        });
-      }
-
-      window.showOtpStep = function () {
-        showStep("step-otp");
-      };
-
-      window.showEmailStep = function () {
-        showStep("step-email");
-      };
-
-      window.showPasswordStep = function () {
-        showStep("step-password");
-        setupPasswordToggles();
-        validateNewPasswordFields();
-      };
-
-      const newPasswordInput = document.getElementById("password");
-      const confirmPasswordInput = document.getElementById("confirmPassword");
-      const passwordError = document.querySelector(
-        ".step-password .field:nth-of-type(1) .hint",
-      );
-      const confirmError = document.querySelector(
-        ".step-password .field:nth-of-type(2) .hint",
-      );
-
-      function setRecoveryError(input, hint, message) {
-        if (hint) hint.textContent = message;
-        if (input) input.classList.add("err-border");
-      }
-
-      function clearRecoveryError(input, hint) {
-        if (hint) hint.textContent = "";
-        if (input) input.classList.remove("err-border");
-      }
-
-      function validateNewPasswordFields(showEmptyErrors = false) {
-        let valid = true;
-        const password = newPasswordInput.value.trim();
-        const confirmPassword = confirmPasswordInput.value.trim();
-        const passwordPattern =
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
-
-        clearRecoveryError(newPasswordInput, passwordError);
-        clearRecoveryError(confirmPasswordInput, confirmError);
-
-        if (!password) {
-          valid = false;
-          if (showEmptyErrors) {
-            setRecoveryError(
-              newPasswordInput,
-              passwordError,
-              "Please enter a new password.",
-            );
-          }
-        } else if (password.length < 6) {
-          valid = false;
-          setRecoveryError(
-            newPasswordInput,
-            passwordError,
-            "Password must be at least 6 characters.",
-          );
-        } else if (!passwordPattern.test(password)) {
-          valid = false;
-          setRecoveryError(
-            newPasswordInput,
-            passwordError,
-            "Password must include uppercase, lowercase, number, and special character.",
-          );
-        }
-
-        if (!confirmPassword) {
-          valid = false;
-          if (showEmptyErrors) {
-            setRecoveryError(
-              confirmPasswordInput,
-              confirmError,
-              "Confirm the password.",
-            );
-          }
-        } else if (confirmPassword !== password) {
-          valid = false;
-          setRecoveryError(
-            confirmPasswordInput,
-            confirmError,
-            "Passwords do not match.",
-          );
-        }
-
-        return valid;
-      }
-
-      newPasswordInput.addEventListener("input", () => {
-        validateNewPasswordFields();
-      });
-
-      confirmPasswordInput.addEventListener("input", () => {
-        validateNewPasswordFields();
-      });
-
-      const otpBoxes = Array.from(document.querySelectorAll(".otp-box"));
-      otpBoxes.forEach((box, index) => {
-        box.addEventListener("input", function () {
-          this.value = this.value.replace(/\D/g, "");
-          if (this.value && index < otpBoxes.length - 1) {
-            otpBoxes[index + 1].focus();
-          }
-        });
-
-        box.addEventListener("keydown", function (event) {
-          if (event.key === "Backspace" && !this.value && index > 0) {
-            otpBoxes[index - 1].focus();
-          }
-        });
-      });
-
       window.resetPassword = async function () {
-        const email = document.getElementById("email").value.trim();
-        const error = document.querySelector(".step-email .hint");
-        const btn = document.getElementById("resetBtn");
-
-        if (!email) {
-          if (error) error.textContent = "Please enter your email address.";
-          return;
-        }
-
-        if (error) error.textContent = "";
-        btn.disabled = true;
-        btn.textContent = "Sending...";
+        const email = document.getElementById("email").value;
 
         try {
           await postAuthJson("/api/email/password-otp", { email });
-
           window.recoveryEmail = email;
-          showToast("A 6-digit code has been sent to your email.");
-          showOtpStep();
+          alert("OTP sent");
         } catch (err) {
-          const message = err?.message || "Unable to send reset code.";
-          if (error) error.textContent = message;
-          console.error("Password reset error:", err);
-          alert(message);
-        } finally {
-          btn.disabled = false;
-          btn.textContent = "Send Reset Code";
+          alert(err.message);
         }
       };
 
       window.verifyOtp = async function () {
-        const otpRow = document.querySelector(".otp-row");
         const otp = Array.from(document.querySelectorAll(".otp-box"))
-          .map((box) => box.value.trim())
+          .map(b => b.value)
           .join("");
-        const error = document.querySelector(".step-otp .hint");
-        const btn = document.getElementById("verifyBtn");
-
-        if (otp.length !== 6) {
-          error.textContent = "Please enter the 6-digit code.";
-          return;
-        }
-
-        error.textContent = "";
-        btn.disabled = true;
 
         try {
           await postAuthJson("/api/email/verify-password-otp", {
             email: window.recoveryEmail,
-            otp,
+            otp
           });
 
           window.recoveryOtp = otp;
-          showToast("Code verified! Set your new password.");
-          showPasswordStep();
+          alert("OTP verified");
         } catch (err) {
-          showToast(err.message, "danger");
-          if (error) error.textContent = err.message;
-        } finally {
-          btn.disabled = false;
+          alert(err.message);
         }
       };
 
       window.saveNewPassword = async function () {
-        if (!validateNewPasswordFields(true)) {
-          return;
-        }
-
-        const btn = document.getElementById("resetPasswordBtn");
-        const password = newPasswordInput.value;
-
-        btn.disabled = true;
-        btn.textContent = "Resetting...";
+        const password = document.getElementById("password").value;
 
         try {
           await postAuthJson("/api/email/reset-password", {
             email: window.recoveryEmail,
             otp: window.recoveryOtp,
-            password,
+            password
           });
 
-          alert(
-            "Password reset successfully. Please log in with your new password.",
-          );
-          window.location.href = "login.html";
+          alert("Password reset successful");
         } catch (err) {
-          const message = err?.message || "Failed to reset password.";
-          showToast(message, "danger");
-          if (passwordError) passwordError.textContent = message;
-        } finally {
-          btn.disabled = false;
-          btn.textContent = "Reset Password";
+          alert(err.message);
         }
       };
-      function setupPasswordToggles() {
-        const passwordGroups = document.querySelectorAll(".password-group");
-        if (!passwordGroups.length) return;
-
-        passwordGroups.forEach((group) => {
-          if (group.dataset.toggleSetup) return;
-
-          const input = group.querySelector("input");
-          const show = group.querySelector(".fa-eye");
-          const hide = group.querySelector(".fa-eye-slash");
-
-          if (!input || !show || !hide) return;
-
-          show.addEventListener("click", () => {
-            input.type = "text";
-            hide.classList.remove("hide");
-            show.classList.add("hide");
-          });
-
-          hide.addEventListener("click", () => {
-            input.type = "password";
-            hide.classList.add("hide");
-            show.classList.remove("hide");
-          });
-
-          group.dataset.toggleSetup = "true";
-        });
-      }
     </script>
-    <!-- Google api -->
-    <script>
-      function googleTranslateElementInit() {
-        new google.translate.TranslateElement(
-          { pageLanguage: "en" },
-          "google_translate_element",
-        );
-      }
-
-      // Hide Google Translate banner whenever it appears
-      function hideGoogleTranslateBanner() {
-        // Remove the top offset Google adds to body
-        document.body.style.top = "0px";
-
-        // Hide the banner frame
-        const banner = document.querySelector(".goog-te-banner-frame");
-        if (banner) {
-          banner.style.display = "none";
-        }
-
-        // Also target the iframe by id
-        const bannerById = document.getElementById(":1.container");
-        if (bannerById) {
-          bannerById.style.display = "none";
-        }
-      }
-
-      // Run on page load
-      hideGoogleTranslateBanner();
-
-      // Watch for DOM changes (when Google injects the banner after language select)
-      const observer = new MutationObserver(function (mutations) {
-        hideGoogleTranslateBanner();
-      });
-
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ["style"],
-      });
-    </script>
-    <script type="text/javascript">
-      function googleTranslateElementInit() {
-        new google.translate.TranslateElement(
-          { pageLanguage: "en" },
-          "google_translate_element",
-        );
-      }
-    </script>
-
-    <script
-      type="text/javascript"
-      src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
-    ></script>
-    <!-- The End of google api -->
   </body>
 </html>
