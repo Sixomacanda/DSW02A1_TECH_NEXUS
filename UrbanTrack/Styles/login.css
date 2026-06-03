@@ -244,21 +244,24 @@ form#loginForm {
   transition: 0.3s;
 }
 
-.password-group i {
+.input-wrapper i {
   position: absolute;
   right: 15px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
   font-size: 18px;
+  color: #38bdf8;
+  z-index: 10;
+  transition: color 0.3s ease;
 }
 
-.fa-eye {
+.input-wrapper i:hover {
   color: #0ea5e9;
 }
 
-.fa-eye-slash {
-  color: #6366f1;
+.input-wrapper .fa-eye-slash.hide {
+  display: none;
 }
 
 .hide {
