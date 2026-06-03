@@ -356,7 +356,7 @@ onAuthStateChanged(auth, (user) => {
   if (isAdmin) {
     loadDashboardData();
     const email = user?.email || localUser?.email || "admin@urbantrack.com";
-    document.getElementById("adminName").textContent   = email;
+    // document.getElementById("adminName").textContent;
     document.getElementById("adminAvatar").textContent = email.charAt(0).toUpperCase();
   } else {
     // location.href = '../pages/login.html';
