@@ -8,7 +8,7 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const nodemailer = require("nodemailer");
 const admin = require("firebase-admin");
-const fetch = require("node-fetch"); // ✅ added
+const fetch = require("node-fetch");
 
 const app = express();
 const geminiApiKey = process.env.GEMINI_API_KEY;
@@ -22,13 +22,9 @@ const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH
   ? resolveProjectPath(process.env.FIREBASE_SERVICE_ACCOUNT_PATH)
   : null;
 
-// ✅ FIXED symbols here
+// ✅ DISABLED Firebase (prevents crash on Railway)
 if (!admin.apps.length && serviceAccountPath) {
-  const serviceAccount = require(serviceAccountPath);
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    projectId: process.env.FIREBASE_PROJECT_ID || serviceAccount.project_id,
-  });
+  console.log("Firebase skipped (no service account on Railway)");
 }
 
 // ✅ Mail setup
@@ -104,17 +100,16 @@ if (GOOGLE_OAUTH_CONFIGURED) {
   );
 }
 
-// Routes
+// ✅ Routes
 app.get("/", (req, res) => {
   res.send("🚀 Server is running!");
 });
 
-//Test route (important)
 app.get("/health", (req, res) => {
   res.json({ status: "OK" });
 });
 
-//Chat API (Gemini)
+// ✅ Chat API
 app.post("/api/chat", async (req, res) => {
   try {
     const userMessage = req.body.message;
@@ -158,9 +153,9 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
-// IMPORTANT: Railway port
+// ✅ Railway port
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
+  console.log("✅ Server running on port " + PORT);
 });
