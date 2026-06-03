@@ -2,7 +2,7 @@ var cur = 1;
 var userEmail = "";
 var verifiedPasswordOtp = "";
 var timerInterval = null;
-var AUTH_API_BASE = "https://dsw02a1technexus-production.up.railway.app";
+const AUTH_API_BASE = "https://dsw02a1technexus-production.up.railway.app";
 
 function postAuthJson(path, payload) {
   return fetch(AUTH_API_BASE + path, {
@@ -13,9 +13,7 @@ function postAuthJson(path, payload) {
     body: JSON.stringify(payload),
   })
     .catch(function () {
-      throw new Error(
-        "Cannot reach the auth server. Start it with npm start, then try again.",
-      );
+      throw new Error("Cannot reach the server. Please try again later.");
     })
     .then(function (res) {
       return res

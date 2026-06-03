@@ -119,7 +119,7 @@ if (GOOGLE_OAUTH_CONFIGURED) {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL:
           process.env.GOOGLE_CALLBACK_URL ||
-          "http://localhost:3000/auth/google/callback",
+          "https://dsw02a1technexus-production.up.railway.app/auth/google/callback",
       },
       function (accessToken, refreshToken, profile, done) {
         return done(null, profile);
@@ -477,5 +477,5 @@ app.post("/api/email/report-status", async (req, res) => {
 
 // Start server
 app.listen(3000, function () {
-  console.log("Server running on http://localhost:3000");
+  console.log("Server running on https://dsw02a1technexus-production.up.railway.app");
 });

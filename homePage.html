@@ -1000,7 +1000,7 @@
           location.protocol === 'file:' ||
           location.port === '5500' ||
           location.port === '5501';
-        return (isLocalDevServer ? 'http://localhost:3000' : '') + '/api/chat';
+        return (isLocalDevServer ? 'https://dsw02a1technexus-production.up.railway.app' : '') + '/api/chat';
       }
 
       async function callChatbot(msg, history) {

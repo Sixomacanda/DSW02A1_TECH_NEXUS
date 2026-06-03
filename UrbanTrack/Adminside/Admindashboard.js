@@ -161,7 +161,7 @@ window.updateStatus = async function(id, newStatus) {
       report.reporterEmail !== "N/A" &&
       ["in-progress", "resolved"].includes(newStatus)
     ) {
-      fetch("http://localhost:3000/api/email/report-status", {
+      fetch("https://dsw02a1technexus-production.up.railway.app/api/email/report-status", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
