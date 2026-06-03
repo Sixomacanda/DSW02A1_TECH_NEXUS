@@ -73,11 +73,20 @@ function getSeverityBadge(sev) {
   return `<span class="badge badge-active">Low</span>`;
 }
 
+function formatCoordinates(lat, lng) {
+  if (lat === undefined || lat === null || lng === undefined || lng === null) {
+    return "Not provided";
+  }
+  const coords = `${lat}, ${lng}`;
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${lat},${lng}`)}`;
+  return `<a href="${mapsUrl}" target="_blank" rel="noopener noreferrer">${coords}</a>`;
+}
+
 // ── RENDER ISSUES TABLE ──
 function renderIssues(reports) {
   const tbody = document.getElementById("issuesTbody");
   if (!reports.length) {
-    tbody.innerHTML = `<tr><td colspan="6" class="empty-state">No issues found.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" class="empty-state">No issues found.</td></tr>`;
     return;
   }
   tbody.innerHTML = reports.map(r => `
@@ -91,6 +100,7 @@ function renderIssues(reports) {
         <div class="cell-sub">${r.reporterEmail || ""}</div>
       </td>
       <td>${r.area || r.address || "—"}</td>
+      <td>${formatCoordinates(r.lat, r.lng)}</td>
       <td>${getSeverityBadge(r.severity)}</td>
       <td>${getBadge(r.status)}</td>
       <td style="display:flex;gap:.4rem;flex-wrap:wrap;">
