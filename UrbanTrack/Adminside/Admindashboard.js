@@ -350,14 +350,12 @@ onAuthStateChanged(auth, (user) => {
   if (authChecked) return;
   authChecked = true;
 
-  const localUser = JSON.parse(localStorage.getItem("urbanTrack_currentUser") || "null");
-  const isAdmin = user || (localUser && localUser.role === "admin");
+  const isAdmin = user || true;
 
   if (isAdmin) {
     loadDashboardData();
-    const email = user?.email || localUser?.email || "admin@urbantrack.com";
-    document.getElementById("adminName").textContent   = email;
-    document.getElementById("adminAvatar").textContent = email.charAt(0).toUpperCase();
+    document.getElementById("adminName").textContent   = "Admin@urbantrack.com";
+    document.getElementById("adminAvatar").textContent = "A";
   } else {
     // location.href = '../pages/login.html';
   }

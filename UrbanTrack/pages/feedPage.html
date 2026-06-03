@@ -410,8 +410,11 @@
       }[issue.severity] || 'sev-medium';
 
       // Location — your docs use lat/lng so show coords or address
-      const location = issue.address || issue.location ||
-        (issue.lat ? `${parseFloat(issue.lat).toFixed(4)}, ${parseFloat(issue.lng).toFixed(4)}` : 'Location not specified');
+      const hasCoords = issue.lat != null && issue.lng != null;
+      const coordsText = hasCoords ? `${parseFloat(issue.lat).toFixed(4)}, ${parseFloat(issue.lng).toFixed(4)}` : null;
+      const mapsUrl = hasCoords ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${issue.lat},${issue.lng}`)}` : null;
+      const location = issue.address || issue.location || coordsText || 'Location not specified';
+      const coordLinkHtml = mapsUrl ? `<a class="coord-link" href="${mapsUrl}" target="_blank" rel="noopener noreferrer">${coordsText}</a>` : '';
 
       // Title — your docs use category as the main label
       const title = issue.title || issue.category || 'Untitled Report';
@@ -433,6 +436,7 @@
             <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
           </button>
           <span class="upvote-count" id="count-${issue.id}">${count}</span>
+          ${coordLinkHtml}
         </div>
         <div class="issue-body">
           <div class="issue-top">

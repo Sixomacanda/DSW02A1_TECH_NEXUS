@@ -263,7 +263,17 @@
     .upvote-count {
       font-size: 0.78rem; font-weight: 700; color: var(--text-muted); line-height: 1;
     }
-    .upvote-btn.voted ~ .upvote-count { color: var(--accent-light); }
+    .coord-link {
+      font-size: 0.66rem;
+      color: var(--text-muted);
+      text-decoration: underline;
+      max-width: 90px;
+      text-align: center;
+      display: block;
+      word-break: break-all;
+    }
+    .upvote-btn.voted ~ .upvote-count,
+    .upvote-btn.voted ~ .coord-link { color: var(--accent-light); }
 
     /* Issue body */
     .issue-body { flex: 1; min-width: 0; }
