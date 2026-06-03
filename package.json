@@ -40,5 +40,9 @@
   "bugs": {
     "url": "https://github.com/Sixomacanda/DSW02A1_TECH_NEXUS/issues"
   },
-  "homepage": "https://github.com/Sixomacanda/DSW02A1_TECH_NEXUS#readme"
+  "homepage": "https://github.com/Sixomacanda/DSW02A1_TECH_NEXUS#readme",
+  "name": "dsw02a1_tech_nexus",
+  "version": "1.0.0",
+  "description": "",
+  "main": "firebase.js"
 }
