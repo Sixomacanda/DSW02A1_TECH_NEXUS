@@ -263,8 +263,6 @@ form#signupForm {
   box-shadow: 0 0 15px #38bdf8;
 }
 
-<<<<<<< HEAD
-=======
 .btn:disabled {
   cursor: not-allowed;
   opacity: 0.65;
@@ -297,7 +295,6 @@ form#signupForm {
   color: #38bdf8;
 }
 
->>>>>>> 4077a6afbca24d1dd8f55367bad2644329836737
 .btn.google-btn {
   background: linear-gradient(135deg, #4285F4, #34A853);
   display: flex;
@@ -505,8 +502,4 @@ body { top: 0 !important; } */
         .goog-te-combo option {
             background: #1e3a8a !important;
             color: white !important;
-<<<<<<< HEAD
         }
-=======
-        }
->>>>>>> 4077a6afbca24d1dd8f55367bad2644329836737

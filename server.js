@@ -1,7 +1,9 @@
 require("dotenv").config();
 
 const path = require("path");
-require("dotenv").config({ path: path.join(__dirname, "google-auth-server", ".env") });
+require("dotenv").config({
+  path: path.join(__dirname, "google-auth-server", ".env"),
+});
 
 const express = require("express");
 const fs = require("fs");
@@ -60,7 +62,9 @@ const transporter = nodemailer.createTransport({
 const otpStore = new Map();
 
 function normalizeEmail(email) {
-  return String(email || "").trim().toLowerCase();
+  return String(email || "")
+    .trim()
+    .toLowerCase();
 }
 
 function getValidOtpRecord(email, otp, purpose) {
@@ -103,7 +107,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
     secret:
-      process.env.SESSION_SECRET || "default-unsafe-secret-change-in-production",
+      process.env.SESSION_SECRET ||
+      "default-unsafe-secret-change-in-production",
     resave: false,
     saveUninitialized: false,
   }),
@@ -299,55 +304,11 @@ app.post("/api/email/reset-password", async (req, res) => {
   }
 });
 
-app.post("/api/email/signup-otp", async (req, res) => {
-  const email = normalizeEmail(req.body.email);
-  if (!email) return res.status(400).json({ error: "Email is required" });
-
-  try {
-    await admin.auth().getUserByEmail(email);
-    return res.status(409).json({ error: "Email is already registered" });
-  } catch (error) {
-    if (error.code !== "auth/user-not-found") {
-      console.error("Signup email check error:", error);
-      return res.status(500).json({ error: "Failed to check email" });
-    }
-  }
-
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  otpStore.set(email, {
-    otp,
-    expires: Date.now() + 600000,
-    purpose: "signup",
-  });
-
-  const mailOptions = {
-    from:
-      process.env.MAIL_FROM ||
-      `"UrbanTrack Support" <${process.env.SMTP_USER}>`,
-    to: email,
-    subject: "Verify your UrbanTrack email",
-    text: `Your UrbanTrack signup code is: ${otp}. This code expires in 10 minutes.`,
-    html: `<h3>Verify your email</h3><p>Your 6-digit signup code is: <strong>${otp}</strong></p><p>This code expires in 10 minutes.</p>`,
-  };
-
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log(`Signup OTP sent to ${email}`);
-    res.json({ success: true, message: "Signup OTP sent successfully" });
-  } catch (error) {
-    console.error("Signup OTP email error:", error);
-    res
-      .status(500)
-      .json({ error: "Failed to send email. Check SMTP settings." });
-  }
-});
-
 app.post("/api/email/complete-signup", async (req, res) => {
-  const { surname, password, otp } = req.body;
+  const { surname, password } = req.body;
   const email = normalizeEmail(req.body.email);
-  const result = getValidOtpRecord(email, otp, "signup");
 
-  if (result.error) return res.status(400).json({ error: result.error });
+  if (!email) return res.status(400).json({ error: "Email is required" });
 
   if (!surname || !String(surname).trim()) {
     return res.status(400).json({ error: "Surname is required" });
@@ -361,20 +322,24 @@ app.post("/api/email/complete-signup", async (req, res) => {
 
   try {
     const user = await admin.auth().createUser({
-      email: result.normalizedEmail,
+      email,
       password,
       emailVerified: true,
       displayName: String(surname).trim(),
     });
 
     try {
-      await admin.firestore().collection("users").doc(user.uid).set({
-        surname: String(surname).trim(),
-        email: result.normalizedEmail,
-        role: "user",
-        reportsCount: 0,
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
+      await admin
+        .firestore()
+        .collection("users")
+        .doc(user.uid)
+        .set({
+          surname: String(surname).trim(),
+          email,
+          role: "user",
+          reportsCount: 0,
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
     } catch (profileError) {
       console.warn(
         "Signup profile write failed; Firebase Auth account was created:",
@@ -382,7 +347,6 @@ app.post("/api/email/complete-signup", async (req, res) => {
       );
     }
 
-    otpStore.delete(result.normalizedEmail);
     res.json({ success: true, message: "Account created successfully" });
   } catch (error) {
     console.error("Signup completion error:", error);
@@ -398,7 +362,8 @@ app.post("/api/email/report-submitted", async (req, res) => {
   const { name, ref, title, status } = req.body;
 
   if (!email) return res.status(400).json({ error: "Email is required" });
-  if (!ref) return res.status(400).json({ error: "Reference number is required" });
+  if (!ref)
+    return res.status(400).json({ error: "Reference number is required" });
 
   const displayName = String(name || "Community Member").trim();
   const issueTitle = String(title || "your issue report").trim();
@@ -440,7 +405,8 @@ app.post("/api/email/report-status", async (req, res) => {
   const { name, ref, title, status } = req.body;
 
   if (!email) return res.status(400).json({ error: "Email is required" });
-  if (!ref) return res.status(400).json({ error: "Reference number is required" });
+  if (!ref)
+    return res.status(400).json({ error: "Reference number is required" });
   if (!["in-progress", "resolved"].includes(status)) {
     return res.status(400).json({ error: "Unsupported status" });
   }
@@ -485,81 +451,63 @@ app.post("/api/chat", async (req, res) => {
     const userMessage = req.body.message;
     const history = Array.isArray(req.body.history) ? req.body.history : [];
 
-    if (!userMessage) return res.status(400).json({ error: "Message is required" });
+    if (!userMessage)
+      return res.status(400).json({ error: "Message is required" });
     if (!geminiApiKey || geminiApiKey === "replace_with_your_gemini_api_key") {
-      return res.status(500).json({ error: "Missing GEMINI_API_KEY in the root .env file." });
+      return res
+        .status(500)
+        .json({ error: "Missing GEMINI_API_KEY in google-auth-server/.env." });
     }
 
     const systemPrompt = `You are UrbanBot, an expert assistant for UrbanTrack - a community issue reporting platform. ONLY answer questions that are directly about UrbanTrack, its features, reporting flow, upvoting, tracking, admin actions, troubleshooting, APIs, and usage. If the user asks anything not related to UrbanTrack, reply exactly: "Sorry, I can only answer questions about UrbanTrack." Do not provide additional information for unrelated queries. When answering, be thorough and accurate, use platform knowledge when relevant, provide numbered actionable steps for how-tos, avoid hallucinations, and ask for clarification when necessary. Keep output professional and focused on UrbanTrack.`;
 
     let KB = [];
     try {
-      const kbRaw = fs.readFileSync(path.join(__dirname, "urbantrack_kb.json"), "utf8");
+      const kbRaw = fs.readFileSync(
+        path.join(__dirname, "urbantrack_kb.json"),
+        "utf8",
+      );
       KB = JSON.parse(kbRaw);
     } catch (e) {
       console.warn("Could not load urbantrack_kb.json:", e.message);
     }
 
-    const keywords = [
-      "urbantrack",
-      "report",
-      "reporting",
-      "upvote",
-      "tracking",
-      "admin",
-      "dashboard",
-      "issue",
-      "location",
-      "map",
-      "follow",
-      "vote",
-      "authenticate",
-      "signup",
-      "signin",
-      "user settings",
-      "troubleshoot",
-      "api",
-      "endpoint",
-      "status",
-      "resolve",
-    ];
-    const isRelated = (text) => {
-      if (!text) return false;
-      const t = String(text).toLowerCase();
-      return keywords.some((k) => t.includes(k));
-    };
-
     const fallback = "Sorry, I can only answer questions about UrbanTrack.";
-    const historyRelated = history.some((h) => isRelated(h.content));
-    if (!isRelated(userMessage) && !historyRelated) {
-      return res.json({ reply: fallback });
-    }
 
-    const contents = [];
-    contents.push({ role: "system", parts: [{ text: systemPrompt }] });
+    let systemText =
+      systemPrompt +
+      "\n\nAlways answer questions about UrbanTrack and its platform features thoroughly. " +
+      'If the user asks anything unrelated to UrbanTrack, reply exactly: "Sorry, I can only answer questions about UrbanTrack."';
 
     if (KB.length) {
       const snippet = KB.slice(0, 6).join("\n");
-      contents.push({ role: "system", parts: [{ text: "Relevant UrbanTrack facts:\n" + snippet }] });
+      systemText += "\n\nRelevant UrbanTrack facts:\n" + snippet;
     }
 
+    const contents = [];
     for (const item of history.slice(-24)) {
       if (!item || !item.role || !item.content) continue;
-      const role = item.role === "assistant" ? "assistant" : "user";
+      const role = item.role === "assistant" ? "model" : "user";
       contents.push({ role, parts: [{ text: String(item.content) }] });
     }
 
     contents.push({ role: "user", parts: [{ text: userMessage }] });
 
     const payload = {
-      temperature: 0.2,
-      candidateCount: 1,
-      maxOutputTokens: 800,
+      systemInstruction: {
+        parts: [{ text: systemText }],
+      },
       contents,
+      generationConfig: {
+        temperature: 0.2,
+        candidateCount: 1,
+        maxOutputTokens: 800,
+      },
     };
 
+    const model = process.env.GEMINI_MODEL || "gemini-1.5-flash";
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiApiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -568,11 +516,15 @@ app.post("/api/chat", async (req, res) => {
     );
 
     const data = await response.json();
-    let reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate a response.";
+    if (!response.ok) {
+      console.error("Gemini API error:", data);
+      return res.status(502).json({
+        error: data?.error?.message || "Gemini API request failed",
+      });
+    }
 
-    const replyLower = String(reply).toLowerCase();
-    const mentionsKeyword = keywords.some((k) => replyLower.includes(k));
-    if (!mentionsKeyword) {
+    let reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || fallback;
+    if (!reply || !String(reply).trim()) {
       reply = fallback;
     }
 

@@ -96,39 +96,19 @@
           </div>
           <small class="error"></small>
         </div>
-        <div class="signup-otp-panel" id="signupOtpPanel">
-          <p id="otpMessage"></p>
-          <div class="form-group">
-            <label for="signupOtp">Email OTP</label>
-            <input
-              type="text"
-              name="signupOtp"
-              id="signupOtp"
-              inputmode="numeric"
-              maxlength="6"
-              placeholder="Enter 6-digit code"
-            />
-            <small class="error" id="otpError"></small>
-          </div>
-          <button type="button" id="editSignupDetails" class="btn btn-secondary">
-            Edit Details
-          </button>
-        </div>
         <button type="submit" id="signing" class="btn" name="signup">
           Sign Up
         </button>
 
         <!-- Google signup option -->
-        <button
-          id="google-login-btn"
-          type="button"
-          class="btn google-btn"
-        >
+        <button id="google-login-btn" type="button" class="btn google-btn">
           <i class="fa-brands fa-google"></i> Continue with Google
         </button>
 
-        <p class="footer-text" style="margin-top: 1rem;">
-          <a href="https://youtu.be/lHobGGVFqFk" target="_blank">Need help signing in?</a>
+        <p class="footer-text" style="margin-top: 1rem">
+          <a href="https://youtu.be/lHobGGVFqFk" target="_blank"
+            >Need help signing in?</a
+          >
         </p>
         <p class="footer-text">
           Already have an account? <a href="login.html">Log in</a>
@@ -170,38 +150,12 @@
       const confirmPassword = document.getElementById(
         "Signup-confirm-password",
       );
-      const otpPanel = document.getElementById("signupOtpPanel");
-      const otpInput = document.getElementById("signupOtp");
-      const otpError = document.getElementById("otpError");
-      const otpMessage = document.getElementById("otpMessage");
       const submitBtn = document.getElementById("signing");
-      const editDetailsBtn = document.getElementById("editSignupDetails");
       const googleBtn = document.getElementById("google-login-btn");
-      const detailGroups = Array.from(
-        document.querySelectorAll(".signup-container > .form-group"),
-      ).filter((group) => !group.closest("#signupOtpPanel"));
-      let signupStep = "details";
-      let pendingSignup = null;
-
-      function setSignupStep(step) {
-        signupStep = step;
-        const showingOtp = step === "otp";
-        detailGroups.forEach((group) => {
-          group.classList.toggle("hidden", showingOtp);
-        });
-        otpPanel.classList.toggle("active", showingOtp);
-        submitBtn.textContent = showingOtp
-          ? "Verify & Create Account"
-          : "Sign Up";
-      }
 
       function setButtonLoading(isLoading, text) {
         submitBtn.disabled = isLoading;
-        submitBtn.textContent = isLoading
-          ? text
-          : signupStep === "otp"
-            ? "Verify & Create Account"
-            : "Sign Up";
+        submitBtn.textContent = isLoading ? text : "Sign Up";
       }
 
       async function readError(response, fallback) {
@@ -243,57 +197,15 @@
         return true;
       }
 
-      async function sendSignupOtp() {
+      async function createAccount() {
         if (!validateSignupDetails()) return;
 
-        pendingSignup = {
+        const signupData = {
           surname: surname.value.trim(),
           email: email.value.trim().toLowerCase(),
           password: password.value,
         };
 
-        setButtonLoading(true, "Sending Code...");
-
-        try {
-          const response = await fetch(
-            "http://localhost:3000/api/email/signup-otp",
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ email: pendingSignup.email }),
-            },
-          );
-
-          if (!response.ok) {
-            throw new Error(
-              await readError(response, "Failed to send verification code"),
-            );
-          }
-
-          otpInput.value = "";
-          otpError.textContent = "";
-          otpMessage.innerHTML =
-            "We sent a 6-digit code to <strong>" +
-            pendingSignup.email +
-            "</strong>.";
-          setSignupStep("otp");
-          otpInput.focus();
-        } catch (error) {
-          alert(error.message);
-        } finally {
-          setButtonLoading(false);
-        }
-      }
-
-      async function completeSignup() {
-        const otp = otpInput.value.trim();
-
-        if (!/^\d{6}$/.test(otp)) {
-          otpError.textContent = "Enter the 6-digit code from your email.";
-          return;
-        }
-
-        otpError.textContent = "";
         setButtonLoading(true, "Creating Account...");
 
         try {
@@ -302,7 +214,7 @@
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ ...pendingSignup, otp }),
+              body: JSON.stringify(signupData),
             },
           );
 
@@ -315,7 +227,7 @@
           alert("Account created successfully. You can now log in.");
           window.location.href = "login.html";
         } catch (error) {
-          otpError.textContent = error.message;
+          alert(error.message);
         } finally {
           setButtonLoading(false);
         }
@@ -323,22 +235,7 @@
 
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
-
-        if (signupStep === "details") {
-          await sendSignupOtp();
-          return;
-        }
-
-        await completeSignup();
-      });
-
-      editDetailsBtn.addEventListener("click", () => {
-        setSignupStep("details");
-      });
-
-      otpInput.addEventListener("input", () => {
-        otpInput.value = otpInput.value.replace(/\D/g, "").slice(0, 6);
-        otpError.textContent = "";
+        await createAccount();
       });
 
       if (googleBtn) {
@@ -403,7 +300,6 @@
           menuOpen = false;
         }
       });
-
     </script>
     <!-- Google api -->
     <script>
