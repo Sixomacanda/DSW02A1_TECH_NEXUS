@@ -117,7 +117,7 @@ UrbanTrack integrates several third-party APIs to enhance functionality:
 
 * Frontend: HTML, CSS, JavaScript
 * Backend: Node.js, Express
-* Database: (Add your database, e.g., MongoDB)
+* Database: Firebase
 * Version Control: GitHub
 
 ---
@@ -127,13 +127,13 @@ UrbanTrack integrates several third-party APIs to enhance functionality:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/urban-track.git
+git clone https://github.com/Sixomacanda/DSW02A1_TECH_NEXUS
 ```
 
 2. Navigate into the project:
 
 ```bash
-cd urban-track
+cd DSW02A1_TECH_NEXUS
 ```
 
 3. Install dependencies:
@@ -164,6 +164,10 @@ node server.js
 ```
 http://localhost:3000
 ```
+7. Alternatively, use the link below (Recommended)
+   ```
+   https://urbantrack-9z2l.onrender.com/
+   ```
 
 
 
@@ -179,7 +183,7 @@ http://localhost:3000
 
 ## Deployment
 
-* Hosted on cloud platforms Render
+* Hosted on Render
 * Continuous deployment via GitHub integration
 * Scalable architecture for growing usage
 
