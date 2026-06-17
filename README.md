@@ -146,11 +146,11 @@ npm install
 
 ```env
 PORT=3000
-GOOGLE_CLIENT_ID=your_key
-GOOGLE_CLIENT_SECRET=your_secret
-MAP_API_KEY=your_key
-CHATBOT_API_KEY=your_key
-LANGUAGE_API_KEY=your_key
+GOOGLE_CLIENT_ID=###
+GOOGLE_CLIENT_SECRET=###
+MAP_API_KEY=###
+CHATBOT_API_KEY=###
+LANGUAGE_API_KEY=###
 ```
 
 5. Run the application:
